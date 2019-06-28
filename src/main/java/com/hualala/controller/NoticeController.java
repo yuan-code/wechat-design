@@ -62,7 +62,7 @@ public class NoticeController {
         //可以拿到的事件: 1 关注/取消关注事件  2:用户还未关注公众号 扫描带参数二维码事件 3: 用户已经关注公众号 扫描带参数二维码事件 ...等等
         //微信有重试机制  需要考虑去重
         NotifyFactory.WeChatNotify infoType = notifyFactory.createWeChatNotify(decryptMap.get("Event"));
-        log.info("创建授权策略对象: [{}]",infoType.getClass().getSimpleName());
+        log.info("创建授权策略对象: [{}] 解密后信息: {}",infoType.getClass().getSimpleName(),decryptMap);
         //通知
         infoType.weChatNotify(decryptMap);
         return echostr;

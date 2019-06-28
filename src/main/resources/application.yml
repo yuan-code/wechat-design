@@ -13,10 +13,10 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/vote?serverTimeZone=Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://118.24.202.81:3306/wechat?serverTimeZone=Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
   redis:
-    port:
-    host:
+    host: 118.24.202.81
+    port: 6379
     database: 0
     timeout: 10000
     jedis:
@@ -37,4 +37,4 @@ wechat:
   appID: wx0abd83b135ccb8e5
   secret: 9a5eb79bb7f4f89a6d15eef2a2601c09
   token: WX_DESIGN_TOKEN
-  encodingAESKey:
+  encodingAESKey: PJKtnHu74965O2WOfdxQgI3FOXrxrXd9YssgsaumzIW
