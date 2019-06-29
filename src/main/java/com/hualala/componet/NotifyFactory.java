@@ -134,8 +134,10 @@ public class NotifyFactory implements ApplicationContextAware {
             resultMap.put("FromUserName", xmlMap.get("ToUserName"));
             String timeStamp = Long.toString(System.currentTimeMillis());
             resultMap.put("CreateTime", timeStamp);
-            resultMap.put("MsgType", "text");
-            resultMap.put("Content", "别乱点");
+            resultMap.put("MsgType", "image");
+            Map<String, String> image = new HashMap<>();
+            image.put("MediaId", "WDjzyoFoPGQhUt5qs01mWHpkdgRFEv-hL4NdsYWHGwbbxfXXJtkYzAmYms1mNHOr");
+            resultMap.put("Image", image);
             String replyMsg = XMLParse.mapToXml(resultMap);
             WXBizMsgCrypt pc = wxConfig.getWxBizMsgCrypt();
             //微信使用时间戳加随机数的方式来防止攻击(如果两次请求的时间戳+随机数都相同)
