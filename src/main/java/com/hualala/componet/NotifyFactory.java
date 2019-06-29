@@ -84,7 +84,7 @@ public class NotifyFactory implements ApplicationContextAware {
 
     @Log4j2
     @NotifyType(NotifyEnum.UNSUBSCRIBE)
-    public static class UnAuthorized implements WeChatNotify {
+    public static class UnSubscribe implements WeChatNotify {
 
         @Autowired
         private WXService wxService;
