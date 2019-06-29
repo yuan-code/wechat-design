@@ -1,5 +1,6 @@
-package com.hualala.config;
+package com.hualala.componet;
 
+import com.hualala.common.NotifyEnum;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;
@@ -16,5 +17,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Component
 public @interface NotifyType {
-    String[] value();
+
+    /**
+     * 事件推送的类型 支持枚举多个事件
+     * @return
+     */
+    NotifyEnum[] value();
 }

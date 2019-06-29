@@ -1,6 +1,7 @@
-package com.hualala.common;
+package com.hualala.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hualala.common.ResultCode;
 import com.hualala.exception.BusinessException;
 
 /**
@@ -13,7 +14,7 @@ public class ResultUtils {
 
     public static JSONObject success(Object object) {
         JSONObject result = new JSONObject();
-        result.put("code",ResultCode.SUCCESS.getCode());
+        result.put("code", ResultCode.SUCCESS.getCode());
         result.put("msg",ResultCode.SUCCESS.getMsg());
         result.put("data",object);
         return result;

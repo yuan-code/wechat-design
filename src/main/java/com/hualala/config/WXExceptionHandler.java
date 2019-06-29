@@ -1,7 +1,7 @@
 package com.hualala.config;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hualala.common.ResultUtils;
+import com.hualala.util.ResultUtils;
 import com.hualala.exception.BusinessException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.ControllerAdvice;
