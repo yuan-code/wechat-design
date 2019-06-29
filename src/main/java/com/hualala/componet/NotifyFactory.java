@@ -199,7 +199,7 @@ public class NotifyFactory implements ApplicationContextAware {
             log.info("被动回复公众号用户消息=====>>>>> {}", replyMsg);
             WXBizMsgCrypt pc = wxConfig.getWxBizMsgCrypt();
             //微信使用时间戳加随机数的方式来防止攻击(如果两次请求的时间戳+随机数都相同)
-            String result = pc.encryptMsg(replyMsg, "1561786796206", Double.toString(Math.random()));
+            String result = pc.encryptMsg(replyMsg, timeStamp, Double.toString(Math.random()));
             return result;
         }
     }
