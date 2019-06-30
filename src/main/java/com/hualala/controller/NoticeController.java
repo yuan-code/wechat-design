@@ -46,32 +46,23 @@ public class NoticeController {
     @RequestMapping(value = "/event")
     public Object official(@RequestParam("timestamp") String timestamp,
                            @RequestParam("nonce") String nonce,
-                           @RequestParam("signature") String msgSignature,
-                           @RequestParam(value = "echostr", defaultValue = "") String echostr,
-                           HttpServletRequest request) throws Exception {
-
-        log.info("Msg接收到的POST请求：signature={}, timestamp={}, nonce={}, echostr={}",
-                msgSignature, timestamp, nonce, echostr);
-
-        ServletInputStream inputStream = request.getInputStream();
-        String xmlData = IOUtils.toString(inputStream);
-        if (StringUtils.isEmpty(xmlData)) {
-            //这里是为初步配置公众号接入做的
+                           @RequestParam(value = "msg_signature",required = false) String msgSignature,
+                           @RequestParam(value = "echostr", required = false) String echostr,
+                           @RequestBody(required = false) String postData) throws Exception {
+        log.info("Msg接收到的POST请求: signature={}, timestamp={}, nonce={}, echostr={} postData={}", msgSignature, timestamp, nonce, echostr,postData);
+        if(StringUtils.isEmpty(postData)) {
             return echostr;
         }
-        Map<String, String> encryptMap = XMLParse.xmlToMap(xmlData);
         WXBizMsgCrypt pc = wxConfig.getWxBizMsgCrypt();
-        // 得到公众号传来的加密信息并解密,得到的是明文xml数据
-        String decryptXml = pc.decrypt(encryptMap.get("Encrypt"));
-        // 将xml数据转换为map
+        //签名校验 数据解密
+        String decryptXml = pc.decryptMsg(msgSignature, timestamp, nonce, postData);
         Map<String, String> decryptMap = XMLParse.xmlToMap(decryptXml);
         //获取推送事件类型  可以拿到的事件: 1 关注/取消关注事件  2:扫描带参数二维码事件 3: 用户已经关注公众号 扫描带参数二维码事件 ...等等
         NotifyEnum notifyEnum = NotifyEnum.resolveEvent(decryptMap.get("MsgType"), decryptMap.get("Event"));
-        //微信有重试机制  需要考虑幂等性
-        WeChatNotify infoType = notifyFactory.findWeChatNotify(notifyEnum);
-        //执行具体的策略 得到给微信的响应信息
+        WeChatNotify infoType = notifyFactory.loadWeChatNotify(notifyEnum);
+        //执行具体的策略 得到给微信的响应信息 微信有重试机制  需要考虑幂等性
         String result = infoType.weChatNotify(decryptMap);
-        log.info("公众号消息和事件推送===>>> 授权策略对象: [{}] 解密后信息: {} 返回给微信的信息: [{}]", infoType.getClass().getSimpleName(), decryptMap, result);
+        log.info("Msg响应的POST结果: 授权策略对象: [{}] 解密后信息: [{}] 返回给微信的信息: [{}]", infoType.getClass().getSimpleName(), decryptMap, result);
         return result;
     }
 }
