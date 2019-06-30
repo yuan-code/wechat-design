@@ -39,7 +39,8 @@ public class NoticeController {
      * @param timestamp    时间戳
      * @param nonce        随机数
      * @param msgSignature 消息体签名
-     * @param echostr
+     * @param echostr 初次接入配置所需
+     * @param postData 消息体
      * @return
      */
     @ResponseBody
