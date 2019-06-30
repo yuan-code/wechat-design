@@ -36,7 +36,7 @@ public class NotifyFactory implements ApplicationContextAware {
      * @param notifyType
      * @return
      */
-    public WeChatNotify findWeChatNotify(NotifyEnum notifyType) {
+    public WeChatNotify loadWeChatNotify(NotifyEnum notifyType) {
         WeChatNotify notify = notifyMap.get(notifyType);
         //对于没配置的策略 返回一个默认的空实现即可
         return Optional.ofNullable(notify).orElse((xmlMap) -> this.defaultNotify(xmlMap));
@@ -141,7 +141,7 @@ public class NotifyFactory implements ApplicationContextAware {
             String replyMsg = XMLParse.mapToXml(resultMap);
             WXBizMsgCrypt pc = wxConfig.getWxBizMsgCrypt();
             //微信使用时间戳加随机数的方式来防止攻击(如果两次请求的时间戳+随机数都相同)
-            String result = pc.encryptMsg(replyMsg, "1561786796206", Double.toString(Math.random()));
+            String result = pc.encryptMsg(replyMsg, "1561786796206", UUID.randomUUID().toString());
             return result;
         }
     }
@@ -199,7 +199,7 @@ public class NotifyFactory implements ApplicationContextAware {
             log.info("被动回复公众号用户消息=====>>>>> {}", replyMsg);
             WXBizMsgCrypt pc = wxConfig.getWxBizMsgCrypt();
             //微信使用时间戳加随机数的方式来防止攻击(如果两次请求的时间戳+随机数都相同)
-            String result = pc.encryptMsg(replyMsg, timeStamp, Double.toString(Math.random()));
+            String result = pc.encryptMsg(replyMsg, timeStamp, UUID.randomUUID().toString());
             return result;
         }
     }
