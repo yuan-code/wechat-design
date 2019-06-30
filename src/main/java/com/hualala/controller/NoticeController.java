@@ -6,14 +6,11 @@ import com.hualala.componet.WeChatNotify;
 import com.hualala.config.WXConfig;
 import com.hualala.util.XMLParse;
 import com.hualala.weixin.mp.WXBizMsgCrypt;
-import io.micrometer.core.instrument.util.IOUtils;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 
