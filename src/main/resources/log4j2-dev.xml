@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，
+     你会看到log4j2内部各种详细输出。可以设置成OFF(关闭) 或 Error(只输出错误信息)。
+     30s 刷新此配置
+-->
+<configuration status="WARN" monitorInterval="30">
+    <!-- 日志文件目录、压缩文件目录、日志格式配置 -->
+    <properties>
+        <Property name="LOG_PATTERN">%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %logger{1.}:%L %msg%n}{%throwable{short.fileName}}{FATAL=white,ERROR=red,WARN=blue, INFO=black, DEBUG=green, TRACE=blue}</Property>
+    </properties>
+
+    <Appenders>
+        <!-- 输出控制台日志的配置 -->
+        <Console name="console" target="SYSTEM_OUT">
+            <!-- 输出日志的格式 -->
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+    </Appenders>
+
+    <!-- Mixed sync/async -->
+    <Loggers>
+        <!--additivity="false" 代表不继承Root内的属性 子Logger只会在自己的appender里输出-->
+        <logger name="com.hualala.mapper" level="debug" additivity="false">
+            <AppenderRef ref="console"/>
+        </logger>
+        <AsyncRoot level="info">
+            <AppenderRef ref="console"/>
+        </AsyncRoot>
+    </Loggers>
+
+</configuration>

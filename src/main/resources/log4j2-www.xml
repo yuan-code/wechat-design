@@ -8,29 +8,25 @@
     <properties>
         <Property name="fileName">logs/</Property>
         <Property name="fileGz">logs/7z</Property>
-        <Property name="LOG_PATTERN">%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %logger{1.}:%L - %msg%n}{%throwable{short.fileName}}{FATAL=white,ERROR=red,WARN=blue, INFO=black, DEBUG=green, TRACE=blue}</Property>
+        <Property name="LOG_PATTERN">%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{1.}:%L - %msg%n}{%throwable{short.fileName}}{FATAL=white,ERROR=red,WARN=blue, INFO=black, DEBUG=green, TRACE=blue}</Property>
     </properties>
 
     <Appenders>
-        <!-- 输出控制台日志的配置 -->
-        <Console name="console" target="SYSTEM_OUT">
-            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-            <!--<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>-->
-            <!-- 输出日志的格式 -->
-            <PatternLayout pattern="${LOG_PATTERN}"/>
-        </Console>
 
         <!-- 打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档 -->
         <RollingRandomAccessFile name="infoFile" fileName="${fileName}/application_info.log" immediateFlush="false"
-                                 filePattern="${fileGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.application_info.gz">
+                                 filePattern="${fileGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.application_info.zip">
+            <!--指定输出日志的内容格式-->
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
+                <!--基于文件大小的滚动策略-->
                 <SizeBasedTriggeringPolicy size="20 MB"/>
             </Policies>
             <Filters>
-                <!-- 只记录info和error级别信息 -->
-                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <!-- 记录info和error debug级别信息 -->
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
                 <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
             <!-- 指定每天的最大压缩包个数，默认7个，超过了会覆盖之前的 -->
             <DefaultRolloverStrategy max="50"/>
@@ -38,29 +34,27 @@
 
         <!-- 存储所有error信息 -->
         <RollingRandomAccessFile name="errorFile" fileName="${fileName}/application_error.log" immediateFlush="false"
-                                 filePattern="${fileGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.application_error.gz">
+                                 filePattern="${fileGz}/$${date:yyyy-MM}/%d{yyyy-MM-dd}-%i.application_error.zip">
             <PatternLayout pattern="${LOG_PATTERN}"/>
             <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <!--基于时间的滚动策略 modulate="true"用来调整时间 单位小时-->
+                <TimeBasedTriggeringPolicy modulate="true" interval="12"/>
             </Policies>
             <Filters>
                 <!-- 只记录error级别信息 -->
                 <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
-            <!-- 指定每天的最大压缩包个数，默认7个，超过了会覆盖之前的 -->
-            <DefaultRolloverStrategy max="50"/>
         </RollingRandomAccessFile>
 
     </Appenders>
 
     <!-- Mixed sync/async -->
     <Loggers>
-        <AsyncLogger name="com.hualala.mapper" level="DEBUG" additivity="false">
-            <AppenderRef ref="console"/>
+        <!--additivity="false" 代表不继承Root内的属性 子Logger只会在自己的appender里输出-->
+        <logger name="com.hualala.mapper" level="debug" additivity="false">
             <AppenderRef ref="infoFile"/>
-        </AsyncLogger>
-        <AsyncRoot level="INFO" includeLocation="true">
-            <AppenderRef ref="console"/>
+        </logger>
+        <AsyncRoot level="info">
             <AppenderRef ref="infoFile"/>
             <AppenderRef ref="errorFile"/>
         </AsyncRoot>
