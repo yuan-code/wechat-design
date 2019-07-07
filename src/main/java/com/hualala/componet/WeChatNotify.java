@@ -17,6 +17,6 @@ public interface WeChatNotify {
      * @return
      * @throws Exception
      */
-    String weChatNotify(Map<String, String> xmlMap) throws Exception;
+    String wechatNotify(Map<String, String> xmlMap) throws Exception;
 
 }

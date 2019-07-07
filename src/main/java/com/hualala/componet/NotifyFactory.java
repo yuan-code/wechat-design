@@ -94,7 +94,7 @@ public class NotifyFactory implements ApplicationContextAware {
 
     @Log4j2
     @NotifyType(NotifyEnum.SUBSCRIBE)
-    public static class UnSubscribe implements WeChatNotify {
+    public static class Subscribe implements WeChatNotify {
 
         @Autowired
         private WXService wxService;
@@ -106,7 +106,7 @@ public class NotifyFactory implements ApplicationContextAware {
         private WXConfig wxConfig;
 
         @Override
-        public String weChatNotify(Map<String, String> xmlMap) throws Exception {
+        public String wechatNotify(Map<String, String> xmlMap) throws Exception {
             String openID = xmlMap.get("FromUserName");
             String appID = xmlMap.get("ToUserName");
             User user = wxService.userBaseInfo(openID);
@@ -125,7 +125,7 @@ public class NotifyFactory implements ApplicationContextAware {
      */
     @Log4j2
     @NotifyType(NotifyEnum.UNSUBSCRIBE)
-    public static class Subscribe implements WeChatNotify {
+    public static class UnSubscribe implements WeChatNotify {
 
         @Autowired
         private UserService userService;
@@ -134,7 +134,7 @@ public class NotifyFactory implements ApplicationContextAware {
         private WXConfig wxConfig;
 
         @Override
-        public String weChatNotify(Map<String, String> xmlMap) throws Exception {
+        public String wechatNotify(Map<String, String> xmlMap) throws Exception {
             String openID = xmlMap.get("FromUserName");
             User user = new User();
             user.setOpenid(openID);
@@ -161,7 +161,7 @@ public class NotifyFactory implements ApplicationContextAware {
         private final String mediaID = "ELYMY-79MurPtaqnYq7igIOKtsiVlENvokg06r0vR5E";
 
         @Override
-        public String weChatNotify(Map<String, String> xmlMap) throws Exception {
+        public String wechatNotify(Map<String, String> xmlMap) throws Exception {
             String openID = xmlMap.get("FromUserName");
             String appID = xmlMap.get("ToUserName");
             WXReply wxReply = new WXReply(appID, openID);
@@ -183,7 +183,7 @@ public class NotifyFactory implements ApplicationContextAware {
         private String aiKey;
 
         @Override
-        public String weChatNotify(Map<String, String> xmlMap) throws Exception {
+        public String wechatNotify(Map<String, String> xmlMap) throws Exception {
 
             String openID = xmlMap.get("FromUserName");
             String appID = xmlMap.get("ToUserName");

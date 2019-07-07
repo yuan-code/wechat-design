@@ -6,8 +6,8 @@ import com.hualala.componet.WeChatNotify;
 import com.hualala.config.WXConfig;
 import com.hualala.util.XMLParse;
 import com.hualala.weixin.mp.WXBizMsgCrypt;
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +59,7 @@ public class NoticeController {
         NotifyEnum notifyEnum = NotifyEnum.resolveEvent(decryptMap.get("MsgType"), decryptMap.get("Event"));
         WeChatNotify infoType = notifyFactory.loadWeChatNotify(notifyEnum);
         //执行具体的策略 得到给微信的响应信息 微信有重试机制  需要考虑幂等性
-        String result = infoType.weChatNotify(decryptMap);
+        String result = infoType.wechatNotify(decryptMap);
         log.info("Msg响应的POST结果: 授权策略对象: [{}] 解密后信息: [{}] 返回给微信的信息: [{}]", infoType.getClass().getSimpleName(), decryptMap, result);
         return result;
     }
