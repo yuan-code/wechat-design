@@ -94,6 +94,10 @@ public class HttpClientUtil {
         return this.post(url, content, "application/json; charset=utf-8");
     }
 
+    public HttpClientUtil.HttpResult post(String url) {
+        return this.post(url, "", "application/json; charset=utf-8");
+    }
+
     public HttpClientUtil.HttpResult postWithUrlDecode(String url, String conent) {
         return this.post(url, conent, "application/x-www-form-urlencoded");
     }

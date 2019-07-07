@@ -25,7 +25,8 @@ spring:
       min-idle: 5
       max-idle: 10
 
-mybatis:
+
+mybatis-plus:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
 
@@ -38,3 +39,6 @@ wechat:
   secret: 9a5eb79bb7f4f89a6d15eef2a2601c09
   token: WX_DESIGN_TOKEN
   encodingAESKey: PJKtnHu74965O2WOfdxQgI3FOXrxrXd9YssgsaumzIW
+
+ai:
+  apiKey: 7d14fa4bc295404a9fced576c37453e5

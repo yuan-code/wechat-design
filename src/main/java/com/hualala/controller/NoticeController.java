@@ -51,7 +51,7 @@ public class NoticeController {
         if(StringUtils.isEmpty(postData)) {
             return echostr;
         }
-        WXBizMsgCrypt pc = wxConfig.getWxBizMsgCrypt();
+        WXBizMsgCrypt pc = WXConfig.wxBizMsgCrypt();
         //签名校验 数据解密
         String decryptXml = pc.decryptMsg(msgSignature, timestamp, nonce, postData);
         Map<String, String> decryptMap = XMLParse.xmlToMap(decryptXml);

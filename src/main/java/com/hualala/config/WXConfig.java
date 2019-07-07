@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+
 /**
  * @author YuanChong
  * @create 2019-06-26 22:20
@@ -24,11 +25,14 @@ public class WXConfig implements InitializingBean {
     /**
      * 微信加解密工具
      */
-    private WXBizMsgCrypt wxBizMsgCrypt;
-
+    private static WXBizMsgCrypt wxBizMsgCrypt;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        wxBizMsgCrypt = new WXBizMsgCrypt(this.token, this.encodingAESKey, this.appID);
+        wxBizMsgCrypt = new WXBizMsgCrypt(token, encodingAESKey,appID);
+    }
+
+    public static WXBizMsgCrypt wxBizMsgCrypt() {
+        return wxBizMsgCrypt;
     }
 }

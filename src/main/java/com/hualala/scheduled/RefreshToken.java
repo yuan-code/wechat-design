@@ -30,6 +30,6 @@ public class RefreshToken implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        scheduledPool.scheduleAtFixedRate(() -> wxService.refreshToken(),0, 6000, TimeUnit.SECONDS);
+        scheduledPool.scheduleAtFixedRate(() -> wxService.refreshToken(),0, 5000, TimeUnit.SECONDS);
     }
 }
