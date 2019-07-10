@@ -21,18 +21,16 @@ public class WXConfig implements InitializingBean {
     private String secret;
     private String token;
     private String encodingAESKey;
+    private Integer expire;
 
     /**
      * 微信加解密工具
      */
-    private static WXBizMsgCrypt wxBizMsgCrypt;
+    public static WXBizMsgCrypt WX_BIZ_MSG_CRYPT;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        wxBizMsgCrypt = new WXBizMsgCrypt(token, encodingAESKey,appID);
+        WX_BIZ_MSG_CRYPT = new WXBizMsgCrypt(token, encodingAESKey,appID);
     }
 
-    public static WXBizMsgCrypt wxBizMsgCrypt() {
-        return wxBizMsgCrypt;
-    }
 }

@@ -17,6 +17,7 @@ public class ResultUtils {
         result.put("code", ResultCode.SUCCESS.getCode());
         result.put("msg",ResultCode.SUCCESS.getMsg());
         result.put("data",object);
+        result.put("success",true);
         return result;
     }
 
@@ -25,6 +26,7 @@ public class ResultUtils {
         result.put("code",ResultCode.SUCCESS.getCode());
         result.put("msg",ResultCode.SUCCESS.getMsg());
         result.put("data",null);
+        result.put("success",true);
         return result;
     }
 
@@ -33,6 +35,7 @@ public class ResultUtils {
         JSONObject result = new JSONObject();
         result.put("code",ResultCode.SYSTEM_ERROR.getCode());
         result.put("msg",msg);
+        result.put("success",false);
         return result;
     }
 
@@ -40,6 +43,7 @@ public class ResultUtils {
         JSONObject result = new JSONObject();
         result.put("code",be.getCode());
         result.put("msg",be.getMsg());
+        result.put("success",false);
         return result;
     }
 
@@ -47,6 +51,7 @@ public class ResultUtils {
         JSONObject result = new JSONObject();
         result.put("code",resultCode.getCode());
         result.put("msg",resultCode.getMsg());
+        result.put("success",false);
         return result;
     }
 

@@ -1,4 +1,4 @@
-package com.hualala.config;
+package com.hualala.componet;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hualala.util.ResultUtils;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Log4j2
 @ControllerAdvice
-public class WXExceptionHandler {
+public class WebExceptionHandler {
 
     /**
      * 全局异常捕捉处理

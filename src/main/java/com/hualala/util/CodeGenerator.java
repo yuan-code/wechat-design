@@ -103,7 +103,7 @@ public class CodeGenerator {
     }
 
     public static void main(String[] args) {
-        String[] tables = new String[] {"user"};//表名数组
+        String[] tables = new String[] {"article"};//表名数组
 //        String[] tablePrefixs = new String[] {"APP_"};
         executeCode(PACKAGE_NAME,tables);
 

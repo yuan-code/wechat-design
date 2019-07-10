@@ -76,6 +76,16 @@ public class User implements Serializable {
     private String headimgurl;
 
     /**
+     * 用户二维码
+     */
+    private String qrcode;
+
+    /**
+     * 用户签名
+     */
+    private String slogan;
+
+    /**
      * 用户关注的渠道来源，ADD_SCENE_SEARCH 公众号搜索，ADD_SCENE_ACCOUNT_MIGRATION 公众号迁移
      */
     private String subscribeScene;

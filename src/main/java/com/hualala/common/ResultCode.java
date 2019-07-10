@@ -5,8 +5,9 @@ public enum ResultCode {
     SUCCESS("000","执行成功"),
     SYSTEM_ERROR("001","系统异常,请稍后重试"),
     PARAMS_LOST("002","缺少参数,请检查"),
-    BUSINESS_ERROR("003","业务异常");
-
+    BUSINESS_ERROR("003","业务异常"),
+    WECHAT_ERROR("004","微信异常"),
+    NO_AUTH_ERROR("005","页面未授权");
 
 
     private String code;

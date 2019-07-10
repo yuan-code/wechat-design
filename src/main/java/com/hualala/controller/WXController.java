@@ -21,11 +21,9 @@ import java.util.Map;
  */
 @Log4j2
 @RestController
-@RequestMapping("/notice")
-public class NoticeController {
+@RequestMapping("/wx")
+public class WXController {
 
-    @Autowired
-    private WXConfig wxConfig;
 
     @Autowired
     private NotifyFactory notifyFactory;
@@ -51,7 +49,7 @@ public class NoticeController {
         if(StringUtils.isEmpty(postData)) {
             return echostr;
         }
-        WXBizMsgCrypt pc = WXConfig.wxBizMsgCrypt();
+        WXBizMsgCrypt pc = WXConfig.WX_BIZ_MSG_CRYPT;
         //签名校验 数据解密
         String decryptXml = pc.decryptMsg(msgSignature, timestamp, nonce, postData);
         Map<String, String> decryptMap = XMLParse.xmlToMap(decryptXml);

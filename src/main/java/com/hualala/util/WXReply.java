@@ -104,7 +104,7 @@ public class WXReply {
         String timeStamp = Long.toString(System.currentTimeMillis());
         params.put("CreateTime", timeStamp);
         String replyMsg = XMLParse.mapToXml(params);
-        WXBizMsgCrypt pc = WXConfig.wxBizMsgCrypt();
+        WXBizMsgCrypt pc = WXConfig.WX_BIZ_MSG_CRYPT;
         //微信使用时间戳加随机数的方式来防止攻击(如果两次请求的时间戳+随机数都相同)
         String result = pc.encryptMsg(replyMsg, timeStamp, UUID.randomUUID().toString());
         return result;

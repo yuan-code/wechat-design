@@ -1,6 +1,5 @@
-package com.hualala.componet;
+package com.hualala.common;
 
-import com.hualala.common.NotifyEnum;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;

@@ -3,6 +3,7 @@ package com.hualala.service;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.mapper.UserMapper;
 import com.hualala.model.User;
 import com.hualala.util.TimeUtil;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @since 2019-07-06
  */
 @Service
-public class UserService {
+public class UserService extends ServiceImpl<UserMapper, User> {
 
     @Autowired
     private UserMapper userMapper;
@@ -42,7 +43,7 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateUser(User user) {
+    public void updateUserBaseInfo(User user) {
         Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", user.getAppid()).eq("openid", user.getOpenid());
         userMapper.update(user,wrapper);
     }

@@ -13,6 +13,8 @@
         <result column="province" property="province" />
         <result column="city" property="city" />
         <result column="language" property="language" />
+        <result column="qrcode" property="qrcode" />
+        <result column="slogan" property="slogan" />
         <result column="headimgurl" property="headimgurl" />
         <result column="subscribe_scene" property="subscribeScene" />
         <result column="subscribe_status" property="subscribeStatus" />

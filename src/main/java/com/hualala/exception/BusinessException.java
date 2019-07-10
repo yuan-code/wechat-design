@@ -1,5 +1,6 @@
 package com.hualala.exception;
 
+import com.hualala.common.ResultCode;
 import lombok.Data;
 
 @Data
@@ -14,6 +15,12 @@ public class BusinessException extends RuntimeException {
         this.code = code;
         this.msg = msg;
     }
+
+    public BusinessException(ResultCode resultCode) {
+        this.code = resultCode.getCode();
+        this.msg = resultCode.getMsg();
+    }
+
 
 
 }

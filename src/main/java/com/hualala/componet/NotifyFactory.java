@@ -3,6 +3,7 @@ package com.hualala.componet;
 import com.alibaba.fastjson.JSON;
 import com.hualala.common.AIConstant;
 import com.hualala.common.NotifyEnum;
+import com.hualala.common.NotifyType;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
 import com.hualala.service.UserService;
@@ -142,7 +143,7 @@ public class NotifyFactory implements ApplicationContextAware {
             user.setUnsubscribeTime(TimeUtil.currentDT());
             user.setSubscribeStatus(2);
 
-            userService.updateUser(user);
+            userService.updateUserBaseInfo(user);
 
             return "";
         }
