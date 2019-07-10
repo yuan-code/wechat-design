@@ -3,17 +3,14 @@ package com.hualala.controller;
 
 import com.hualala.common.ResultCode;
 import com.hualala.common.UserResolver;
-import com.hualala.config.WXConfig;
 import com.hualala.exception.BusinessException;
 import com.hualala.model.Article;
 import com.hualala.model.User;
 import com.hualala.service.ArticleService;
 import com.hualala.service.UserService;
-import com.hualala.service.WXService;
 import com.hualala.util.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
