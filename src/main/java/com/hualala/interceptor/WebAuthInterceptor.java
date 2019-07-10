@@ -2,7 +2,6 @@ package com.hualala.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hualala.common.WXConstant;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
 import com.hualala.service.WXService;
@@ -22,8 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import static com.hualala.common.WXConstant.COOKIE_ACCESS_TOKEN_NAME;
-import static com.hualala.common.WXConstant.WEB_ACCESS_TOKEN_KEY;
+import static com.hualala.common.WXConstant.*;
 
 
 /**
@@ -56,7 +54,7 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         if (StringUtils.isEmpty(code)) {
             StringBuffer requestURL = request.getRequestURL();
             String encoderUrl = URLEncoder.encode(requestURL.toString(), StandardCharsets.UTF_8.name());
-            String redirectUrl = String.format(WXConstant.JS_PRE_AUTH_URL, wxConfig.getAppID(), encoderUrl, "snsapi_userinfo", request.getRequestURI());
+            String redirectUrl = String.format(JS_PRE_AUTH_URL, wxConfig.getAppID(), encoderUrl, "snsapi_userinfo", request.getRequestURI());
             response.sendRedirect(redirectUrl);
             return false;
         }
