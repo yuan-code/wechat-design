@@ -52,29 +52,29 @@ public class WebAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //授权码
-//        String code = request.getParameter("code");
-//        if (StringUtils.isEmpty(code)) {
-//            StringBuffer requestURL = request.getRequestURL();
-//            String encoderUrl = URLEncoder.encode(requestURL.toString(), StandardCharsets.UTF_8.name());
-//            String redirectUrl = String.format(WXConstant.JS_PRE_AUTH_URL, wxConfig.getAppID(), encoderUrl, "snsapi_userinfo", request.getRequestURI());
-//            response.sendRedirect(redirectUrl);
-//            return false;
-//        }
-//        JSONObject tokenMap = wxService.webAccessToken(code);
-//        String accessToken = tokenMap.getString("access_token");
-//        String openid = tokenMap.getString("openid");
-//        Integer expiresIn = tokenMap.getInteger("expires_in");
-//        String tokenKey = String.format(WEB_ACCESS_TOKEN_KEY, wxConfig.getAppID(),openid);
-//        //先保存起来这个web token 暂时没什么用
-//        CacheUtils.set(tokenKey,tokenMap.toJSONString(),expiresIn);
-//        User user = wxService.webUserInfo(accessToken, openid);
-//        UserHolder.setUser(user);
-//        //返回给前端cookie
-//        //cookie内的token30分钟过期
-//        String cookieToken = UUID.randomUUID().toString();
-//        CacheUtils.set(cookieToken, JSON.toJSONString(user),30 * 60);
-//        Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME,cookieToken);
-//        response.addCookie(cookie);
+        String code = request.getParameter("code");
+        if (StringUtils.isEmpty(code)) {
+            StringBuffer requestURL = request.getRequestURL();
+            String encoderUrl = URLEncoder.encode(requestURL.toString(), StandardCharsets.UTF_8.name());
+            String redirectUrl = String.format(WXConstant.JS_PRE_AUTH_URL, wxConfig.getAppID(), encoderUrl, "snsapi_userinfo", request.getRequestURI());
+            response.sendRedirect(redirectUrl);
+            return false;
+        }
+        JSONObject tokenMap = wxService.webAccessToken(code);
+        String accessToken = tokenMap.getString("access_token");
+        String openid = tokenMap.getString("openid");
+        Integer expiresIn = tokenMap.getInteger("expires_in");
+        String tokenKey = String.format(WEB_ACCESS_TOKEN_KEY, wxConfig.getAppID(),openid);
+        //先保存起来这个web token 暂时没什么用
+        CacheUtils.set(tokenKey,tokenMap.toJSONString(),expiresIn);
+        User user = wxService.webUserInfo(accessToken, openid);
+        UserHolder.setUser(user);
+        //返回给前端cookie
+        //cookie内的token30分钟过期
+        String cookieToken = UUID.randomUUID().toString();
+        CacheUtils.set(cookieToken, JSON.toJSONString(user),30 * 60);
+        Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME,cookieToken);
+        response.addCookie(cookie);
         return true;
     }
 
