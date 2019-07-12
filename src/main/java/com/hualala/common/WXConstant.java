@@ -13,6 +13,8 @@ public class WXConstant {
      */
     public static final String COOKIE_ACCESS_TOKEN_NAME = "accessToken";
 
+    public static final Long COOKIE_EXPIRE_SECONDS = 60 * 60L;
+
     /**
      * wx access_token redis key
      */

@@ -2,14 +2,11 @@ package com.hualala.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.hualala.common.ResultCode;
-import com.hualala.config.WXConfig;
 import com.hualala.model.User;
-import com.hualala.service.WXService;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.ResultUtils;
 import com.hualala.util.UserHolder;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -22,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.hualala.common.WXConstant.COOKIE_ACCESS_TOKEN_NAME;
+import static com.hualala.common.WXConstant.COOKIE_EXPIRE_SECONDS;
 
 
 /**
@@ -32,11 +30,6 @@ import static com.hualala.common.WXConstant.COOKIE_ACCESS_TOKEN_NAME;
 @Component
 public class PassportInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private WXService wxService;
-
-    @Autowired
-    private WXConfig wxConfig;
 
     /**
      * 微信JS授权统一处理
@@ -50,14 +43,15 @@ public class PassportInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if(request.getCookies() != null) {
+        if (request.getCookies() != null) {
             Optional<String> token = Arrays.stream(request.getCookies()).filter(c -> Objects.equals(c.getName(), COOKIE_ACCESS_TOKEN_NAME)).map(Cookie::getValue).findFirst();
 
-            if(token.isPresent()) {
+            if (token.isPresent()) {
                 String jsonUser = CacheUtils.get(token.get());
-                if(StringUtils.isNotEmpty(jsonUser)) {
+                if (StringUtils.isNotEmpty(jsonUser)) {
                     User user = JSON.parseObject(jsonUser, User.class);
                     UserHolder.setUser(user);
+                    CacheUtils.expire(token.get(), COOKIE_EXPIRE_SECONDS);
                     return true;
                 }
                 //TODO 如果走到这里 可能是token过期了 没想好要怎么做
@@ -77,6 +71,7 @@ public class PassportInterceptor implements HandlerInterceptor {
 
     /**
      * 清除user 防内存泄露
+     *
      * @param request
      * @param response
      * @param handler
@@ -84,7 +79,7 @@ public class PassportInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         UserHolder.clear();
     }
 }

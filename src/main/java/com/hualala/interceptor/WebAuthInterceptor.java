@@ -7,6 +7,7 @@ import com.hualala.model.User;
 import com.hualala.service.WXService;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.UserHolder;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 import static com.hualala.common.WXConstant.*;
 
@@ -92,9 +92,14 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         modelMap.addAttribute("user", user);
         wxService.jsApiSignature(modelAndView.getModelMap(), url);
         //返回给前端cookie
-        //cookie内的token30分钟过期
-        String cookieToken = UUID.randomUUID().toString();
-        CacheUtils.set(cookieToken, JSON.toJSONString(user), 30 * 60);
+        //cookie内的token一小时过期
+        String jsonUser = JSON.toJSONString(user);
+        String cookieToken = DigestUtils.md5Hex(jsonUser);
+        if(CacheUtils.exists(cookieToken)) {
+            CacheUtils.expire(cookieToken,COOKIE_EXPIRE_SECONDS);
+        }else {
+            CacheUtils.set(cookieToken, JSON.toJSONString(user), COOKIE_EXPIRE_SECONDS);
+        }
         Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME, cookieToken);
         cookie.setPath("/");
         response.addCookie(cookie);

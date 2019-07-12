@@ -72,6 +72,7 @@ public class CodeGenerator {
         };
         List<FileOutConfig> focList = new ArrayList<>();
         focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+            @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
                 if (StringUtils.isEmpty(pc.getModuleName())) {
@@ -103,8 +104,8 @@ public class CodeGenerator {
     }
 
     public static void main(String[] args) {
-        String[] tables = new String[] {"article"};//表名数组
-//        String[] tablePrefixs = new String[] {"APP_"};
+        //表名数组
+        String[] tables = new String[] {"article"};
         executeCode(PACKAGE_NAME,tables);
 
     }

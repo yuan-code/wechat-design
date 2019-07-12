@@ -16,14 +16,14 @@ import java.net.URL;
  * @desc
  */
 public class HttpClientUtil {
-    private static final HttpClientUtil httpClient = new HttpClientUtil();
+    private static final HttpClientUtil HTTP_CLIENT = new HttpClientUtil();
     private volatile Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private HttpClientUtil() {
     }
 
     public static HttpClientUtil getInstance() {
-        return httpClient;
+        return HTTP_CLIENT;
     }
 
     public HttpClientUtil.HttpResult post(String url, String content, String contentType) {

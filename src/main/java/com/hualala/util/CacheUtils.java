@@ -46,6 +46,26 @@ public class CacheUtils {
     }
 
     /**
+     * 判断key是否存在
+     *
+     * @param key   键
+     * @return true成功 false 失败
+     */
+    public static boolean exists(String key) {
+        return stringRedisTemplate.hasKey(key);
+    }
+
+    /**
+     * 设置过期时间
+     *
+     * @param key
+     * @param time
+     */
+    public static void expire(String key, long time) {
+        stringRedisTemplate.expire(key, time, TimeUnit.SECONDS);
+    }
+
+    /**
      * 普通缓存获取
      *
      * @param key 键
