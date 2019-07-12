@@ -177,11 +177,11 @@
 
         <div class="insert-box">
             <div class="weui-flex__item">
-                <a href="/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                <a href="/do/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                         class="iconfont icon-edit"></span>插入文本</a>
             </div>
             <div class="weui-flex__item">
-                <a href="/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                <a href="/do/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                         class="iconfont icon-tupian"></span>插入图片</a>
             </div>
         </div>
@@ -191,11 +191,11 @@
                 <div class="select-box__bd">
                 </div>
                 <div class="select-box__ft">
-                    <a href="/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="/do/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-chuyidong1-copy"></span>删除</a>
-                    <a href="/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="/do/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-edit"></span>插入文字</a>
-                    <a href="/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="/do/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-tupian"></span>插入图片</a>
                 </div>
             </div>

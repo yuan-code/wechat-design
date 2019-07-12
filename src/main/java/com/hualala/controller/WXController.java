@@ -40,8 +40,8 @@ public class WXController {
      */
     @ResponseBody
     @RequestMapping(value = "/event")
-    public Object official(@RequestParam("timestamp") String timestamp,
-                           @RequestParam("nonce") String nonce,
+    public Object official(@RequestParam(value = "timestamp",required = false) String timestamp,
+                           @RequestParam(value = "nonce",required = false) String nonce,
                            @RequestParam(value = "msg_signature",required = false) String msgSignature,
                            @RequestParam(value = "echostr", required = false) String echostr,
                            @RequestBody(required = false) String postData) throws Exception {

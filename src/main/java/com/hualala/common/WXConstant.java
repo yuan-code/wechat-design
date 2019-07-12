@@ -35,6 +35,16 @@ public class WXConstant {
     public static final String JSAPI_SIGNATURE = "jsapi_ticket=%s&noncestr=%s&timestamp=%s&url=%s";
 
     /**
+     * 点击事件 热点推送
+     */
+    public static final String HOT_ARTICLE_CLICK_TYPE = "HotArticle";
+
+    /**
+     * 点击事件 联系我们
+     */
+    public static final String HOT_ARTICLE_CONTACT_US = "ContactUs";
+
+    /**
      * 获取微信公众号的access_token
      */
     public static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";

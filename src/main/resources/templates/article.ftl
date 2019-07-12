@@ -178,7 +178,7 @@
 <body id="activity-detail" class="zh_CN mm_appmsg  appmsg_skin_default appmsg_style_default">
     <#--只有二次编辑的文章 并且是作者 或者原创文章 才显示这个-->
     <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-        <a href="/customer?source=top" class="toptip">
+        <a href="/do/customer?source=top" class="toptip">
             共有<span>0人</span>阅读了该文章，点击查看
         </a>
     <#--</#if>-->
@@ -195,16 +195,18 @@
                         </h2>
                         <div class="rich_media_author">
                             <div class="rich_media_author__hd">
-                                <img src="${author.headimgurl}">
+                                <img src="${user.headimgurl}">
                             </div>
                             <div class="rich_media_author_body">
-                                <h2>${author.nickname}</h2>
+                                <h2>${user.nickname}</h2>
                                 <p>
                                     <#--如果是原创文章 显示设置 如果是二次编辑 设置了显示内容 没设置显示编辑 如果是分享 显示内容-->
                                     <#--<#if user?? && (author.slogan?? || author.openID != openID)>-->
-                                        ${author.slogan}
+                                        <#if user.slogan??>
+                                            ${user.slogan}
+                                        </#if>
                                     <#--<#else>-->
-                                        <a href="/slogan?path=/article/auth/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
+                                        <a href="/do/slogan?path=/article/auth/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
                                     <#--</#if>-->
                                 </p>
                             </div>
@@ -231,7 +233,7 @@
         <span style="color:#1296db">0
             <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
             <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-                <a href="/customer?source=bottom" class="right-customer-btn">0人关注</a>
+                <a href="/do/customer?source=bottom" class="right-customer-btn">0人关注</a>
             <#--</#if>-->
         </span>
     </p>
@@ -251,7 +253,7 @@
     </div>
     <div class="mask mask_gr" style="display:none">
         <div class="mask-dialog" style="padding-top:20px;">
-            <img src="http://yx.herbedu.com/res/i/972b2f59-a79a-4fb3-abea-cc53b5462e99-JPEG" style="width:80%;height:80%">
+            <img src="" style="width:80%;height:80%">
             <p style="color:red;margin-bottom:20px;">长按二维码加我微信</p>
         </div>
     </div>

@@ -12,15 +12,9 @@
         <result column="thumbnail" property="thumbnail" />
         <result column="head" property="head" />
         <result column="userid" property="userid" />
-        <result column="sort_number" property="sortNumber" />
         <result column="status" property="status" />
-        <result column="comment_status" property="commentStatus" />
-        <result column="comment_count" property="commentCount" />
-        <result column="comment_time" property="commentTime" />
-        <result column="view_count" property="viewCount" />
-        <result column="created" property="created" />
-        <result column="modified" property="modified" />
-        <result column="flag" property="flag" />
+        <result column="create_time" property="createTime" />
+        <result column="modify_time" property="modifyTime" />
         <result column="remarks" property="remarks" />
         <result column="source" property="source" />
     </resultMap>

@@ -33,7 +33,7 @@ public class CodeGenerator {
         gc.setFileOverride(true);
         // 生成文件的输出目录
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/src/main/java");
+        gc.setOutputDir(projectPath + "/src/main/test");
         //设置bean命名规范
         gc.setEntityName("%s");
         // 开发人员

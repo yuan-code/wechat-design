@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -106,7 +105,7 @@ public class ArticleController {
      */
     @ResponseBody
     @RequestMapping("/passport/save")
-    public Object articleEdit(@RequestBody Article article, @UserResolver User user) {
+    public Object articleEdit(Article article, @UserResolver User user) {
         if(StringUtils.isEmpty(article.getContent())) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"文章内容必传");
         }

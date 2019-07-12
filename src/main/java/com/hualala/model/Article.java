@@ -1,6 +1,5 @@
 package com.hualala.model;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -15,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author YuanChong
- * @since 2019-07-08
+ * @since 2019-07-12
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -29,12 +28,12 @@ public class Article implements Serializable {
      * 主键ID
      */
     @TableId(value = "articleid", type = IdType.AUTO)
-    private Integer articleid;
+    private Long articleid;
 
     /**
      * 子版本的文章id
      */
-    private Integer pid;
+    private Long pid;
 
     /**
      * 标题
@@ -64,52 +63,22 @@ public class Article implements Serializable {
     /**
      * 用户ID
      */
-    private Integer userid;
-
-    /**
-     * 排序编号
-     */
-    private Integer sortNumber;
+    private Long userid;
 
     /**
      * 状态
      */
-    private String status;
-
-    /**
-     * 评论状态，默认允许评论
-     */
-    private Boolean commentStatus;
-
-    /**
-     * 评论总数
-     */
-    private Integer commentCount;
-
-    /**
-     * 最后评论时间
-     */
-    private Long commentTime;
-
-    /**
-     * 访问量
-     */
-    private Integer viewCount;
+    private Integer status;
 
     /**
      * 创建日期
      */
-    private Long created;
+    private Long createTime;
 
     /**
      * 最后更新日期
      */
-    private Long modified;
-
-    /**
-     * 标识，通常用于对某几篇文章进行标识，从而实现单独查询
-     */
-    private String flag;
+    private Long modifyTime;
 
     /**
      * 备注信息
@@ -117,8 +86,9 @@ public class Article implements Serializable {
     private String remarks;
 
     /**
-     *  文章来源
+     * 文章来源
      */
     private String source;
+
 
 }

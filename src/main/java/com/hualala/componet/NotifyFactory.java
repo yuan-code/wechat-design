@@ -5,7 +5,9 @@ import com.hualala.common.AIConstant;
 import com.hualala.common.NotifyEnum;
 import com.hualala.common.NotifyType;
 import com.hualala.config.WXConfig;
+import com.hualala.model.Article;
 import com.hualala.model.User;
+import com.hualala.service.ArticleService;
 import com.hualala.service.UserService;
 import com.hualala.service.WXService;
 import com.hualala.util.HttpClientUtil;
@@ -27,6 +29,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.hualala.common.WXConstant.HOT_ARTICLE_CLICK_TYPE;
+import static com.hualala.common.WXConstant.HOT_ARTICLE_CONTACT_US;
 
 /**
  * @author YuanChong
@@ -161,12 +166,24 @@ public class NotifyFactory implements ApplicationContextAware {
 
         private final String mediaID = "ELYMY-79MurPtaqnYq7igIOKtsiVlENvokg06r0vR5E";
 
+        @Autowired
+        private ArticleService articleService;
+
         @Override
         public String wechatNotify(Map<String, String> xmlMap) throws Exception {
             String openID = xmlMap.get("FromUserName");
             String appID = xmlMap.get("ToUserName");
             WXReply wxReply = new WXReply(appID, openID);
-            return wxReply.replyImage(mediaID);
+            switch (xmlMap.get("EventKey")) {
+                case HOT_ARTICLE_CLICK_TYPE:
+                    Article article = articleService.list().get(0);
+                    String articleUrl = "http://wechat.ictry.com/article/auth/detail/" + article.getArticleid();
+                    return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),articleUrl);
+                case HOT_ARTICLE_CONTACT_US:
+                    return wxReply.replyImage(mediaID);
+                default:
+                    return "";
+            }
         }
     }
 

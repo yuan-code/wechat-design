@@ -1,11 +1,15 @@
 package com.hualala.config;
 
+import com.hualala.componet.UserArgumentResolver;
 import com.hualala.interceptor.PassportInterceptor;
 import com.hualala.interceptor.WebAuthInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 /**
  * @author YuanChong
@@ -21,6 +25,9 @@ public class WebConfg implements WebMvcConfigurer {
     @Autowired
     private WebAuthInterceptor webAuthInterceptor;
 
+    @Autowired
+    private UserArgumentResolver userArgumentResolver;
+
     /**
      * 授权后的内部页面拦截器 路径定义规则：controller内 /passport开头接口
      */
@@ -34,5 +41,10 @@ public class WebConfg implements WebMvcConfigurer {
         registry.addInterceptor(passportInterceptor)
                 .addPathPatterns("/article/passport/**")
                 .addPathPatterns("/user/passport/**");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(userArgumentResolver);
     }
 }

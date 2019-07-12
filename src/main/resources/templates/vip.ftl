@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <title>开通会员</title>
     <link rel="shortcut icon" type="image/x-icon" href="/image/icon.png">
-    <link rel="stylesheet" href="css/weui.min.css"/>
-    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="/css/weui.min.css"/>
+    <link rel="stylesheet" href="/css/app.css"/>
     <style>
         .weui-cell__bd{
             color:#343537;

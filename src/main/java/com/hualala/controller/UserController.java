@@ -1,12 +1,14 @@
 package com.hualala.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hualala.common.UserResolver;
+import com.hualala.config.WXConfig;
 import com.hualala.model.User;
 import com.hualala.service.UserService;
 import com.hualala.util.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private WXConfig wxConfig;
+
+
     /**
      * 更新用户签名或二维码
      *
@@ -37,9 +43,9 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/passport/updateByID")
-    public Object updateByID(@RequestBody User params, @UserResolver User user) {
-        params.setUserid(user.getUserid());
-        userService.updateById(params);
+    public Object updateByID(User params, @UserResolver User user) {
+        Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());
+        userService.update(params,wrapper);
         return ResultUtils.success();
     }
 

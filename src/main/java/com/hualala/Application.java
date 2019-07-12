@@ -21,7 +21,7 @@ public class Application {
     }
 
 
-    @RequestMapping("/{path}")
+    @RequestMapping("/do/{path}")
     public String doPath(@PathVariable("path") String path, HttpServletRequest request, ModelMap modelMap) {
         for (Map.Entry<String, String[]> param : request.getParameterMap().entrySet()) {
             modelMap.addAttribute(param.getKey(), param.getValue());

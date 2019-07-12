@@ -62,22 +62,17 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         String accessToken = tokenMap.getString("access_token");
         String openid = tokenMap.getString("openid");
         Integer expiresIn = tokenMap.getInteger("expires_in");
-        String tokenKey = String.format(WEB_ACCESS_TOKEN_KEY, wxConfig.getAppID(),openid);
+        String tokenKey = String.format(WEB_ACCESS_TOKEN_KEY, wxConfig.getAppID(), openid);
         //先保存起来这个web token 暂时没什么用
-        CacheUtils.set(tokenKey,tokenMap.toJSONString(),expiresIn);
+        CacheUtils.set(tokenKey, tokenMap.toJSONString(), expiresIn);
         User user = wxService.webUserInfo(accessToken, openid);
         UserHolder.setUser(user);
-        //返回给前端cookie
-        //cookie内的token30分钟过期
-        String cookieToken = UUID.randomUUID().toString();
-        CacheUtils.set(cookieToken, JSON.toJSONString(user),30 * 60);
-        Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME,cookieToken);
-        response.addCookie(cookie);
         return true;
     }
 
     /**
      * 为web视图补充js-api数据
+     * 返回给前端cookie
      *
      * @param request
      * @param response
@@ -87,17 +82,27 @@ public class WebAuthInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        //拿到的这个url是不带？后面的参数的  项目应避免使用GET请求传参数
-        StringBuffer requestURL = request.getRequestURL();
-        String encoderUrl = URLEncoder.encode(requestURL.toString(), StandardCharsets.UTF_8.name());
-        ModelMap modelMap = modelAndView.getModelMap();
-        modelMap.addAttribute("user",UserHolder.getUser());
+        User user = UserHolder.getUser();
         //补充js-api数据
-        wxService.jsApiSignature(modelAndView.getModelMap(), encoderUrl);
+        StringBuffer requestURL = request.getRequestURL();
+        String queryString = request.getQueryString();
+        queryString = StringUtils.isNotEmpty(queryString) ? "?" + queryString : "";
+        String url = requestURL.toString() + queryString;
+        ModelMap modelMap = modelAndView.getModelMap();
+        modelMap.addAttribute("user", user);
+        wxService.jsApiSignature(modelAndView.getModelMap(), url);
+        //返回给前端cookie
+        //cookie内的token30分钟过期
+        String cookieToken = UUID.randomUUID().toString();
+        CacheUtils.set(cookieToken, JSON.toJSONString(user), 30 * 60);
+        Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME, cookieToken);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 
     /**
      * 清除user 防内存泄露
+     *
      * @param request
      * @param response
      * @param handler
@@ -105,7 +110,7 @@ public class WebAuthInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         UserHolder.clear();
     }
 }
