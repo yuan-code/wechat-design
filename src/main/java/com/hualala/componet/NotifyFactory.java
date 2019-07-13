@@ -44,7 +44,7 @@ public class NotifyFactory implements ApplicationContextAware {
     /**
      * 策略列表
      */
-    private Map<NotifyEnum, WeChatNotify> notifyMap = new HashMap<>();
+    private Map<NotifyEnum, WechatNotify> notifyMap = new HashMap<>();
 
     /**
      * 工厂获取事件执行策略对象
@@ -52,8 +52,8 @@ public class NotifyFactory implements ApplicationContextAware {
      * @param notifyType
      * @return
      */
-    public WeChatNotify loadWeChatNotify(NotifyEnum notifyType) {
-        WeChatNotify notify = notifyMap.get(notifyType);
+    public WechatNotify loadWeChatNotify(NotifyEnum notifyType) {
+        WechatNotify notify = notifyMap.get(notifyType);
         //对于没配置的策略 返回一个默认的空实现即可
         return Optional.ofNullable(notify).orElse((xmlMap) -> this.defaultNotify(xmlMap));
     }
@@ -80,9 +80,9 @@ public class NotifyFactory implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, Object> notifyBeanMap = applicationContext.getBeansWithAnnotation(NotifyType.class);
-        Map<NotifyEnum[], WeChatNotify> annoValueBeanMap = notifyBeanMap.values().stream()
-                .filter(obj -> ArrayUtils.contains(obj.getClass().getInterfaces(), WeChatNotify.class))
-                .map(obj -> (WeChatNotify) obj)
+        Map<NotifyEnum[], WechatNotify> annoValueBeanMap = notifyBeanMap.values().stream()
+                .filter(obj -> ArrayUtils.contains(obj.getClass().getInterfaces(), WechatNotify.class))
+                .map(obj -> (WechatNotify) obj)
                 .collect(Collectors.toMap(obj -> obj.getClass().getAnnotation(NotifyType.class).value(), Function.identity()));
 
         annoValueBeanMap.entrySet().stream().forEach(enrty -> Arrays.stream(enrty.getKey()).forEach(type -> notifyMap.put(type, enrty.getValue())));
@@ -100,7 +100,7 @@ public class NotifyFactory implements ApplicationContextAware {
 
     @Log4j2
     @NotifyType(NotifyEnum.SUBSCRIBE)
-    public static class Subscribe implements WeChatNotify {
+    public static class Subscribe implements WechatNotify {
 
         @Autowired
         private WXService wxService;
@@ -131,7 +131,7 @@ public class NotifyFactory implements ApplicationContextAware {
      */
     @Log4j2
     @NotifyType(NotifyEnum.UNSUBSCRIBE)
-    public static class UnSubscribe implements WeChatNotify {
+    public static class UnSubscribe implements WechatNotify {
 
         @Autowired
         private UserService userService;
@@ -162,7 +162,7 @@ public class NotifyFactory implements ApplicationContextAware {
      */
     @Log4j2
     @NotifyType(NotifyEnum.CLICK)
-    public static class Click implements WeChatNotify {
+    public static class Click implements WechatNotify {
 
         private final String mediaID = "ELYMY-79MurPtaqnYq7igIOKtsiVlENvokg06r0vR5E";
 
@@ -194,7 +194,7 @@ public class NotifyFactory implements ApplicationContextAware {
      */
     @Log4j2
     @NotifyType(NotifyEnum.TEXT)
-    public static class Text implements WeChatNotify {
+    public static class Text implements WechatNotify {
 
 
         @Value("${ai.apiKey}")

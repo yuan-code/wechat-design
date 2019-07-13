@@ -2,7 +2,7 @@ package com.hualala.controller;
 
 import com.hualala.common.NotifyEnum;
 import com.hualala.componet.NotifyFactory;
-import com.hualala.componet.WeChatNotify;
+import com.hualala.componet.WechatNotify;
 import com.hualala.config.WXConfig;
 import com.hualala.util.XMLParse;
 import com.hualala.weixin.mp.WXBizMsgCrypt;
@@ -55,7 +55,7 @@ public class WXController {
         Map<String, String> decryptMap = XMLParse.xmlToMap(decryptXml);
         //获取推送事件类型  可以拿到的事件: 1 关注/取消关注事件  2:扫描带参数二维码事件 3: 用户已经关注公众号 扫描带参数二维码事件 ...等等
         NotifyEnum notifyEnum = NotifyEnum.resolveEvent(decryptMap.get("MsgType"), decryptMap.get("Event"));
-        WeChatNotify infoType = notifyFactory.loadWeChatNotify(notifyEnum);
+        WechatNotify infoType = notifyFactory.loadWeChatNotify(notifyEnum);
         //执行具体的策略 得到给微信的响应信息 微信有重试机制  需要考虑幂等性
         String result = infoType.wechatNotify(decryptMap);
         log.info("Msg响应的POST结果: 授权策略对象: [{}] 解密后信息: [{}] 返回给微信的信息: [{}]", infoType.getClass().getSimpleName(), decryptMap, result);

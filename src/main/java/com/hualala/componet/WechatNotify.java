@@ -7,7 +7,7 @@ import java.util.Map;
  * @create 2018-07-06 16:21
  * @desc 微信事件推送策略的最上层抽象
  */
-public interface WeChatNotify {
+public interface WechatNotify {
 
 
     /**
