@@ -38,11 +38,11 @@
         </div>
 
         <a class="weui-btn weui-btn_primary" href="javascript:" id="submitBtn" style="margin:20px 10px;">确定</a>
-        <div class="weui-footer">
+       <#-- <div class="weui-footer">
             <p class="weui-footer__links">
                 <a href="https://mp.weixin.qq.com/s/OCkRMjb_K_oBAEC_fRf1HA" class="weui-footer__link">如何复制公众号文章地址?</a>
             </p>
-        </div>
+        </div>-->
     </div>
 </div>
 <div id="loadingToast" style="opacity: 0; display: none;">

@@ -84,10 +84,9 @@ public class WebAuthInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         User user = UserHolder.getUser();
         //补充js-api数据
-        StringBuffer requestURL = request.getRequestURL();
+        String requestURL = request.getRequestURL().toString();
         String queryString = request.getQueryString();
-        queryString = StringUtils.isNotEmpty(queryString) ? "?" + queryString : "";
-        String url = requestURL.toString() + queryString;
+        String url = StringUtils.isEmpty(queryString)? requestURL : requestURL + "?" + queryString;
         ModelMap modelMap = modelAndView.getModelMap();
         modelMap.addAttribute("user", user);
         wxService.jsApiSignature(modelAndView.getModelMap(), url);

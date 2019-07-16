@@ -251,7 +251,7 @@
         <a href="/article/auth/detail/${article.articleid}" class="weui-btn weui-btn_default">返回</a>
     </div>
     <div class="weui-flex__item">
-        <a href="/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_primary">保存</a>
+        <a href="/do/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_primary">保存</a>
     </div>
 </div>
 <div id="loadingToast" style="opacity: 0; display: none;">
