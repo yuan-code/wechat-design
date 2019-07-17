@@ -1,9 +1,14 @@
 package com.hualala.interceptor;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
+import com.hualala.service.UserService;
 import com.hualala.service.WXService;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.UserHolder;
@@ -38,6 +43,9 @@ public class WebAuthInterceptor implements HandlerInterceptor {
     @Autowired
     private WXConfig wxConfig;
 
+    @Autowired
+    private UserService userService;
+
     /**
      * 微信JS授权统一处理
      *
@@ -66,7 +74,18 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         //先保存起来这个web token 暂时没什么用
         CacheUtils.set(tokenKey, tokenMap.toJSONString(), expiresIn);
         User user = wxService.webUserInfo(accessToken, openid);
-        UserHolder.setUser(user);
+        //todo 这块得改
+        Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());
+        User dbUser = userService.getOne(wrapper);
+        if(dbUser != null) {
+            user.setSlogan(dbUser.getSlogan());
+            user.setQrcode(dbUser.getQrcode());
+            user.setPhone(dbUser.getPhone());
+            user.setNickname(dbUser.getNickname());
+            user.setUserid(dbUser.getUserid());
+            user.setAppid(dbUser.getAppid());
+            UserHolder.setUser(user);
+        }
         return true;
     }
 
@@ -92,8 +111,8 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         wxService.jsApiSignature(modelAndView.getModelMap(), url);
         //返回给前端cookie
         //cookie内的token一小时过期
-        String jsonUser = JSON.toJSONString(user);
-        String cookieToken = DigestUtils.md5Hex(jsonUser);
+        String cookieToken = DigestUtils.md5Hex(user.getAppid() + user.getOpenid());
+        user.setToken(cookieToken);
         if(CacheUtils.exists(cookieToken)) {
             CacheUtils.expire(cookieToken,COOKIE_EXPIRE_SECONDS);
         }else {

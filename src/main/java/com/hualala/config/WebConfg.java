@@ -37,10 +37,13 @@ public class WebConfg implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(webAuthInterceptor)
-                .addPathPatterns("/article/auth/**");
+                .addPathPatterns("/article/auth/**")
+                .addPathPatterns("/user/auth/**")
+                .addPathPatterns("/auth/**");
         registry.addInterceptor(passportInterceptor)
                 .addPathPatterns("/article/passport/**")
-                .addPathPatterns("/user/passport/**");
+                .addPathPatterns("/user/passport/**")
+                .addPathPatterns("/passport/**");
     }
 
     @Override

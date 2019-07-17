@@ -83,10 +83,10 @@
     <script type="text/javascript">
         wx.config({
             debug: false,
-            appId: 'wx2aa93c5623a0285f',
-            timestamp:'1562469457',
-            nonceStr: '4d6e4daf556e4689',
-            signature: 'b9d94bfbe4d612fe0a962a9f72666e7c9395bcc2',
+            appId: '${appID}',
+            timestamp:${timestamp},
+            nonceStr: '${noncestr}',
+            signature: '${signature}',
             jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','updateAppMessageShareData','updateTimelineShareData']
         });
     </script>
@@ -107,9 +107,9 @@
     <div class="mask">
         <div class="mask-dialog">
             <p>共有2人关注了我的文章</p>
-            <a href="/do/vip?path=/customer" class="weui-btn weui-btn_primary">立即查看</a>
+            <a href="/passport/vip/vip?path=/customer" class="weui-btn weui-btn_primary">立即查看</a>
             <p>或者</p>
-            <a href="/article/auth/copy" class="weui-btn weui-btn_primary">发篇文章试试看</a>
+            <a href="/passport/article/copy" class="weui-btn weui-btn_primary">发篇文章试试看</a>
         </div>
     </div>
 

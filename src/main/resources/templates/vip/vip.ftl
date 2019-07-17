@@ -189,19 +189,19 @@
         wx.ready(function () {
             if(wx.onMenuShareAppMessage){
                 wx.onMenuShareTimeline({
-                    title: '推客行',
-                    link: 'http://yx.herbedu.com/vip?p=u22a642b644f6f69',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){
                     }
                 });
                 wx.onMenuShareAppMessage({
-                    title: '推客行',
-                    desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://yx.herbedu.com/vip?p=u22a642b644f6f69',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    desc: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){
@@ -210,20 +210,20 @@
                 });
             } else {
                 wx.updateTimelineShareData({
-                    title: '推客行',
-                    desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://yx.herbedu.com/vip?p=u22a642b644f6f69',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    desc: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){
                     }
                 });
                 wx.updateAppMessageShareData({
-                    title: '推客行',
-                    desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://yx.herbedu.com/vip?p=u22a642b644f6f69',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    desc: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){

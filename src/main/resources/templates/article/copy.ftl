@@ -78,9 +78,8 @@
         }
         $loadingToast.fadeIn(100);
         $.post('/article/passport/copy', {source: url}, function (result) {
-            $loadingToast.fadeOut(100);
             if (result.success) {
-                window.location.href = "/art/"+json.data;
+                window.location.href = "/article/auth/detail/"+response.data.articleid;
             } else {
                 alert("复制文章失败");
             }

@@ -178,7 +178,7 @@
 <body id="activity-detail" class="zh_CN mm_appmsg  appmsg_skin_default appmsg_style_default">
     <#--只有二次编辑的文章 并且是作者 或者原创文章 才显示这个-->
     <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-        <a href="/do/customer?source=top" class="toptip">
+        <a href="/passport/customer/customer?source=top" class="toptip">
             共有<span>0人</span>阅读了该文章，点击查看
         </a>
     <#--</#if>-->
@@ -202,11 +202,9 @@
                                 <p>
                                     <#--如果是原创文章 显示设置 如果是二次编辑 设置了显示内容 没设置显示编辑 如果是分享 显示内容-->
                                     <#--<#if user?? && (author.slogan?? || author.openID != openID)>-->
-                                        <#if user.slogan??>
-                                            ${user.slogan}
-                                        </#if>
+                                        ${user.slogan}
                                     <#--<#else>-->
-                                        <a href="/do/slogan?path=/article/auth/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
+                                        <a href="/passport/user/slogan?path=/article/auth/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
                                     <#--</#if>-->
                                 </p>
                             </div>
@@ -233,7 +231,7 @@
         <span style="color:#1296db">0
             <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
             <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-                <a href="/do/customer?source=bottom" class="right-customer-btn">0人关注</a>
+                <a href="/passport/customer/customer?source=bottom" class="right-customer-btn">0人关注</a>
             <#--</#if>-->
         </span>
     </p>
@@ -242,7 +240,7 @@
     </div>
     <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
     <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-        <a href="/article/auth/edit/${article.articleid}" class="right-edit-btn">修改文章</a>
+        <a href="/article/passport/edit/${article.articleid}" class="right-edit-btn">修改文章</a>
     <#--</#if>-->
 
     <div class="mask mask_gzh" style="display:none">

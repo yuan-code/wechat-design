@@ -8,6 +8,7 @@ import com.hualala.model.Article;
 import com.hualala.model.User;
 import com.hualala.service.ArticleService;
 import com.hualala.service.UserService;
+import com.hualala.util.HttpClientUtil;
 import com.hualala.util.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class ArticleController {
             //TODO 增加阅读用户
         }
         modelMap.addAttribute("article", article);
-        return "article";
+        return "article/article";
     }
 
 
@@ -69,22 +70,14 @@ public class ArticleController {
      * @param user 访问页面的用户
      * @throws IOException
      */
-    @RequestMapping("/auth/edit/{articleid}")
+    @RequestMapping("/passport/edit/{articleid}")
     public String articleEdit(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) {
         Article article = articleService.getById(articleid);
         modelMap.addAttribute("article", article);
-        return "edit";
+        return "article/edit";
     }
 
-    /**
-     * 复制文章页面 需要微信基础授权
-     *
-     * @throws IOException
-     */
-    @RequestMapping("/auth/copy")
-    public String articleCopyPage() {
-        return "copy";
-    }
+
 
     /**
      * 复制文章
@@ -93,7 +86,12 @@ public class ArticleController {
      */
     @ResponseBody
     @RequestMapping("/passport/copy")
-    public Object articleCopy() {
+    public Object articleCopy(Article article, @UserResolver User user) {
+
+
+        Article copy = articleService.articleCopy(article.getSource());
+
+
         return ResultUtils.success();
     }
 
