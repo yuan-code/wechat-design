@@ -1,5 +1,6 @@
 package com.hualala.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -92,8 +93,9 @@ public class User implements Serializable {
     private String subscribeScene;
 
     /**
-     * 用户的关注状态 1-关注 2-取关
+     * 用户的关注状态 1-关注 2-取关 3-路人甲
      */
+    @JSONField(name = "subscribe")
     private Integer subscribeStatus;
 
     /**

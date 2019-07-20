@@ -19,4 +19,7 @@
         <result column="source" property="source" />
     </resultMap>
 
+    <select id="findAny" resultMap="BaseResultMap">
+        SELECT * FROM article WHERE pid = 0 ORDER BY RAND() LIMIT 1
+    </select>
 </mapper>

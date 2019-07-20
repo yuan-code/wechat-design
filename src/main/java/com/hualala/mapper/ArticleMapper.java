@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface ArticleMapper extends BaseMapper<Article> {
 
+    /**
+     * 随机取一条原创文章 效率较低 可优化
+     *
+     * @return
+     */
+    Article findAny();
+
 }

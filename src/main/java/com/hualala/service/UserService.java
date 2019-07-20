@@ -2,8 +2,8 @@ package com.hualala.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hualala.config.WXConfig;
 import com.hualala.mapper.UserMapper;
 import com.hualala.model.User;
 import com.hualala.util.TimeUtil;
@@ -26,25 +26,43 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private WXConfig wxConfig;
+
+    @Autowired
+    private WXService wxService;
+
     @Transactional(rollbackFor = Exception.class)
-    public void saveUser(User user) {
+    public User saveUser(User user) {
+        user.setAppid(wxConfig.getAppID());
         user.setSubscribeTime(TimeUtil.currentDT());
+        if(user.getSubscribeStatus() != null && user.getSubscribeStatus() == 1) {
+            //这里是抓取到的关注的请求
+            return doSave(user);
+        }
+        //这里是用户授权网页 做一个补救措施 防止丢失了某条关注用户
+        //先查询用户状态是否关注
+        User status = wxService.userBaseInfo(user.getOpenid());
+        if(status.getSubscribeStatus() == 0) {
+            //路人甲
+            user.setSubscribeStatus(3);
+        }else {
+            user.setSubscribeStatus(1);
+        }
+        return doSave(user);
+    }
+
+
+    private User doSave(User user) {
         Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", user.getAppid()).eq("openid", user.getOpenid());
-        Integer count = userMapper.selectCount(wrapper);
-        if(count == 0) {
+        User dbUser = userMapper.selectOne(wrapper);
+        if(dbUser == null) {
             //净增的人
             userMapper.insert(user);
         }else {
-            //之前关注过 取关后又重新关注了
-            user.setSubscribeStatus(1);
-            user.setUnsubscribeTime(0L);
             userMapper.update(user,wrapper);
         }
+        return userMapper.selectOne(wrapper);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void updateUserBaseInfo(User user) {
-        Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", user.getAppid()).eq("openid", user.getOpenid());
-        userMapper.update(user,wrapper);
-    }
 }

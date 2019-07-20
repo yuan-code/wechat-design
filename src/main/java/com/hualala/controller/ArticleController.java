@@ -87,12 +87,8 @@ public class ArticleController {
     @ResponseBody
     @RequestMapping("/passport/copy")
     public Object articleCopy(Article article, @UserResolver User user) throws IOException {
-
-
         Article copy = articleService.articleCopy(article.getSource());
-
-
-        return ResultUtils.success();
+        return ResultUtils.success(copy);
     }
 
     /**

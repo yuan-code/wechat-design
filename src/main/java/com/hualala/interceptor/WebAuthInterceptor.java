@@ -74,18 +74,8 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         //先保存起来这个web token 暂时没什么用
         CacheUtils.set(tokenKey, tokenMap.toJSONString(), expiresIn);
         User user = wxService.webUserInfo(accessToken, openid);
-        //todo 这块得改
-        Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());
-        User dbUser = userService.getOne(wrapper);
-        if(dbUser != null) {
-            user.setSlogan(dbUser.getSlogan());
-            user.setQrcode(dbUser.getQrcode());
-            user.setPhone(dbUser.getPhone());
-            user.setNickname(dbUser.getNickname());
-            user.setUserid(dbUser.getUserid());
-            user.setAppid(dbUser.getAppid());
-            UserHolder.setUser(user);
-        }
+        user = userService.saveUser(user);
+        UserHolder.setUser(user);
         return true;
     }
 

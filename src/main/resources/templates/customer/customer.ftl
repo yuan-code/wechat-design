@@ -95,18 +95,18 @@
 <div class="container" id="container">
     <div class="weui-flex">
         <div class="weui-flex__item">
-            <h2>1</h2>
+            <h2>0</h2>
             <p>今天看了</p>
         </div>
         <div class="weui-flex__item">
-            <h2>2</h2>
+            <h2>0</h2>
             <p>看我总数</p>
         </div>
     </div>
 
     <div class="mask">
         <div class="mask-dialog">
-            <p>共有2人关注了我的文章</p>
+            <p>共有0人关注了我的文章</p>
             <a href="/passport/vip/vip?path=/customer" class="weui-btn weui-btn_primary">立即查看</a>
             <p>或者</p>
             <a href="/passport/article/copy" class="weui-btn weui-btn_primary">发篇文章试试看</a>

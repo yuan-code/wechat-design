@@ -2,8 +2,6 @@ package com.hualala.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hualala.common.ResultCode;
 import com.hualala.config.WXConfig;
 import com.hualala.exception.BusinessException;

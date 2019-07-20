@@ -1,6 +1,7 @@
 package com.hualala.componet;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hualala.common.AIConstant;
 import com.hualala.common.NotifyEnum;
 import com.hualala.common.NotifyType;
@@ -108,15 +109,12 @@ public class NotifyFactory implements ApplicationContextAware {
         @Autowired
         private UserService userService;
 
-        @Autowired
-        private WXConfig wxConfig;
 
         @Override
         public String wechatNotify(Map<String, String> xmlMap) throws Exception {
             String openID = xmlMap.get("FromUserName");
             String appID = xmlMap.get("ToUserName");
             User user = wxService.userBaseInfo(openID);
-            user.setAppid(wxConfig.getAppID());
             userService.saveUser(user);
             WXReply wxReply = new WXReply(appID, openID);
             return wxReply.replyMsg("我见青山多妩媚，料青山见我应如是");
@@ -143,13 +141,10 @@ public class NotifyFactory implements ApplicationContextAware {
         public String wechatNotify(Map<String, String> xmlMap) throws Exception {
             String openID = xmlMap.get("FromUserName");
             User user = new User();
-            user.setOpenid(openID);
-            user.setAppid(wxConfig.getAppID());
             user.setUnsubscribeTime(TimeUtil.currentDT());
             user.setSubscribeStatus(2);
-
-            userService.updateUserBaseInfo(user);
-
+            UpdateWrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", openID);
+            userService.update(user,wrapper);
             return "";
         }
     }
@@ -176,7 +171,7 @@ public class NotifyFactory implements ApplicationContextAware {
             WXReply wxReply = new WXReply(appID, openID);
             switch (xmlMap.get("EventKey")) {
                 case HOT_ARTICLE_CLICK_TYPE:
-                    Article article = articleService.list().get(0);
+                    Article article = articleService.findAny();
                     String articleUrl = "http://wechat.ictry.com/article/auth/detail/" + article.getArticleid();
                     return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),articleUrl);
                 case HOT_ARTICLE_CONTACT_US:
@@ -200,6 +195,9 @@ public class NotifyFactory implements ApplicationContextAware {
         @Value("${ai.apiKey}")
         private String aiKey;
 
+        @Autowired
+        private ArticleService articleService;
+
         @Override
         public String wechatNotify(Map<String, String> xmlMap) throws Exception {
 
@@ -207,14 +205,13 @@ public class NotifyFactory implements ApplicationContextAware {
             String appID = xmlMap.get("ToUserName");
             WXReply wxReply = new WXReply(appID, openID);
             String content = xmlMap.get("Content");
-            String aiUrl = String.format(AIConstant.TULING_API, aiKey, URLEncoder.encode(content, "utf-8"));
-            HttpClientUtil.HttpResult result = HttpClientUtil.getInstance().post(aiUrl);
-            String text = JSON.parseObject(result.getContent()).getString("text");
-            int index = text.indexOf("http");
-            if(index != -1) {
-                text = text.substring(0,index);
+            if(content.startsWith("https://mp.weixin.qq.com/")) {
+                Article article = articleService.articleCopy(content);
+                String articleUrl = "http://wechat.ictry.com/article/auth/detail/" + article.getArticleid();
+                return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),articleUrl);
             }
-            return wxReply.replyMsg(text);
+            String msg = "回复公众号，内容为要复制的文章链接地址，即可获得文章推送（仅支持mp.weixin.qq.com域名下的原创文章）";
+            return wxReply.replyMsg(msg);
         }
     }
 

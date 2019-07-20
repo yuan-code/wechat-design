@@ -52,10 +52,10 @@
     <script type="text/javascript">
         wx.config({
             debug: false,
-            appId: 'wx2aa93c5623a0285f',
-            timestamp:'1562509603',
-            nonceStr: '0553919efa1145c0',
-            signature: 'e5cfc6d14503a2e4918ab056dc2b891d6899045b',
+            appId: '${appID}',
+            timestamp:${timestamp},
+            nonceStr: '${noncestr}',
+            signature: '${signature}',
             jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','updateAppMessageShareData','updateTimelineShareData']
         });
     </script>
