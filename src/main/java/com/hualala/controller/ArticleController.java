@@ -8,7 +8,6 @@ import com.hualala.model.Article;
 import com.hualala.model.User;
 import com.hualala.service.ArticleService;
 import com.hualala.service.UserService;
-import com.hualala.util.HttpClientUtil;
 import com.hualala.util.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

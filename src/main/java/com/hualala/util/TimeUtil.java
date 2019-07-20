@@ -2,6 +2,9 @@ package com.hualala.util;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 /**
  * @author YuanChong
@@ -30,6 +33,18 @@ public class TimeUtil {
         return currentDT(now);
 
     }
+
+    /**
+     * 时间戳转换yyyyMMddHHmmss
+     * @param timestamp
+     * @return
+     */
+    public static Long covertTimestamp(Long timestamp) {
+        Date date = new Date(timestamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return Long.valueOf(sdf.format(date));
+    }
+
 
     /**
      * 返回时间戳,格式yyyyMMdd

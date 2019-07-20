@@ -17,8 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import static com.hualala.common.WXConstant.COOKIE_EXPIRE_SECONDS;
-
 /**
  * <p>
  * 公众号的用户信息 前端控制器

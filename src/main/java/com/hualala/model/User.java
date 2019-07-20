@@ -101,6 +101,7 @@ public class User implements Serializable {
     /**
      * 用户关注时间
      */
+    @JSONField(name = "subscribe_time")
     private Long subscribeTime;
 
     /**

@@ -1,8 +1,6 @@
 package com.hualala.componet;
 
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.hualala.common.AIConstant;
 import com.hualala.common.NotifyEnum;
 import com.hualala.common.NotifyType;
 import com.hualala.config.WXConfig;
@@ -11,7 +9,6 @@ import com.hualala.model.User;
 import com.hualala.service.ArticleService;
 import com.hualala.service.UserService;
 import com.hualala.service.WXService;
-import com.hualala.util.HttpClientUtil;
 import com.hualala.util.TimeUtil;
 import com.hualala.util.WXReply;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +20,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

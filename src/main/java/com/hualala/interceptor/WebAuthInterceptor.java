@@ -1,11 +1,7 @@
 package com.hualala.interceptor;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
 import com.hualala.service.UserService;
