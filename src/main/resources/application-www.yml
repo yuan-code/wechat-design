@@ -1,7 +1,7 @@
 spring:
   datasource:
     username: root
-    password: root
+    password: mysql@TXY
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://62.234.24.11:3306/wechat?serverTimeZone=Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
   redis:
