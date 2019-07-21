@@ -8,6 +8,7 @@ import com.hualala.service.UserService;
 import com.hualala.service.WXService;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.UserHolder;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import static com.hualala.common.WXConstant.*;
  * @create 2019-07-09 18:44
  * @desc 微信JS页面授权拦截器
  */
+@Log4j2
 @Component
 public class WebAuthInterceptor implements HandlerInterceptor {
 
@@ -59,6 +61,7 @@ public class WebAuthInterceptor implements HandlerInterceptor {
             StringBuffer requestURL = request.getRequestURL();
             String encoderUrl = URLEncoder.encode(requestURL.toString(), StandardCharsets.UTF_8.name());
             String redirectUrl = String.format(JS_PRE_AUTH_URL, wxConfig.getAppID(), encoderUrl, "snsapi_userinfo", request.getRequestURI());
+            log.info("微信JS授权统一处理 redirectUrl=[{}]", redirectUrl);
             response.sendRedirect(redirectUrl);
             return false;
         }
@@ -91,7 +94,7 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         //补充js-api数据
         String requestURL = request.getRequestURL().toString();
         String queryString = request.getQueryString();
-        String url = StringUtils.isEmpty(queryString)? requestURL : requestURL + "?" + queryString;
+        String url = StringUtils.isEmpty(queryString) ? requestURL : requestURL + "?" + queryString;
         ModelMap modelMap = modelAndView.getModelMap();
         modelMap.addAttribute("user", user);
         wxService.jsApiSignature(modelAndView.getModelMap(), url);
@@ -99,9 +102,9 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         //cookie内的token一小时过期
         String cookieToken = DigestUtils.md5Hex(user.getAppid() + user.getOpenid());
         user.setToken(cookieToken);
-        if(CacheUtils.exists(cookieToken)) {
-            CacheUtils.expire(cookieToken,COOKIE_EXPIRE_SECONDS);
-        }else {
+        if (CacheUtils.exists(cookieToken)) {
+            CacheUtils.expire(cookieToken, COOKIE_EXPIRE_SECONDS);
+        } else {
             CacheUtils.set(cookieToken, JSON.toJSONString(user), COOKIE_EXPIRE_SECONDS);
         }
         Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME, cookieToken);
