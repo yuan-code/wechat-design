@@ -25,6 +25,9 @@ public class WebConfg implements WebMvcConfigurer {
     @Autowired
     private WebAuthInterceptor webAuthInterceptor;
 
+    /**
+     * 参数解析器
+     */
     @Autowired
     private UserArgumentResolver userArgumentResolver;
 
@@ -33,6 +36,9 @@ public class WebConfg implements WebMvcConfigurer {
      */
     @Autowired
     private PassportInterceptor passportInterceptor;
+
+    @Autowired
+    private CosConfig cosConfig;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

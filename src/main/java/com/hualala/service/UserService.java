@@ -84,6 +84,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             //净增的人
             userMapper.insert(user);
         }else {
+            //昵称不改
+            user.setNickname(null);
             userMapper.update(user,wrapper);
         }
         return userMapper.selectOne(wrapper);

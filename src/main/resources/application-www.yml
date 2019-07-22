@@ -19,6 +19,3 @@ wechat:
   token: WX_DESIGN_TOKEN
   encodingAESKey: PJKtnHu74965O2WOfdxQgI3FOXrxrXd9YssgsaumzIW
   expire: 5000
-
-ai:
-  apiKey: 7d14fa4bc295404a9fced576c37453e5

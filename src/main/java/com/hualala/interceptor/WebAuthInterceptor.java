@@ -13,8 +13,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -29,14 +27,12 @@ import static com.hualala.common.WXConstant.*;
 /**
  * @author YuanChong
  * @create 2019-07-09 18:44
- * @desc 微信JS页面授权拦截器
+ * @desc 微信JS页面授权拦截器 用于获取当前点击页面的用户授权
  */
 @Log4j2
 @Component
-public class WebAuthInterceptor implements HandlerInterceptor {
+public class WebAuthInterceptor extends AbstractInterceptor {
 
-    @Autowired
-    private WXService wxService;
 
     @Autowired
     private WXConfig wxConfig;
@@ -46,6 +42,7 @@ public class WebAuthInterceptor implements HandlerInterceptor {
 
     /**
      * 微信JS授权统一处理
+     * 存在已经存在cookie了 则不需要走授权 优化效率
      *
      * @param request
      * @param response
@@ -55,6 +52,10 @@ public class WebAuthInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        User cookieAuth = super.cookieAuth(request);
+        if(cookieAuth != null) {
+            return true;
+        }
         //授权码
         String code = request.getParameter("code");
         if (StringUtils.isEmpty(code)) {
@@ -78,10 +79,9 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         return true;
     }
 
+
     /**
-     * 为web视图补充js-api数据
-     * 返回给前端cookie
-     *
+     * 设置cookie
      * @param request
      * @param response
      * @param handler
@@ -90,14 +90,8 @@ public class WebAuthInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        super.postHandle(request,response,handler,modelAndView);
         User user = UserHolder.getUser();
-        //补充js-api数据
-        String requestURL = request.getRequestURL().toString();
-        String queryString = request.getQueryString();
-        String url = StringUtils.isEmpty(queryString) ? requestURL : requestURL + "?" + queryString;
-        ModelMap modelMap = modelAndView.getModelMap();
-        modelMap.addAttribute("user", user);
-        wxService.jsApiSignature(modelAndView.getModelMap(), url);
         //返回给前端cookie
         //cookie内的token一小时过期
         String cookieToken = DigestUtils.md5Hex(user.getAppid() + user.getOpenid());
@@ -112,17 +106,5 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         response.addCookie(cookie);
     }
 
-    /**
-     * 清除user 防内存泄露
-     *
-     * @param request
-     * @param response
-     * @param handler
-     * @param ex
-     * @throws Exception
-     */
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        UserHolder.clear();
-    }
+
 }

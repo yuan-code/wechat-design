@@ -3,10 +3,7 @@ package com.hualala.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -66,11 +63,10 @@ public class HttpClientUtil {
 
                 result.setContent(buffer.toString());
                 result.setStatusCode(200);
-            } catch (Exception var20) {
-                this.logger.error(var20.getMessage(), var20);
-                var20.printStackTrace();
+            } catch (Exception e) {
+                this.logger.error(e.getMessage(), e);
                 result.setStatusCode(900);
-                result.setT(var20);
+                result.setT(e);
             } finally {
                 if (reader != null) {
                     try {
@@ -92,6 +88,34 @@ public class HttpClientUtil {
 
     public HttpClientUtil.HttpResult post(String url, String content) {
         return this.post(url, content, "application/json; charset=utf-8");
+    }
+
+    /**
+     * 从网络Url中下载文件
+     *
+     * @param url
+     * @throws IOException
+     */
+    public InputStream downLoadFromUrl(String url) throws Exception {
+        HttpURLConnection conn = null;
+        try {
+            URL getUrl = new URL(url);
+            conn = (HttpURLConnection) getUrl.openConnection();
+
+            //设置超时间为3秒
+            conn.setConnectTimeout(3 * 1000);
+            // 忽略缓存
+            conn.setUseCaches(false);
+            conn.setRequestMethod("GET");
+            //得到输入流
+            return conn.getInputStream();
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+
+        }
+
     }
 
     public HttpClientUtil.HttpResult post(String url) {

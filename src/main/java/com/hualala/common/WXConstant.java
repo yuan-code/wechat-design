@@ -76,4 +76,9 @@ public class WXConstant {
      * JS网页授权accessToken获取用户信息
      */
     public static final String JS_USER_BASE_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN";
+
+    /**
+     * 下载多媒体文件接口
+     */
+    public static final String DOWNLOAD_MEDIA = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
 }

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -191,5 +192,18 @@ public class WXService {
         return data;
     }
 
+    /**
+     * 下载多媒体文件
+     *
+     * @param mediaID
+     * @return
+     * @throws Exception
+     */
+    public InputStream downloadMedia(String mediaID) throws Exception {
+        String accessToken = getAccessToken();
+        String url = String.format(DOWNLOAD_MEDIA, accessToken, wxConfig.getSecret(), mediaID);
+        InputStream inputStream = HttpClientUtil.getInstance().downLoadFromUrl(url);
+        return inputStream;
+    }
 
 }

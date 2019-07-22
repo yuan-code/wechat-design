@@ -10,12 +10,17 @@ import com.hualala.common.UserResolver;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
 import com.hualala.service.UserService;
+import com.hualala.service.WXService;
 import com.hualala.util.CacheUtils;
+import com.hualala.util.MediaUtils;
 import com.hualala.util.ResultUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.InputStream;
 
 /**
  * <p>
@@ -36,6 +41,10 @@ public class UserController {
     @Autowired
     private WXConfig wxConfig;
 
+    @Autowired
+    private WXService wxService;
+
+
 
     /**
      * 更新用户签名或二维码
@@ -46,9 +55,14 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/passport/updateByID")
-    public Object updateByID(User params, @UserResolver User user) {
+    public Object updateByID(User params, @UserResolver User user) throws Exception {
+        if(StringUtils.isNotEmpty(params.getQrcode())){
+            //上传图片
+            InputStream inputStream = wxService.downloadMedia(user.getQrcode());
+            String key = MediaUtils.uploadImage(inputStream);
+            params.setQrcode(key);
+        }
         Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());
-        //TODO 如果是上传图片 需要把图片保存到服务器 微信只保存3天
         userService.update(params,wrapper);
         //获取缓存的登陆用户
         String json = CacheUtils.get(user.getToken());
