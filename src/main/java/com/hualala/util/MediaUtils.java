@@ -4,6 +4,7 @@ import com.hualala.config.CosConfig;
 import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.util.UUID;
  * @create 2019-07-22 18:33
  * @desc
  */
+@Component
 public class MediaUtils {
 
 
