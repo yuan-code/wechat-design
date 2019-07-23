@@ -8,7 +8,8 @@ public enum ResultCode {
     BUSINESS_ERROR("003","业务异常"),
     WECHAT_ERROR("004","微信异常"),
     NO_AUTH_ERROR("005","页面未授权"),
-    VERIFY_CODE_ERROR("006","爬取公众号出现验证码");
+    VERIFY_CODE_ERROR("006","爬取公众号出现验证码"),
+    HTTP_CLIENT_ERROR("007","HTTP_CLIENT_ERROR");
 
 
     private String code;

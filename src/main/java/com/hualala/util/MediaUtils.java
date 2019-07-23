@@ -6,6 +6,7 @@ import com.qcloud.cos.model.PutObjectResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
@@ -41,4 +42,7 @@ public class MediaUtils {
         return upload(inputStream,"image/jpeg");
     }
 
+    public static String uploadImage(byte[] bytes) throws IOException {
+        return upload(new ByteArrayInputStream(bytes),"image/jpeg");
+    }
 }

@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hualala.common.UserResolver;
+import com.hualala.config.CosConfig;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
 import com.hualala.service.UserService;
@@ -44,6 +45,9 @@ public class UserController {
     @Autowired
     private WXService wxService;
 
+    @Autowired
+    private CosConfig cosConfig;
+
 
 
     /**
@@ -58,9 +62,10 @@ public class UserController {
     public Object updateByID(User params, @UserResolver User user) throws Exception {
         if(StringUtils.isNotEmpty(params.getQrcode())){
             //上传图片
-            InputStream inputStream = wxService.downloadMedia(user.getQrcode());
-            String key = MediaUtils.uploadImage(inputStream);
-            params.setQrcode(key);
+            byte[] images = wxService.downloadMedia(params.getQrcode());
+            String key = MediaUtils.uploadImage(images);
+            String url = cosConfig.getServer() + key;
+            params.setQrcode(url);
         }
         Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());
         userService.update(params,wrapper);

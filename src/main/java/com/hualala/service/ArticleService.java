@@ -2,8 +2,11 @@ package com.hualala.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hualala.config.CosConfig;
 import com.hualala.mapper.ArticleMapper;
 import com.hualala.model.Article;
+import com.hualala.util.HttpClientUtil;
+import com.hualala.util.MediaUtils;
 import com.hualala.util.TimeUtil;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -32,6 +35,9 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private CosConfig cosConfig;
+
     /**
      * 爬取单个公众号文章
      *
@@ -48,8 +54,9 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Connection connect = Jsoup.connect(source);
         Document document = connect.get();
         String head = document.head().toString();
-        //TODO 处理图片防盗链
-        String content = document.getElementById("js_content").toString();
+        //处理图片防盗链
+        Element jsContent = document.getElementById("js_content");
+        String content = replaceImage(jsContent).toString();
         String title = document.select("#activity-name").text();
         //获取JS变量
         Map<String, String> variableMap = scriptVariable(document);
@@ -75,6 +82,19 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     public Article findAny() {
         return articleMapper.findAny();
     }
+
+
+    public Element replaceImage(Element element) throws IOException {
+        Elements images = element.select("img");
+        for(Element ele : images) {
+            String imgUrl = ele.attr("data-src");
+            byte[] bytes = HttpClientUtil.downLoadFromUrl(imgUrl);
+            String newUrl = MediaUtils.uploadImage(bytes);
+            ele.attr("src", cosConfig.getServer() + newUrl);
+        }
+        return element;
+    }
+
 
     public Map<String, String> scriptVariable(Document document) {
         Map<String, String> map = new HashMap<>();

@@ -36,3 +36,4 @@ cos:
   secretKey: 73lHm5B3jCSVLvFI6sPffQyLVTCNIyQc
   region: ap-beijing
   bucket: wechat-design-1257895402
+  server: https://wechat-design-1257895402.cos.ap-beijing.myqcloud.com/

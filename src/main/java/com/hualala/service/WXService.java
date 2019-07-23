@@ -70,7 +70,7 @@ public class WXService {
     public String refreshToken() {
         String redisKey = String.format(ACCESS_TOKEN_KEY, wxConfig.getAppID());
         String url = String.format(ACCESS_TOKEN_URL, wxConfig.getAppID(), wxConfig.getSecret());
-        HttpClientUtil.HttpResult result = HttpClientUtil.getInstance().post(url);
+        HttpClientUtil.HttpResult result = HttpClientUtil.post(url);
         log.info("获取微信公众号的access_token: {}", result.getContent());
         String accessToken = JSON.parseObject(result.getContent()).getString("access_token");
         int expire = wxConfig.getExpire() + 200;
@@ -92,7 +92,7 @@ public class WXService {
         String accessToken = getAccessToken();
         //获取JS-api ticket
         String ticketUrl = String.format(JSAPI_TICKET_URL, accessToken);
-        HttpClientUtil.HttpResult ticketResult = HttpClientUtil.getInstance().post(ticketUrl);
+        HttpClientUtil.HttpResult ticketResult = HttpClientUtil.post(ticketUrl);
         log.info("获取微信公众号的jsApi ticket : {}", ticketResult.getContent());
         String ticket = JSON.parseObject(ticketResult.getContent()).getString("ticket");
         String ticketKey = String.format(JSAPI_TICKET_KEY, wxConfig.getAppID());
@@ -113,7 +113,7 @@ public class WXService {
     public User userBaseInfo(String openID) {
         String accessToken = getAccessToken();
         String url = String.format(USER_BASE_INFO_URL, accessToken, openID);
-        HttpClientUtil.HttpResult result = HttpClientUtil.getInstance().post(url);
+        HttpClientUtil.HttpResult result = HttpClientUtil.post(url);
         log.info("通过OpenID来获取用户基本信息: {}", result.getContent());
         User user = JSONObject.parseObject(result.getContent(), User.class);
         if (StringUtils.isEmpty(user.getOpenid())) {
@@ -135,7 +135,7 @@ public class WXService {
      */
     public JSONObject webAccessToken(String code) {
         String url = String.format(JS_ACCESS_TOKEN_URL, wxConfig.getAppID(), wxConfig.getSecret(), code);
-        HttpClientUtil.HttpResult tokenResult = HttpClientUtil.getInstance().post(url);
+        HttpClientUtil.HttpResult tokenResult = HttpClientUtil.post(url);
         log.info("通过code授权码换取网页授权access_token: {}", tokenResult.getContent());
         JSONObject result = JSONObject.parseObject(tokenResult.getContent());
         if (StringUtils.isEmpty(result.getString("access_token"))) {
@@ -159,7 +159,7 @@ public class WXService {
      */
     public User webUserInfo(String accessToken, String openid) {
         String url = String.format(JS_USER_BASE_INFO_URL, accessToken, openid);
-        HttpClientUtil.HttpResult result = HttpClientUtil.getInstance().post(url);
+        HttpClientUtil.HttpResult result = HttpClientUtil.post(url);
         log.info("网页授权拉取用户信息: {}", result.getContent());
         User user = JSONObject.parseObject(result.getContent(), User.class);
         if (StringUtils.isEmpty(user.getOpenid())) {
@@ -199,11 +199,10 @@ public class WXService {
      * @return
      * @throws Exception
      */
-    public InputStream downloadMedia(String mediaID) throws Exception {
+    public byte[] downloadMedia(String mediaID) throws Exception {
         String accessToken = getAccessToken();
-        String url = String.format(DOWNLOAD_MEDIA, accessToken, wxConfig.getSecret(), mediaID);
-        InputStream inputStream = HttpClientUtil.getInstance().downLoadFromUrl(url);
-        return inputStream;
+        String url = String.format(DOWNLOAD_MEDIA, accessToken, mediaID);
+        return HttpClientUtil.downLoadFromUrl(url);
     }
 
 }

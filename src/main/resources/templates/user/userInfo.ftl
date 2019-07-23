@@ -130,7 +130,7 @@
                     success: function (res) {
                         var serverId = res.serverId; // 返回图片的服务器端ID
                         $.post('/user/passport/updateByID', {"qrcode":serverId}, function (response) {
-                            var imageUrl = "https://wechat-design-1257895402.cos.ap-beijing.myqcloud.com/" + response.data.qrcode
+                            var imageUrl = response.data.qrcode
                             $("#wxQrcode").attr("src",imageUrl)
                         })
                     }

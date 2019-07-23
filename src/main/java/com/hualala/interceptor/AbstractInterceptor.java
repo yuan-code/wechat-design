@@ -43,10 +43,10 @@ public abstract class AbstractInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        User user = UserHolder.getUser();
-        ModelMap modelMap = modelAndView.getModelMap();
-        modelMap.addAttribute("user", user);
         if (modelAndView != null) {
+            User user = UserHolder.getUser();
+            ModelMap modelMap = modelAndView.getModelMap();
+            modelMap.addAttribute("user", user);
             //有视图 freemarker请求
             //补充js-api数据
             String requestURL = request.getRequestURL().toString();

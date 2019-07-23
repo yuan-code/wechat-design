@@ -25,6 +25,7 @@ public class CosConfig implements InitializingBean {
     private String secretKey;
     private String region;
     private String bucket;
+    private String server;
 
     public static COSClient COS_CLIENT;
 

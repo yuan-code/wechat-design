@@ -247,7 +247,7 @@ ${article.head}
     </div>
     <div class="mask mask_gr" style="display:none">
         <div class="mask-dialog" style="padding-top:20px;">
-            <img src="http://res.hualala.com/group2/M01/41/EE/wKgVSl0zIRD5FnswAAApVrSbZ8w012.jpg" style="width:80%;height:80%">
+            <img src="${user.qrcode}" style="width:80%;height:80%">
             <p style="color:red;margin-bottom:20px;">长按二维码加我微信</p>
         </div>
     </div>
