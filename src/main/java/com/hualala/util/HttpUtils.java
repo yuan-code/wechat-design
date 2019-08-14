@@ -46,12 +46,12 @@ public class HttpUtils {
             log.error("IPUtils ERROR ", e);
         }
         // 使用代理，则获取第一个IP地址
-        if (StringUtils.isEmpty(ip)) {
+        if (StringUtils.isNotEmpty(ip)) {
             if (ip.indexOf(",") > 0) {
                 ip = ip.substring(0, ip.indexOf(","));
             }
         }
-        log.info("获取用户ID {}", ip);
+        log.info("获取用户IP {}", ip);
         return ip;
     }
 
