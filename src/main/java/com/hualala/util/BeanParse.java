@@ -1,5 +1,8 @@
 package com.hualala.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -18,7 +21,25 @@ import java.util.Map;
  * <p>
  * 提供提取消息格式中的密文及生成回复消息格式的接口.
  */
-public class XMLParse {
+public class BeanParse {
+
+
+    /**
+     * 对象转xml
+     *
+     * @param obj
+     * @return
+     */
+    public static String beanToXMl(Object obj) throws JsonProcessingException {
+        ObjectMapper objectMapper = new XmlMapper();
+        return objectMapper.writeValueAsString(obj);
+    }
+
+
+    public static <T> T XMLToBean(String xml, Class<T> objClass) throws IOException {
+        ObjectMapper objectMapper = new XmlMapper();
+        return objectMapper.readValue(xml, objClass);
+    }
 
 
     /**

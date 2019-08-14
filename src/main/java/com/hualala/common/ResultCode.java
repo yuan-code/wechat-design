@@ -9,8 +9,10 @@ public enum ResultCode {
     WECHAT_ERROR("004","微信异常"),
     NO_AUTH_ERROR("005","页面未授权"),
     VERIFY_CODE_ERROR("006","爬取公众号出现验证码"),
-    HTTP_CLIENT_ERROR("007","HTTP_CLIENT_ERROR");
-
+    HTTP_CLIENT_ERROR("007","HTTP_CLIENT_ERROR"),
+    PARAMS_ERROR("008","参数错误"),
+    PAY_ERROR("009","支付异常"),
+    SIGN_ERROR("010","签名错误");
 
     private String code;
     private String msg;

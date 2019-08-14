@@ -11,6 +11,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -49,6 +50,22 @@ public class HttpClientUtil {
         packageParam(params, httpPost);
         return getHttpResult(httpClient, httpPost);
     }
+
+    public static HttpClientUtil.HttpResult postXML(String url,String content) {
+        return post(url,content,"application/xml; charset=utf-8");
+    }
+
+
+    public static HttpClientUtil.HttpResult post(String url,String content,String contentType)  {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setConfig(requestConfig);
+        httpPost.setHeader("Content-Type", contentType);
+        httpPost.setEntity(new StringEntity(content,"utf-8"));
+        return getHttpResult(httpClient, httpPost);
+    }
+
+
 
     public static HttpClientUtil.HttpResult get(String url, Map<String, String> params) {
         CloseableHttpClient httpClient = HttpClients.createDefault();

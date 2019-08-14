@@ -8,6 +8,9 @@ package com.hualala.common;
  */
 public class WXConstant {
 
+
+    public static final String SUCCESS = "SUCCESS";
+
     /**
      * cookie name for access_token
      */
@@ -81,4 +84,10 @@ public class WXConstant {
      * 下载多媒体文件接口
      */
     public static final String DOWNLOAD_MEDIA = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
+
+    /**
+     * 统一下单接口
+     */
+    public static final String WX_ORDER_PAY = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+
 }

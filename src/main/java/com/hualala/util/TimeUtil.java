@@ -2,7 +2,9 @@ package com.hualala.util;
 
 import org.joda.time.DateTime;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -13,8 +15,27 @@ import java.util.Date;
  */
 public class TimeUtil {
 
+
+    /**
+     * 时间加上N个月
+     *
+     * @param time yyyyMMddHHmmss
+     * @param month
+     * @return
+     * @throws ParseException
+     */
+    public static Long stepMonth(Long time, int month) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = sdf.parse(time.toString());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, month);
+        return Long.valueOf(sdf.format(c.getTime()));
+    }
+
     /**
      * 返回当前时间的时间戳,格式yyyyMMdd
+     *
      * @return
      */
     public static Long currentDT8() {
@@ -26,6 +47,7 @@ public class TimeUtil {
 
     /**
      * 返回当前时间的时间戳,格式yyyyMMddHHmmss
+     *
      * @return
      */
     public static Long currentDT() {
@@ -36,6 +58,7 @@ public class TimeUtil {
 
     /**
      * 时间戳转换yyyyMMddHHmmss
+     *
      * @param timestamp
      * @return
      */
@@ -48,6 +71,7 @@ public class TimeUtil {
 
     /**
      * 返回时间戳,格式yyyyMMdd
+     *
      * @param time joda时间
      * @return
      */

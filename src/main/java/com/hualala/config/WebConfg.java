@@ -49,6 +49,7 @@ public class WebConfg implements WebMvcConfigurer {
         registry.addInterceptor(passportInterceptor)
                 .addPathPatterns("/article/passport/**")
                 .addPathPatterns("/user/passport/**")
+                .addPathPatterns("/order/passport/**")
                 .addPathPatterns("/passport/**");
     }
 

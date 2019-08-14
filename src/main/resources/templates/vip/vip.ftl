@@ -139,23 +139,20 @@
         vipType = $(this).attr("vipType");
     });
     $("#payBtn").on('click', function(e){
-        $.post('/my/vip/pay', {vipType:vipType}, function (response) {
-            var json = eval("(" + response + ")")
-            if (json["code"] == 1) {
+        $.post('/order/passport/create', {vipType:vipType}, function (response) {
+            if (response.success) {
                 wx.chooseWXPay({
-                    timestamp: json.timestamp,
-                    nonceStr: json.nonceStr,
-                    package: json.package,
-                    signType: json.signType,
-                    paySign: json.paySign,
+                    appId: response.data.appId,
+                    nonceStr: response.data.nonceStr,
+                    timestamp: response.data.timeStamp,
+                    package: response.data.package,
+                    signType: response.data.signType,
+                    paySign: response.data.paySign,
                     success: function (res) {
                         alert("支付成功",true);
-                        window.location.href = "/art/a22b1d3a4265f526/edit"+"?id="+10000*Math.random();
+                        // window.location.href = "/art/a22b1d3a4265f526/edit"+"?id="+10000*Math.random();
                     }
                 });
-            } else if(json["code"] == 2) {
-                alert(json.errorMsg,true);
-                window.location.href = "/art/a22b1d3a4265f526/edit"+"?id="+10000*Math.random();
             }else {
                 alert("操作失败",false);
             }

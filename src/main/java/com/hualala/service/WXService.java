@@ -3,9 +3,12 @@ package com.hualala.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hualala.common.ResultCode;
+import com.hualala.common.WXConstant;
 import com.hualala.config.WXConfig;
 import com.hualala.exception.BusinessException;
 import com.hualala.model.User;
+import com.hualala.model.WxPayRes;
+import com.hualala.util.BeanParse;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.HttpClientUtil;
 import com.hualala.weixin.mp.JSApiUtil;
@@ -14,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -199,10 +202,29 @@ public class WXService {
      * @return
      * @throws Exception
      */
-    public byte[] downloadMedia(String mediaID) throws Exception {
+    public byte[] downloadMedia(String mediaID) {
         String accessToken = getAccessToken();
         String url = String.format(DOWNLOAD_MEDIA, accessToken, mediaID);
         return HttpClientUtil.downLoadFromUrl(url);
+    }
+
+    /**
+     * 微信支付创建订单
+     *
+     * @param xml
+     * @return
+     */
+    public WxPayRes payOrder(String xml) throws IOException {
+        HttpClientUtil.HttpResult result = HttpClientUtil.postXML(WX_ORDER_PAY, xml);
+        WxPayRes wxPayRes = BeanParse.XMLToBean(result.getContent(), WxPayRes.class);
+        log.info("微信支付创建订单 wxPayRes: {}", wxPayRes);
+        if (!wxPayRes.getReturnCode().equals(WXConstant.SUCCESS)) {
+            throw new BusinessException(ResultCode.PAY_ERROR.getCode(), "【微信统一支付】发起支付, returnCode != SUCCESS, returnMsg = " + wxPayRes.getReturnMsg());
+        }
+        if (!wxPayRes.getResultCode().equals(WXConstant.SUCCESS)) {
+            throw new BusinessException(ResultCode.PAY_ERROR.getCode(), "【微信统一支付】发起支付, resultCode != SUCCESS, err_code = " + wxPayRes.getErrCode() + " err_code_des=" + wxPayRes.getErrCodeDes());
+        }
+        return wxPayRes;
     }
 
 }

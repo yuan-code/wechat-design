@@ -23,6 +23,9 @@ public class WXConfig implements InitializingBean {
     private String encodingAESKey;
     private Integer expire;
 
+    private String mchId;
+    private String mchKey;
+
     /**
      * 微信加解密工具
      */

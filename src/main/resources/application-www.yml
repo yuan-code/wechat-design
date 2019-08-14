@@ -3,9 +3,9 @@ spring:
     username: root
     password: mysql@TXY
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/wechat?serverTimeZone=Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://62.234.24.11:3306/wechat?serverTimeZone=Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
   redis:
-    host: 127.0.0.1
+    host: 62.234.24.11
     port: 6379
     database: 1
     timeout: 10000
@@ -19,3 +19,5 @@ wechat:
   token: WX_DESIGN_TOKEN
   encodingAESKey: PJKtnHu74965O2WOfdxQgI3FOXrxrXd9YssgsaumzIW
   expire: 5000
+  mchId: 1547520731
+  mchKey: 04b19705b97f4d07bf57f4f455438d2d
