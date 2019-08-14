@@ -205,6 +205,7 @@ public class Order implements Serializable {
         this.transactionid = payResult.getTransactionid();
         this.status = 2;
         this.actionTime = payResult.getTimeEnd();
+        this.feeType = payResult.getFeeType();
         return this;
     }
 
