@@ -51,6 +51,7 @@ public class HttpUtils {
                 ip = ip.substring(0, ip.indexOf(","));
             }
         }
+        log.info("获取用户ID {}", ip);
         return ip;
     }
 
