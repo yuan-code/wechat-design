@@ -114,7 +114,7 @@ public class ArticleController {
         if(article.getPid() == null || article.getPid() == 0L) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"父文章ID必传");
         }
-        if(!user.getAvailable()) {
+        if(!user.isAvailable()) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(),"用户未付费");
         }
         Article copy = articleService.getById(article.getPid());
