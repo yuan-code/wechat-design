@@ -64,7 +64,7 @@
             alert("签名不能大于20个字符");
             return;
         }
-        $.post('/user/passport/updateByID', {slogan: slogan}, function (response) {
+        $.post('/user/updateByID', {slogan: slogan}, function (response) {
             alert("修改成功");
             window.location.href = "${path[0]}";
         })

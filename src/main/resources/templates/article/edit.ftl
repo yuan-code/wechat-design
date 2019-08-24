@@ -177,11 +177,11 @@
 
         <div class="insert-box">
             <div class="weui-flex__item">
-                <a href="/passport/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                <a href="/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                         class="iconfont icon-edit"></span>插入文本</a>
             </div>
             <div class="weui-flex__item">
-                <a href="/passport/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                <a href="/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                         class="iconfont icon-tupian"></span>插入图片</a>
             </div>
         </div>
@@ -191,11 +191,11 @@
                 <div class="select-box__bd">
                 </div>
                 <div class="select-box__ft">
-                    <a href="/passport/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-chuyidong1-copy"></span>删除</a>
-                    <a href="/passport/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-edit"></span>插入文字</a>
-                    <a href="/passport/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-tupian"></span>插入图片</a>
                 </div>
             </div>
@@ -248,10 +248,10 @@
 </div>
 <div class="footer">
     <div class="weui-flex__item">
-        <a href="/article/auth/detail/${article.articleid}" class="weui-btn weui-btn_default">返回</a>
+        <a href="/article/detail/${article.articleid}" class="weui-btn weui-btn_default">返回</a>
     </div>
     <div class="weui-flex__item">
-        <a href="/passport/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_primary">保存</a>
+        <a href="/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_primary">保存</a>
     </div>
 </div>
 <div id="loadingToast" style="opacity: 0; display: none;">
@@ -277,9 +277,9 @@
             var title = $(".art-title").html();
             var artId = "${article.articleid}";
             $loadingToast.fadeIn(100);
-            $.post('/article/passport/save', {title: title, pid:artId,content: html}, function (result) {
+            $.post('/article/save', {title: title, pid:artId,content: html}, function (result) {
                 $loadingToast.fadeOut(100);
-                window.location.href = "/article/auth/detail/" + result.data.articleid;
+                window.location.href = "/article/detail/" + result.data.articleid;
             });
         });
         $("#contentCancelBtn").on("click", function () {

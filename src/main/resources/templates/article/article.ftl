@@ -176,7 +176,7 @@ ${article.head}
 <body id="activity-detail" class="zh_CN mm_appmsg  appmsg_skin_default appmsg_style_default">
     <#--只有二次编辑的文章 并且是作者 或者原创文章 才显示这个-->
     <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-        <a href="/passport/customer/customer?source=top" class="toptip">
+        <a href="/customer/customer?source=top" class="toptip">
             共有<span>0人</span>阅读了该文章，点击查看
         </a>
     <#--</#if>-->
@@ -202,7 +202,7 @@ ${article.head}
                                     <#--<#if user?? && (author.slogan?? || author.openID != openID)>-->
                                         ${user.slogan}
                                     <#--<#else>-->
-                                        <a href="/passport/user/slogan?path=/article/auth/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
+                                        <a href="/user/slogan?path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
                                     <#--</#if>-->
                                 </p>
                             </div>
@@ -227,7 +227,7 @@ ${article.head}
         <span style="color:#1296db">0
             <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
             <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-                <a href="/passport/customer/customer?source=bottom" class="right-customer-btn">0人关注</a>
+                <a href="/customer/customer?source=bottom" class="right-customer-btn">0人关注</a>
             <#--</#if>-->
         </span>
     </p>
@@ -236,7 +236,7 @@ ${article.head}
     </div>
     <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
     <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-        <a href="/article/passport/edit/${article.articleid}" class="right-edit-btn">修改文章</a>
+        <a href="/article/edit/${article.articleid}" class="right-edit-btn">修改文章</a>
     <#--</#if>-->
 
     <div class="mask mask_gzh" style="display:none">
@@ -663,7 +663,7 @@ ${article.head}
                         isShowProgressTips: 1,
                         success: function (res) {
                             var serverId = res.serverId;
-                            $.post('/user/passport/updateByID', {qrcode: serverId}, function (response) {
+                            $.post('/user/updateByID', {qrcode: serverId}, function (response) {
                                 var json = JSON.parse(response);
                                 location.reload();
                             })

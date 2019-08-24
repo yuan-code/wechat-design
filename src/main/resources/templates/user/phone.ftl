@@ -60,9 +60,9 @@
             alert("请正确填写手机号码");
             return;
         }
-        $.post('/user/passport/updateByID', {phone: mobile}, function (response) {
+        $.post('/user/updateByID', {phone: mobile}, function (response) {
             alert("修改成功");
-            window.location.href = "/passport/user/userInfo";
+            window.location.href = "/user/userInfo";
         })
     });
 </script>

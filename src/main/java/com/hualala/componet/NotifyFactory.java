@@ -168,7 +168,7 @@ public class NotifyFactory implements ApplicationContextAware {
             switch (xmlMap.get("EventKey")) {
                 case HOT_ARTICLE_CLICK_TYPE:
                     Article article = articleService.findAny();
-                    String articleUrl = "http://wechat.ictry.com/article/auth/detail/" + article.getArticleid();
+                    String articleUrl = "http://wechat.ictry.com/article/detail/" + article.getArticleid();
                     return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),articleUrl);
                 case HOT_ARTICLE_CONTACT_US:
                     return wxReply.replyImage(mediaID);
@@ -203,7 +203,7 @@ public class NotifyFactory implements ApplicationContextAware {
             String content = xmlMap.get("Content");
             if(content.startsWith("https://mp.weixin.qq.com/")) {
                 Article article = articleService.articleCopy(content);
-                String articleUrl = "http://wechat.ictry.com/article/auth/detail/" + article.getArticleid();
+                String articleUrl = "http://wechat.ictry.com/article/detail/" + article.getArticleid();
                 return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),articleUrl);
             }
             String msg = "回复公众号，内容为要复制的文章链接地址，即可获得文章推送（仅支持mp.weixin.qq.com域名下的原创文章）";

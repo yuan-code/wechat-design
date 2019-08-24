@@ -139,7 +139,7 @@
         vipType = $(this).attr("vipType");
     });
     $("#payBtn").on('click', function(e){
-        $.post('/order/passport/create', {vipType:vipType}, function (response) {
+        $.post('/order/create', {vipType:vipType}, function (response) {
             if (response.success) {
                 wx.chooseWXPay({
                     appId: response.data.appId,

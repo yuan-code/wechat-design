@@ -110,7 +110,7 @@
 
 <div class="page-content">
     <div class="my-card">
-        <a href="/passport/user/userInfo">修改名片</a>
+        <a href="/user/userInfo">修改名片</a>
         <div class="my-card__ct">
             <div  class="my-card__hd">
                 <img src="${user.headimgurl}">

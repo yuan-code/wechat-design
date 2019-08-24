@@ -77,9 +77,9 @@
             return;
         }
         $loadingToast.fadeIn(100);
-        $.post('/article/passport/copy', {source: url}, function (result) {
+        $.post('/article/copyArticle', {source: url}, function (result) {
             if (result.success) {
-                window.location.href = "/article/auth/detail/"+result.data.articleid;
+                window.location.href = "/article/detail/"+result.data.articleid;
             } else {
                 alert("复制文章失败");
             }

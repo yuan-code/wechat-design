@@ -5,10 +5,10 @@ import com.hualala.common.ResultCode;
 import com.hualala.common.UserResolver;
 import com.hualala.exception.BusinessException;
 import com.hualala.model.Article;
-import com.hualala.model.Order;
+import com.hualala.model.Customer;
 import com.hualala.model.User;
 import com.hualala.service.ArticleService;
-import com.hualala.service.OrderService;
+import com.hualala.service.CustomerService;
 import com.hualala.service.UserService;
 import com.hualala.util.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * <p>
@@ -42,7 +42,7 @@ public class ArticleController {
     private UserService userService;
 
     @Autowired
-    private OrderService orderService;
+    private CustomerService customerService;
 
     /**
      * 查看文章详情 需要微信基础授权
@@ -52,15 +52,22 @@ public class ArticleController {
      * @param user 访问页面的用户
      * @throws IOException
      */
-    @RequestMapping("/auth/detail/{articleid}")
+    @RequestMapping("/detail/{articleid}")
     public String articleDetail(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) {
         Article article = articleService.getById(articleid);
         if (article.getPid() != 0L) {
             //二次编辑文章查询所属用户
             User author = userService.getById(article.getUserid());
             modelMap.addAttribute("author", author);
-
-            //TODO 增加阅读用户
+            if(!Objects.equals(author.getOpenid(),user.getOpenid())) {
+                Customer customer = new Customer();
+                customer.setArticleid(article.getArticleid());
+                customer.setAuthorOpenid(author.getOpenid());
+                customer.setAuthorUserid(author.getUserid());
+                customer.setCustomerOpenid(user.getOpenid());
+                customer.setCustomerUserid(user.getUserid());
+                customerService.save(customer);
+            }
         }
         modelMap.addAttribute("article", article);
         return "article/article";
@@ -75,7 +82,7 @@ public class ArticleController {
      * @param user 访问页面的用户
      * @throws IOException
      */
-    @RequestMapping("/passport/edit/{articleid}")
+    @RequestMapping("/edit/{articleid}")
     public String articleEdit(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) {
         Article article = articleService.getById(articleid);
         modelMap.addAttribute("article", article);
@@ -90,7 +97,7 @@ public class ArticleController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping("/passport/copy")
+    @RequestMapping("/copyArticle")
     public Object articleCopy(Article article, @UserResolver User user) throws IOException {
         Article copy = articleService.articleCopy(article.getSource());
         return ResultUtils.success(copy);
@@ -103,7 +110,7 @@ public class ArticleController {
      * @throws IOException
      */
     @ResponseBody
-    @RequestMapping("/passport/save")
+    @RequestMapping("/save")
     public Object articleSave(Article article, @UserResolver User user) {
         if(StringUtils.isEmpty(article.getContent())) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"文章内容必传");

@@ -59,9 +59,9 @@
             alert("名字不能大于10个字符");
             return;
         }
-        $.post('/user/passport/updateByID', {"nickname":userName}, function (response) {
+        $.post('/user/updateByID', {"nickname":userName}, function (response) {
             alert("修改成功");
-            window.location.href = "/passport/user/userInfo";
+            window.location.href = "/user/userInfo";
         })
     });
 </script>

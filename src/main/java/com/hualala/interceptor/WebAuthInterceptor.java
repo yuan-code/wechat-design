@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hualala.common.RedisKey;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
+import com.hualala.service.OrderService;
 import com.hualala.service.UserService;
 import com.hualala.service.WXService;
 import com.hualala.util.CacheUtils;
@@ -14,6 +15,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -21,8 +24,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 
-import static com.hualala.common.WXConstant.*;
+import static com.hualala.common.WXConstant.COOKIE_ACCESS_TOKEN_NAME;
+import static com.hualala.common.WXConstant.JS_PRE_AUTH_URL;
 
 
 /**
@@ -32,7 +39,7 @@ import static com.hualala.common.WXConstant.*;
  */
 @Log4j2
 @Component
-public class WebAuthInterceptor extends AbstractInterceptor {
+public class WebAuthInterceptor implements HandlerInterceptor {
 
 
     @Autowired
@@ -40,6 +47,13 @@ public class WebAuthInterceptor extends AbstractInterceptor {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private WXService wxService;
+
+    @Autowired
+    private OrderService orderService;
+
 
     /**
      * 微信JS授权统一处理
@@ -53,7 +67,7 @@ public class WebAuthInterceptor extends AbstractInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        User cookieAuth = super.cookieAuth(request);
+        User cookieAuth = this.cookieAuth(request);
         if(cookieAuth != null) {
             return true;
         }
@@ -93,8 +107,17 @@ public class WebAuthInterceptor extends AbstractInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        super.postHandle(request,response,handler,modelAndView);
         User user = UserHolder.getUser();
+        if (modelAndView != null) {
+            ModelMap modelMap = modelAndView.getModelMap();
+            modelMap.addAttribute("user", user);
+            //有视图 freemarker请求
+            //补充js-api数据
+            String requestURL = request.getRequestURL().toString();
+            String queryString = request.getQueryString();
+            String url = StringUtils.isEmpty(queryString) ? requestURL : requestURL + "?" + queryString;
+            wxService.jsApiSignature(modelAndView.getModelMap(), url);
+        }
         //返回给前端cookie
         //cookie内的token一小时过期
         String cookieToken = DigestUtils.md5Hex(user.getAppid() + user.getOpenid());
@@ -109,5 +132,45 @@ public class WebAuthInterceptor extends AbstractInterceptor {
         response.addCookie(cookie);
     }
 
+
+    /**
+     * 清除user 防内存泄露
+     *
+     * @param request
+     * @param response
+     * @param handler
+     * @param ex
+     * @throws Exception
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        UserHolder.clear();
+    }
+
+
+    /**
+     * cookie认证
+     *
+     * @param request
+     * @return
+     */
+    protected User cookieAuth(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            Optional<String> token = Arrays.stream(request.getCookies()).filter(c -> Objects.equals(c.getName(), COOKIE_ACCESS_TOKEN_NAME)).map(Cookie::getValue).findFirst();
+
+            if (token.isPresent()) {
+                String jsonUser = CacheUtils.get(token.get());
+                if (StringUtils.isNotEmpty(jsonUser)) {
+                    User user = JSON.parseObject(jsonUser, User.class);
+                    //判断用户是否是有效的付费用户
+                    UserHolder.setUser(user);
+                    CacheUtils.expire(token.get(), RedisKey.COOKIE_EXPIRE_SECONDS);
+                    orderService.currentUserOrder(user.getOpenid()).ifPresent(order -> user.setAvailable(true));
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
 
 }

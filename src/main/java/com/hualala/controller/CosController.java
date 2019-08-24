@@ -30,7 +30,7 @@ public class CosController {
      * @return 完整的图片路径
      * @throws IOException
      */
-    @RequestMapping("/passport/upload")
+    @RequestMapping("/upload")
     public Object upload(String mediaID) throws IOException {
         if(StringUtils.isEmpty(mediaID)) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"mediaID必传");

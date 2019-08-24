@@ -40,7 +40,7 @@ public class OrderController {
      * 创建订单，发起预支付
      */
     @ResponseBody
-    @RequestMapping(value = "/passport/create")
+    @RequestMapping(value = "/create")
     public Object create(@RequestParam("vipType") Integer vipType, @UserResolver User user) throws Exception {
         if(vipType == null || vipType == 0L) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"支付类型必传");

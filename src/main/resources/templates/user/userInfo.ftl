@@ -70,7 +70,7 @@
                 <img src="${user.headimgurl}">
             </div>
         </div>
-        <a href="/passport/user/nickname" class="weui-cell weui-cell_access">
+        <a href="/user/nickname" class="weui-cell weui-cell_access">
             <div class="weui-cell__bd">
                 姓名
             </div>
@@ -81,7 +81,7 @@
     </div>
 
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="/passport/user/slogan?path=/passport/user/userInfo">
+        <a class="weui-cell weui-cell_access" href="/user/slogan?path=/user/userInfo">
             <div class="weui-cell__bd">
                 签名
             </div>
@@ -92,7 +92,7 @@
     </div>
 
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="/passport/user/phone">
+        <a class="weui-cell weui-cell_access" href="/user/phone">
             <div class="weui-cell__bd">
                 手机
             </div>
@@ -129,7 +129,7 @@
                     isShowProgressTips: 1, // 默认为1，显示进度提示
                     success: function (res) {
                         var serverId = res.serverId; // 返回图片的服务器端ID
-                        $.post('/user/passport/updateByID', {"qrcode":serverId}, function (response) {
+                        $.post('/user/updateByID', {"qrcode":serverId}, function (response) {
                             var imageUrl = response.data.qrcode
                             $("#wxQrcode").attr("src",imageUrl)
                         })
