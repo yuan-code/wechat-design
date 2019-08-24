@@ -1,7 +1,7 @@
 package com.hualala.order;
 
 import com.hualala.common.ResultCode;
-import com.hualala.config.UserResolver;
+import com.hualala.wechat.common.UserResolver;
 import com.hualala.wechat.WXConfig;
 import com.hualala.common.BusinessException;
 import com.hualala.user.domain.User;

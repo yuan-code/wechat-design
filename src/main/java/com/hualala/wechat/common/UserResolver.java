@@ -1,4 +1,4 @@
-package com.hualala.config;
+package com.hualala.wechat.common;
 
 import java.lang.annotation.*;
 

@@ -9,7 +9,7 @@ import com.hualala.user.UserService;
 import com.hualala.wechat.WXConfig;
 import com.hualala.wechat.WXService;
 import com.hualala.util.CacheUtils;
-import com.hualala.util.UserHolder;
+import com.hualala.wechat.util.UserHolder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;

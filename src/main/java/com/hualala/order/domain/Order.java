@@ -10,6 +10,7 @@ import com.hualala.order.util.MoneyUtil;
 import com.hualala.pay.domain.WXPayResult;
 import com.hualala.user.domain.User;
 import com.hualala.util.*;
+import com.hualala.wechat.util.UserHolder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

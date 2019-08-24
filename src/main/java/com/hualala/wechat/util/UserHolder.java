@@ -1,4 +1,4 @@
-package com.hualala.util;
+package com.hualala.wechat.util;
 
 import com.hualala.user.domain.User;
 
