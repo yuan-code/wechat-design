@@ -75,8 +75,15 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         if(order == null) {
             throw new BusinessException(ResultCode.PAY_ERROR);
         }
+        //如果有重复支付，计算订单的下次起止时间
+        Long beginTime = payResult.getTimeEnd();
+        //TODO 需要做到幂等
+        Order vipTime = orderMapper.queryVipTime(payResult.getAppid(), payResult.getOpenid(), payResult.getMchid());
+        if(vipTime != null) {
+            beginTime = vipTime.getEndTime();
+        }
         order.validateMoney(MoneyUtil.Fen2Yuan(payResult.getCashFee()));
-        order.calculateTime(payResult.getTimeEnd()).savePayResult(payResult);
+        order.calculateTime(beginTime).savePayResult(payResult);
         orderMapper.updateById(order);
     }
 }
