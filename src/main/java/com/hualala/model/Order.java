@@ -14,7 +14,6 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -133,7 +132,7 @@ public class Order implements Serializable {
      * @return
      */
     public Order generateNo() {
-        Long orderNo = SnowflakeIdWorker.generateId();
+        Long orderNo = SnowflakeID.generateId();
         this.orderNo = orderNo.toString();
         return this;
     }

@@ -34,7 +34,7 @@ public class MediaUtils {
         objectMetadata.setContentType(contentType);
         String key = UUID.randomUUID().toString();
         PutObjectResult putObjectResult = CosConfig.COS_CLIENT.putObject(cosConfig.getBucket(), key, inputStream, objectMetadata);
-        return key;
+        return cosConfig.getServer() + key;
     }
 
 

@@ -63,8 +63,7 @@ public class UserController {
         if(StringUtils.isNotEmpty(params.getQrcode())){
             //上传图片
             byte[] images = wxService.downloadMedia(params.getQrcode());
-            String key = MediaUtils.uploadImage(images);
-            String url = cosConfig.getServer() + key;
+            String url = MediaUtils.uploadImage(images);
             params.setQrcode(url);
         }
         Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());

@@ -20,7 +20,7 @@ import java.net.UnknownHostException;
  * SnowFlake的优点是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞(由数据中心ID和机器ID作区分)，并且效率较高，经测试，SnowFlake每秒能够产生26万ID左右。
  */
 @Log4j2
-public class SnowflakeIdWorker {
+public class SnowflakeID {
 
     // ==============================Fields===========================================
     /** 开始时间截 (2015-01-01) */
@@ -53,12 +53,12 @@ public class SnowflakeIdWorker {
     /** 上次生成ID的时间截 */
     private long lastTimestamp = -1L;
 
-    private static SnowflakeIdWorker idWorker;
+    private static SnowflakeID idWorker;
 
 
 
     static {
-        idWorker = new SnowflakeIdWorker(getWorkId());
+        idWorker = new SnowflakeID(getWorkId());
     }
 
     //==============================Constructors=====================================
@@ -66,7 +66,7 @@ public class SnowflakeIdWorker {
      * 构造函数
      * @param workerId 工作ID (0~31)
      */
-    public SnowflakeIdWorker(long workerId) {
+    public SnowflakeID(long workerId) {
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("workerId can't be greater than %d or less than 0", maxWorkerId));
         }
