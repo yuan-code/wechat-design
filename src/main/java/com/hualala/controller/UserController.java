@@ -45,8 +45,6 @@ public class UserController {
     @Autowired
     private WXService wxService;
 
-    @Autowired
-    private CosConfig cosConfig;
 
 
 

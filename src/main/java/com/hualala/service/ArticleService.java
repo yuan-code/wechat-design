@@ -35,8 +35,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     @Autowired
     private ArticleMapper articleMapper;
 
-    @Autowired
-    private CosConfig cosConfig;
 
     /**
      * 爬取单个公众号文章
@@ -90,7 +88,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             String imgUrl = ele.attr("data-src");
             byte[] bytes = HttpClientUtil.downLoadFromUrl(imgUrl);
             String newUrl = MediaUtils.uploadImage(bytes);
-            ele.attr("src", cosConfig.getServer() + newUrl);
+            ele.attr("src", newUrl);
         }
         return element;
     }
