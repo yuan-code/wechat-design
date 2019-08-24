@@ -51,8 +51,6 @@ public abstract class AbstractInterceptor implements HandlerInterceptor {
         if (modelAndView != null) {
             User user = UserHolder.getUser();
             ModelMap modelMap = modelAndView.getModelMap();
-            //判断用户是否是有效的付费用户
-            orderService.currentUserOrder(user.getOpenid()).ifPresent(order -> user.setAvailable(1));
             modelMap.addAttribute("user", user);
             //有视图 freemarker请求
             //补充js-api数据
@@ -92,8 +90,10 @@ public abstract class AbstractInterceptor implements HandlerInterceptor {
                 String jsonUser = CacheUtils.get(token.get());
                 if (StringUtils.isNotEmpty(jsonUser)) {
                     User user = JSON.parseObject(jsonUser, User.class);
+                    //判断用户是否是有效的付费用户
                     UserHolder.setUser(user);
                     CacheUtils.expire(token.get(), RedisKey.COOKIE_EXPIRE_SECONDS);
+                    orderService.currentUserOrder(user.getOpenid()).ifPresent(order -> user.setAvailable(true));
                     return user;
                 }
                 //TODO 如果走到这里 可能是token过期了 没想好要怎么做

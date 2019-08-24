@@ -75,8 +75,10 @@ public class WebAuthInterceptor extends AbstractInterceptor {
         //先保存起来这个web token 暂时没什么用
         CacheUtils.set(tokenKey, tokenMap.toJSONString(), expiresIn);
         User user = wxService.webUserInfo(accessToken, openid);
-        user = userService.saveUser(user);
-        UserHolder.setUser(user);
+        User newUser = userService.saveUser(user);
+        //判断用户是否是有效的付费用户
+        orderService.currentUserOrder(newUser.getOpenid()).ifPresent(order -> newUser.setAvailable(true));
+        UserHolder.setUser(newUser);
         return true;
     }
 
