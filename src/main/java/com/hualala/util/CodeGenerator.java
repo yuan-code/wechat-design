@@ -60,7 +60,7 @@ public class CodeGenerator {
         // 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名
         pc.setParent(pack);
         // Entity包名
-        pc.setEntity("model");
+        pc.setEntity("domain");
         mpg.setPackageInfo(pc);
 
         // 自定义配置

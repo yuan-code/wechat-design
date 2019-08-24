@@ -2,7 +2,7 @@ package com.hualala.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hualala.common.ResultCode;
-import com.hualala.exception.BusinessException;
+import com.hualala.common.BusinessException;
 
 /**
  * @author YuanChong

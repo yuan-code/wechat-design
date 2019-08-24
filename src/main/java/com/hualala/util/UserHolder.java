@@ -1,6 +1,6 @@
 package com.hualala.util;
 
-import com.hualala.model.User;
+import com.hualala.user.domain.User;
 
 /**
  * @author YuanChong

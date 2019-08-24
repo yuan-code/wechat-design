@@ -1,7 +1,5 @@
 package com.hualala.config;
 
-import com.hualala.componet.UserArgumentResolver;
-import com.hualala.interceptor.WebAuthInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

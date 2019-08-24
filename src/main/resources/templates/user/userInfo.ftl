@@ -93,7 +93,7 @@
 
     <div class="weui-cells">
         <a class="weui-cell weui-cell_access" href="/user/phone">
-            <div class="weui-cell__bd">
+             <div class="weui-cell__bd">
                 手机
             </div>
             <div class="weui-cell__ft">

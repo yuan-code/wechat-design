@@ -1,7 +1,7 @@
 package com.hualala.util;
 
 import com.hualala.common.ResultCode;
-import com.hualala.exception.BusinessException;
+import com.hualala.common.BusinessException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;

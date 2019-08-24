@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hualala.mapper.ArticleMapper">
+<mapper namespace="com.hualala.article.ArticleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hualala.model.Article">
+    <resultMap id="BaseResultMap" type="com.hualala.article.domain.Article">
         <id column="articleid" property="articleid" />
         <result column="pid" property="pid" />
         <result column="title" property="title" />

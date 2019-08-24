@@ -28,9 +28,6 @@ logging:
   level:
     com.hualala.mapper: DEBUG
 
-ai:
-  apiKey: 7d14fa4bc295404a9fced576c37453e5
-
 cos:
   secretID: AKIDvmPp0vr00sVt2wNyBF4dw0qSvCIB8Iah
   secretKey: 73lHm5B3jCSVLvFI6sPffQyLVTCNIyQc
