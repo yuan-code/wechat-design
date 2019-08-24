@@ -2,6 +2,7 @@ package com.hualala.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hualala.common.RedisKey;
 import com.hualala.config.WXConfig;
 import com.hualala.model.User;
 import com.hualala.service.UserService;
@@ -70,7 +71,7 @@ public class WebAuthInterceptor extends AbstractInterceptor {
         String accessToken = tokenMap.getString("access_token");
         String openid = tokenMap.getString("openid");
         Integer expiresIn = tokenMap.getInteger("expires_in");
-        String tokenKey = String.format(WEB_ACCESS_TOKEN_KEY, wxConfig.getAppID(), openid);
+        String tokenKey = String.format(RedisKey.WEB_ACCESS_TOKEN_KEY, wxConfig.getAppID(), openid);
         //先保存起来这个web token 暂时没什么用
         CacheUtils.set(tokenKey, tokenMap.toJSONString(), expiresIn);
         User user = wxService.webUserInfo(accessToken, openid);
@@ -97,9 +98,9 @@ public class WebAuthInterceptor extends AbstractInterceptor {
         String cookieToken = DigestUtils.md5Hex(user.getAppid() + user.getOpenid());
         user.setToken(cookieToken);
         if (CacheUtils.exists(cookieToken)) {
-            CacheUtils.expire(cookieToken, COOKIE_EXPIRE_SECONDS);
+            CacheUtils.expire(cookieToken, RedisKey.COOKIE_EXPIRE_SECONDS);
         } else {
-            CacheUtils.set(cookieToken, JSON.toJSONString(user), COOKIE_EXPIRE_SECONDS);
+            CacheUtils.set(cookieToken, JSON.toJSONString(user), RedisKey.COOKIE_EXPIRE_SECONDS);
         }
         Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME, cookieToken);
         cookie.setPath("/");

@@ -26,9 +26,5 @@
     </resultMap>
 
 
-    <select id="queryVipTime" parameterType="java.util.Map" resultType="com.hualala.model.Order">
-        SELECT MIN(begin_time) AS beginTime, MAX(end_time) AS endTime
-        FROM `order` WHERE appid = #{appid} AND openid = #{openid} AND mchid = #{mchid} AND status = 2
-    </select>
 
 </mapper>

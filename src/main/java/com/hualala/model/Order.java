@@ -14,6 +14,7 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Calendar;
 
 /**
  * <p>
@@ -212,7 +213,7 @@ public class Order implements Serializable {
     public Order calculateTime(Long time) throws ParseException {
         this.beginTime = time;
         PriceEnum priceEnum = PriceEnum.resolveType(this.getOrderType());
-        this.endTime = TimeUtil.stepMonth(time,priceEnum.getMonth());
+        this.endTime = TimeUtil.stepTime(time, Calendar.MONTH, priceEnum.getMonth());
         return this;
     }
 }

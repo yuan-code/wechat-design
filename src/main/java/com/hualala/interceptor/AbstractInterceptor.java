@@ -1,7 +1,10 @@
 package com.hualala.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.hualala.common.RedisKey;
+import com.hualala.model.Order;
 import com.hualala.model.User;
+import com.hualala.service.OrderService;
 import com.hualala.service.WXService;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.UserHolder;
@@ -19,7 +22,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.hualala.common.WXConstant.COOKIE_ACCESS_TOKEN_NAME;
-import static com.hualala.common.WXConstant.COOKIE_EXPIRE_SECONDS;
 
 /**
  * @author YuanChong
@@ -31,6 +33,9 @@ public abstract class AbstractInterceptor implements HandlerInterceptor {
 
     @Autowired
     protected WXService wxService;
+
+    @Autowired
+    protected OrderService orderService;
 
     /**
      * 为web视图补充js-api数据
@@ -46,6 +51,8 @@ public abstract class AbstractInterceptor implements HandlerInterceptor {
         if (modelAndView != null) {
             User user = UserHolder.getUser();
             ModelMap modelMap = modelAndView.getModelMap();
+            //判断用户是否是有效的付费用户
+            orderService.currentUserOrder(user.getOpenid()).ifPresent(order -> user.setAvailable(1));
             modelMap.addAttribute("user", user);
             //有视图 freemarker请求
             //补充js-api数据
@@ -86,7 +93,7 @@ public abstract class AbstractInterceptor implements HandlerInterceptor {
                 if (StringUtils.isNotEmpty(jsonUser)) {
                     User user = JSON.parseObject(jsonUser, User.class);
                     UserHolder.setUser(user);
-                    CacheUtils.expire(token.get(), COOKIE_EXPIRE_SECONDS);
+                    CacheUtils.expire(token.get(), RedisKey.COOKIE_EXPIRE_SECONDS);
                     return user;
                 }
                 //TODO 如果走到这里 可能是token过期了 没想好要怎么做

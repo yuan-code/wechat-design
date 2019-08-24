@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,7 +50,7 @@ public class CacheUtils {
     /**
      * 判断key是否存在
      *
-     * @param key   键
+     * @param key 键
      * @return true成功 false 失败
      */
     public static boolean exists(String key) {
@@ -76,4 +78,35 @@ public class CacheUtils {
     }
 
 
+    public static void zAdd(String key, String value, Double score) {
+        stringRedisTemplate.opsForZSet().add(key, value, score);
+    }
+
+    /**
+     * 从小到大
+     * @param key
+     * @return
+     */
+    public static Set<String> zRangeAll(String key,long start, long end) {
+        return stringRedisTemplate.opsForZSet().range(key, start, end);
+    }
+
+
+    /**
+     * 从大到小
+     * @param key
+     * @return
+     */
+    public static Set<String> zRangeRevertAll(String key,long start, long end) {
+        return stringRedisTemplate.opsForZSet().reverseRange(key, start, end);
+    }
+
+    /**
+     * 从大到小
+     * @param key
+     * @return
+     */
+    public static Long zSize(String key) {
+        return stringRedisTemplate.opsForZSet().size(key);
+    }
 }

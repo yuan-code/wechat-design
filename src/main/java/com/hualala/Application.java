@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -25,15 +27,12 @@ public class Application {
      * 用于普通页面的跳转
      *
      * @param path
-     * @param request
      * @param modelMap
      * @return
      */
     @RequestMapping("/do/{path}")
-    public String doPath(@PathVariable("path") String path, HttpServletRequest request, ModelMap modelMap) {
-        for (Map.Entry<String, String[]> param : request.getParameterMap().entrySet()) {
-            modelMap.addAttribute(param.getKey(), param.getValue());
-        }
+    public String doPath(@PathVariable("path") String path, ModelMap modelMap) {
+        resolveParams(modelMap);
         return path;
     }
 
@@ -47,11 +46,8 @@ public class Application {
     @RequestMapping("/passport/{rootPath}/{servicePath}")
     public String passport(@PathVariable("rootPath") String rootPath,
                            @PathVariable("servicePath") String servicePath,
-                           HttpServletRequest request,
                            ModelMap modelMap) {
-        for (Map.Entry<String, String[]> param : request.getParameterMap().entrySet()) {
-            modelMap.addAttribute(param.getKey(), param.getValue());
-        }
+        resolveParams(modelMap);
         return rootPath + "/" + servicePath;
     }
 
@@ -66,12 +62,21 @@ public class Application {
     @RequestMapping("/auth/{rootPath}/{servicePath}")
     public String auth(@PathVariable("rootPath") String rootPath,
                        @PathVariable("servicePath") String servicePath,
-                       HttpServletRequest request,
                        ModelMap modelMap) {
+        resolveParams(modelMap);
+        return rootPath + "/" + servicePath;
+    }
+
+
+    /**
+     * 解析请求参数 原样返回
+     * @param modelMap
+     */
+    private void resolveParams(ModelMap modelMap) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         for (Map.Entry<String, String[]> param : request.getParameterMap().entrySet()) {
             modelMap.addAttribute(param.getKey(), param.getValue());
         }
-        return rootPath + "/" + servicePath;
     }
 
 

@@ -16,23 +16,6 @@ public class WXConstant {
      */
     public static final String COOKIE_ACCESS_TOKEN_NAME = "accessToken";
 
-    public static final Long COOKIE_EXPIRE_SECONDS = 60 * 60L;
-
-    /**
-     * wx access_token redis key
-     */
-    public static final String ACCESS_TOKEN_KEY = "wechat:%s:accessToken";
-
-    /**
-     * wx JS ticket redis key
-     */
-    public static final String JSAPI_TICKET_KEY = "wechat:%s:jsapiTicket";
-
-    /**
-     * wx web access_token redis key
-     */
-    public static final String WEB_ACCESS_TOKEN_KEY = "wechat:%s:webAccessToken:%s";
-
 
     /**
      * JS ticket 签名参数格式

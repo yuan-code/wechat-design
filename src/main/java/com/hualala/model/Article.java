@@ -66,6 +66,11 @@ public class Article implements Serializable {
     private Long userid;
 
     /**
+     * OPENID
+     */
+    private String openid;
+
+    /**
      * 状态
      */
     private Integer status;

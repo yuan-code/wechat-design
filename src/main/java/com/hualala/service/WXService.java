@@ -2,6 +2,7 @@ package com.hualala.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hualala.common.RedisKey;
 import com.hualala.common.ResultCode;
 import com.hualala.common.WXConstant;
 import com.hualala.config.WXConfig;
@@ -44,7 +45,7 @@ public class WXService {
      * @return
      */
     public String getAccessToken() {
-        String redisKey = String.format(ACCESS_TOKEN_KEY, wxConfig.getAppID());
+        String redisKey = String.format(RedisKey.ACCESS_TOKEN_KEY, wxConfig.getAppID());
         String accessToken = CacheUtils.get(redisKey);
         return accessToken;
     }
@@ -55,7 +56,7 @@ public class WXService {
      * @return
      */
     public String getJSTicket() {
-        String ticketKey = String.format(JSAPI_TICKET_KEY, wxConfig.getAppID());
+        String ticketKey = String.format(RedisKey.JSAPI_TICKET_KEY, wxConfig.getAppID());
         String ticket = CacheUtils.get(ticketKey);
         return ticket;
     }
@@ -71,7 +72,7 @@ public class WXService {
      * @return
      */
     public String refreshToken() {
-        String redisKey = String.format(ACCESS_TOKEN_KEY, wxConfig.getAppID());
+        String redisKey = String.format(RedisKey.ACCESS_TOKEN_KEY, wxConfig.getAppID());
         String url = String.format(ACCESS_TOKEN_URL, wxConfig.getAppID(), wxConfig.getSecret());
         HttpClientUtil.HttpResult result = HttpClientUtil.post(url);
         log.info("获取微信公众号的access_token: {}", result.getContent());
@@ -98,7 +99,7 @@ public class WXService {
         HttpClientUtil.HttpResult ticketResult = HttpClientUtil.post(ticketUrl);
         log.info("获取微信公众号的jsApi ticket : {}", ticketResult.getContent());
         String ticket = JSON.parseObject(ticketResult.getContent()).getString("ticket");
-        String ticketKey = String.format(JSAPI_TICKET_KEY, wxConfig.getAppID());
+        String ticketKey = String.format(RedisKey.JSAPI_TICKET_KEY, wxConfig.getAppID());
         int expire = wxConfig.getExpire() + 200;
         CacheUtils.set(ticketKey, ticket, expire);
         return ticket;

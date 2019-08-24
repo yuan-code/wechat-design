@@ -17,19 +17,19 @@ public class TimeUtil {
 
 
     /**
-     * 时间加上N个月
+     * 时间加上N个
      *
      * @param time yyyyMMddHHmmss
-     * @param month
+     * @param step
      * @return
      * @throws ParseException
      */
-    public static Long stepMonth(Long time, int month) throws ParseException {
+    public static Long stepTime(Long time,int calendarType, int step) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = sdf.parse(time.toString());
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        c.add(Calendar.MONTH, month);
+        c.add(calendarType, step);
         return Long.valueOf(sdf.format(c.getTime()));
     }
 
