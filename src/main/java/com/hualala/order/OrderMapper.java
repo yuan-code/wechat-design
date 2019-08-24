@@ -2,6 +2,7 @@ package com.hualala.order;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hualala.order.domain.Order;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.hualala.order.domain.Order;
  * @author YuanChong
  * @since 2019-08-04
  */
+@Mapper
 public interface OrderMapper extends BaseMapper<Order> {
 
 

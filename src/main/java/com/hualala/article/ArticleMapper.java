@@ -2,6 +2,7 @@ package com.hualala.article;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hualala.article.domain.Article;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.hualala.article.domain.Article;
  * @author YuanChong
  * @since 2019-07-08
  */
+@Mapper
 public interface ArticleMapper extends BaseMapper<Article> {
 
     /**
