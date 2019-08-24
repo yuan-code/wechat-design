@@ -5,8 +5,10 @@ import com.hualala.common.ResultCode;
 import com.hualala.common.UserResolver;
 import com.hualala.exception.BusinessException;
 import com.hualala.model.Article;
+import com.hualala.model.Order;
 import com.hualala.model.User;
 import com.hualala.service.ArticleService;
+import com.hualala.service.OrderService;
 import com.hualala.service.UserService;
 import com.hualala.util.ResultUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * <p>
@@ -37,6 +40,9 @@ public class ArticleController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 查看文章详情 需要微信基础授权
@@ -98,7 +104,7 @@ public class ArticleController {
      */
     @ResponseBody
     @RequestMapping("/passport/save")
-    public Object articleEdit(Article article, @UserResolver User user) {
+    public Object articleSave(Article article, @UserResolver User user) {
         if(StringUtils.isEmpty(article.getContent())) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"文章内容必传");
         }
@@ -108,12 +114,17 @@ public class ArticleController {
         if(article.getPid() == null || article.getPid() == 0L) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"父文章ID必传");
         }
-        //todo 验证用户购买
-
-        Article copy = articleService.getById(article.getArticleid());
+        Optional<Order> order = orderService.currentUserOrder(user.getOpenid());
+        if(!order.isPresent()) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(),"用户未付费");
+        }
+        Article copy = articleService.getById(article.getPid());
         copy.setContent(article.getContent());
         copy.setThumbnail(article.getTitle());
         copy.setArticleid(null);
+        copy.setPid(article.getPid());
+        copy.setUserid(user.getUserid());
+        copy.setOpenid(user.getOpenid());
         articleService.save(copy);
         return ResultUtils.success(copy);
     }

@@ -49,6 +49,7 @@ public class WebConfg implements WebMvcConfigurer {
                 .addPathPatterns("/article/passport/**")
                 .addPathPatterns("/user/passport/**")
                 .addPathPatterns("/order/passport/**")
+                .addPathPatterns("/cos/passport/**")
                 .addPathPatterns("/passport/**");
     }
 
