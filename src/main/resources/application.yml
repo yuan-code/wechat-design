@@ -26,7 +26,7 @@ mybatis-plus:
 
 logging:
   level:
-    com.hualala.mapper: DEBUG
+    com.hualala.*.mapper: DEBUG
 
 cos:
   secretID: AKIDvmPp0vr00sVt2wNyBF4dw0qSvCIB8Iah
