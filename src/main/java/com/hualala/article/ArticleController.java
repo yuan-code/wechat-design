@@ -1,6 +1,10 @@
 package com.hualala.article;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hualala.article.domain.Article;
 import com.hualala.common.ResultCode;
 import com.hualala.util.TimeUtil;
@@ -49,7 +53,7 @@ public class ArticleController {
      *
      * @param articleid
      * @param modelMap
-     * @param user 访问页面的用户
+     * @param user      访问页面的用户
      * @throws IOException
      */
     @RequestMapping("/detail/{articleid}")
@@ -59,7 +63,7 @@ public class ArticleController {
             //二次编辑文章查询所属用户
             User author = userService.getById(article.getUserid());
             modelMap.addAttribute("author", author);
-            if(!Objects.equals(author.getOpenid(),user.getOpenid())) {
+            if (!Objects.equals(author.getOpenid(), user.getOpenid())) {
                 Customer customer = new Customer();
                 customer.setArticleid(article.getArticleid());
                 customer.setAuthorOpenid(author.getOpenid());
@@ -80,7 +84,7 @@ public class ArticleController {
      *
      * @param articleid
      * @param modelMap
-     * @param user 访问页面的用户
+     * @param user      访问页面的用户
      * @throws IOException
      */
     @RequestMapping("/edit/{articleid}")
@@ -89,7 +93,6 @@ public class ArticleController {
         modelMap.addAttribute("article", article);
         return "article/edit";
     }
-
 
 
     /**
@@ -113,28 +116,29 @@ public class ArticleController {
     @ResponseBody
     @RequestMapping("/save")
     public Object articleSave(Article article, @UserResolver User user) {
-        if(StringUtils.isEmpty(article.getContent())) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"文章内容必传");
+        if (StringUtils.isEmpty(article.getContent())) {
+            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "文章内容必传");
         }
-        if(StringUtils.isEmpty(article.getTitle())) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"文章标题必传");
+        if (StringUtils.isEmpty(article.getTitle())) {
+            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "文章标题必传");
         }
-        if(article.getPid() == null || article.getPid() == 0L) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"父文章ID必传");
+        if (article.getPid() == null || article.getPid() == 0L) {
+            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "父文章ID必传");
         }
-        if(!user.isAvailable()) {
-            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(),"用户未付费");
+        if (!user.isAvailable()) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(), "用户未付费");
         }
-        if(StringUtils.isNotEmpty(article.getOpenid()) && !Objects.equals(article.getOpenid(),user.getOpenid())) {
-            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(),"这篇文章不属于您");
+        if (StringUtils.isNotEmpty(article.getOpenid()) && !Objects.equals(article.getOpenid(), user.getOpenid())) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(), "这篇文章不属于您");
         }
         Article source = articleService.getById(article.getPid());
-        if(source.getPid() != null && source.getPid() != 0L) {
+        if (source.getPid() != null && source.getPid() != 0L) {
             //这种情况是对自己做编辑
             article.setPid(source.getPid());
             article.setArticleid(source.getArticleid());
         } else {
             article.setPid(source.getArticleid());
+            article.setCreateTime(TimeUtil.currentDT());
         }
         article.setSummary(source.getSummary());
         article.setThumbnail(source.getThumbnail());
@@ -142,9 +146,44 @@ public class ArticleController {
         article.setSource(source.getSource());
         article.setUserid(user.getUserid());
         article.setOpenid(user.getOpenid());
-        article.setCreateTime(TimeUtil.currentDT());
+        article.setModifyTime(TimeUtil.currentDT());
         articleService.saveOrUpdate(article);
         return ResultUtils.success(article);
+    }
+
+    /**
+     * 跳转文章列表页面 有可能是被人分享过
+     *
+     * @param userid
+     * @param modelMap
+     * @param user
+     * @return
+     */
+    @RequestMapping("/custom/${userid}")
+    public Object custom(@PathVariable("userid") Long userid, ModelMap modelMap, @UserResolver User user) {
+        User author = null;
+        if (userid != null && userid == -1) {
+            author = user;
+        } else {
+            author = userService.getById(userid);
+        }
+        modelMap.put("author", author);
+        return "article/custom";
+    }
+
+    /**
+     * 文章列表
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/list/${userid}")
+    public Object list(@PathVariable("userid") Long userid, Long pageNo, Long pageSize) {
+        Page<Article> page = new Page<>(pageNo, pageSize);
+        page.addOrder(OrderItem.desc("modify_Time"));
+        QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("userid", userid);
+        IPage<Article> result = articleService.page(page, wrapper);
+        return ResultUtils.success(result);
     }
 
 
