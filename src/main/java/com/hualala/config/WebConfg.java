@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -33,7 +34,20 @@ public class WebConfg implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(webAuthInterceptor).excludePathPatterns("/wx/**").addPathPatterns("/**");
+        registry.addInterceptor(webAuthInterceptor)
+                .excludePathPatterns("/wx/**")
+                .excludePathPatterns("/css/**")
+                .excludePathPatterns("/js/**")
+                .excludePathPatterns("/image/**")
+                .addPathPatterns("/**");
+    }
+
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css");
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js");
+        registry.addResourceHandler("/image/**").addResourceLocations("classpath:/static/image");
     }
 
     @Override
