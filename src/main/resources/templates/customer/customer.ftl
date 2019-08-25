@@ -102,20 +102,46 @@
             <h2>0</h2>
             <p>看我总数</p>
         </div>
+        <#if (user.available)??>
+            <div class="weui-flex__item" style="line-height: 77px;padding:0;font-size: 1.2em;">
+                    <a href="/customer/arts">文章统计</a>
+            </div>
+        </#if>
     </div>
 
-    <div class="mask">
-        <div class="mask-dialog">
-            <p>共有0人关注了我的文章</p>
-            <a href="<#--/vip/vip?path=/customer-->" class="weui-btn weui-btn_primary">立即查看</a>
-            <p>或者</p>
-            <a href="/article/copy" class="weui-btn weui-btn_primary">发篇文章试试看</a>
+      <#if (user.available)??>
+        <div class="weui-cells" id="content">
+
         </div>
-    </div>
 
+        <div class="weui-loadmore" id="loadMore" style="display:none;">
+            <a href="javascript:void(0)" id="loadMoreBtn" style="">加载更多</a>
+        </div>
+        <div class="weui-loadmore" id="loadingMore" style="display:none;">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+        </div>
+        <div class="weui-loadmore weui-loadmore_line" id="nonLoadingMore" style="display:none;">
+            <span class="weui-loadmore__tips" id="nonLoadingMoreTips">暂无数据</span>
+        </div>
+      <#else>
+       <div class="mask">
+           <div class="mask-dialog">
+               <p>共有0人关注了我的文章</p>
+               <a href="<#--/vip/vip?path=/customer-->" class="weui-btn weui-btn_primary">立即查看</a>
+               <p>或者</p>
+               <a href="/article/copy" class="weui-btn weui-btn_primary">发篇文章试试看</a>
+           </div>
+       </div>
+      </#if>
 </div>
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
+<#if (user.available)??>
+<script type='text/javascript' src="/js/clipboard.min.js"></script>
+<script src="/js/app.js"></script>
+</#if>
+
 <script type="text/javascript">
     (function(){
         wx.ready(function () {
@@ -166,5 +192,91 @@
         });
     })();
 </script>
+<#if (user.available)??>
+<script>
+    var sessionUserId = "u22a27fcf4b8e09b";
+    function copy(){
+        var clipboard = new Clipboard('.weui-btn').on('success', function(e) {
+            alert("复制成功");
+        }).on('error', function(e) {
+            alert("复制失败");
+        });
+    }
+    var page = 0;
+    var hasMore = true;
+    var loading = false;
+    function loadMore(){
+        if(loading){
+            return;
+        }
+        loading = true;
+        if(!hasMore){
+            $("#loadMore").css("display","none");
+            $("#loadingMore").css("display","none");
+            $("#nonLoadingMore").css("display","");
+            loading = false;
+            return;
+        }
+        $("#loadMore").css("display","none");
+        $("#loadingMore").css("display","");
+        $("#nonLoadingMore").css("display","none");
+        page = page+1;
+        $.post('/customer/list', {page:page}, function (response) {
+            loading = false;
+            var json = eval("(" + response + ")")
+            console.log(json)
+            if (json["code"] != 0) {
+                $("#nonLoadingMoreTips").html("加载失败");
+            } else {
+                hasMore = json.hasMore;
+                var data = json.data;
+                if(page==1&&data.length==0){
+                    $("#loadMoreBtn").css("display","none");
+                    $("#nonLoadingMore").css("display","");
+                    $("#loadingMore").css("display","none");
+                    $("#nonLoadingMoreTips").html("暂无数据");
+                }else{
+                    var html = "";
+                    for(var i=0;i<data.length;i++){
+                        var o = data[i];
+                        html += '<div class="weui-cell">';
+                        html += '<div class="weui-cell__hd"><img src="'+o.headImgUrl+'"></div>';
+                        html += '<div class="weui-cell__bd">';
+                        html += '    <p>'+o.nickName+'</p>';
+                        html += '</div>';
+                        html += '<div class="weui-cell__ft">';
+                        if(o.subscribe==1){
+                            html += '	<a href="/chat/'+sessionUserId+'/'+o.userId+'" class="weui-btn weui-btn_mini weui-btn_warn">撩TA</a>';
+                        }else{
+                            html += '	<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" data-clipboard-text="'+o.nickName+'">复制TA</a>';
+                        }
+                        html += '</div>';
+                        html += '</div>';
+                    }
+                    $("#content").append(html);
+                    copy();
+                    if(hasMore){
+                        console.log(hasMore)
+                        $("#loadMore").css("display","");
+                        console.log($("#loadMoreBtn").css("display"))
+                        $("#nonLoadingMore").css("display","none");
+                        $("#loadingMore").css("display","none");
+                    }else{
+                        $("#loadMore").css("display","none");
+                        $("#nonLoadingMore").css("display","");
+                        $("#loadingMore").css("display","none");
+                        $("#nonLoadingMoreTips").html("已全部加载完成");
+                    }
+                }
+            }
+        })
+    }
+    loadMore();
+    $("#loadMore").on("click",function(){
+        loadMore();
+    });
+</script>
+
+</#if>
 </body>
 </html>
