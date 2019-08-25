@@ -129,10 +129,12 @@ public class ArticleController {
             throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(),"这篇文章不属于您");
         }
         Article source = articleService.getById(article.getPid());
-        if(StringUtils.isNotEmpty(article.getOpenid()) && Objects.equals(article.getOpenid(),user.getOpenid())) {
+        if(source.getPid() != null && source.getPid() != 0L) {
             //这种情况是对自己做编辑
             article.setPid(source.getPid());
-            article.setArticleid(article.getPid());
+            article.setArticleid(source.getArticleid());
+        } else {
+            article.setPid(source.getArticleid());
         }
         article.setSummary(source.getSummary());
         article.setThumbnail(source.getThumbnail());
