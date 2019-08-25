@@ -104,7 +104,7 @@
         </div>
         <#if user.available>
             <div class="weui-flex__item" style="line-height: 77px;padding:0;font-size: 1.2em;">
-                    <a href="/customer/arts">文章统计</a>
+                    <a href="/customer/customer/-1">文章统计</a>
             </div>
         </#if>
     </div>
