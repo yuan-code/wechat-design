@@ -178,7 +178,7 @@ public class ArticleController {
      */
     @ResponseBody
     @RequestMapping("/list/{openid}")
-    public Object list(@PathVariable("openid") Long openid, Long pageNo, Long pageSize) {
+    public Object list(@PathVariable("openid") String openid, Long pageNo, Long pageSize) {
         Page<Article> page = new Page<>(pageNo, pageSize);
         page.addOrder(OrderItem.desc("modify_Time"));
         QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("openid", openid);
