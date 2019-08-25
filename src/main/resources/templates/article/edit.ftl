@@ -405,7 +405,7 @@
                         $loadingToast.fadeIn(100);
                         $.post('/cos/upload', {mediaID: serverId}, function (response) {
                             $loadingToast.fadeOut(100);
-                            var path = json.data;
+                            var path = response.data;
                             $panel.after('<p style="margin: 0em 0.5em;max-width: 100%;color: rgb(0, 0, 0);white-space: normal;line-height: 1.75em;box-sizing: border-box !important;word-wrap: break-word !important;"><img src="' + path + '" style="max-width:100%;height:auto;"></p>')
                             bindContentClick();
                         })
