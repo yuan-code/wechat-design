@@ -11,7 +11,7 @@ spring:
     timeout: 10000
 
 logging:
-  config: classpath:log4j2-dev.xml
+  config: classpath:log4j2-www.xml
 
 wechat:
   appID: wx0abd83b135ccb8e5
