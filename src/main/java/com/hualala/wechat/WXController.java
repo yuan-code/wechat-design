@@ -1,6 +1,10 @@
 package com.hualala.wechat;
 
+import com.hualala.pay.OrderService;
+import com.hualala.pay.domain.WXPayResult;
+import com.hualala.pay.domain.WxPaySuccess;
 import com.hualala.wechat.common.NotifyEnum;
+import com.hualala.wechat.common.WXConstant;
 import com.hualala.wechat.component.NotifyFactory;
 import com.hualala.wechat.component.WechatNotify;
 import com.hualala.util.BeanParse;
@@ -8,6 +12,7 @@ import com.hualala.weixin.mp.WXBizMsgCrypt;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,6 +31,9 @@ public class WXController {
 
     @Autowired
     private NotifyFactory notifyFactory;
+
+    @Autowired
+    private OrderService orderService;
 
 
     /**
@@ -62,4 +70,25 @@ public class WXController {
         return result;
     }
 
+
+    /**
+     * 微信支付回调
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/pay", produces = MediaType.APPLICATION_XML_VALUE)
+    public Object pay(@RequestBody WXPayResult payResult) throws Exception {
+        log.info("Msg接收到微信支付回调请求: payResult={}", payResult);
+        if (!payResult.getReturnCode().equals(WXConstant.SUCCESS)) {
+            return WxPaySuccess.INSTANCE;
+        }
+        if (!payResult.getResultCode().equals(WXConstant.SUCCESS)) {
+            return WxPaySuccess.INSTANCE;
+        }
+        //基础校验 签名 金额
+        payResult.baseValidate();
+        orderService.paySuccess(payResult);
+        return WxPaySuccess.INSTANCE;
+    }
 }

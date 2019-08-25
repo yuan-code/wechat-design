@@ -102,14 +102,14 @@
             <h2>#{allCount}</h2>
             <p>看我总数</p>
         </div>
-        <#if (user.available)??>
+        <#if ${user.available}>
             <div class="weui-flex__item" style="line-height: 77px;padding:0;font-size: 1.2em;">
                     <a href="/customer/arts">文章统计</a>
             </div>
         </#if>
     </div>
 
-      <#if (user.available)??>
+      <#if ${user.available}>
         <div class="weui-cells" id="content">
 
         </div>
@@ -137,7 +137,7 @@
 </div>
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
-<#if (user.available)??>
+<#if ${user.available}>
 <script type='text/javascript' src="/js/clipboard.min.js"></script>
 <script src="/js/app.js"></script>
 </#if>
@@ -192,7 +192,7 @@
         });
     })();
 </script>
-<#if (user.available)??>
+<#if ${user.available}>
 <script>
     var sessionUserId = "u22a27fcf4b8e09b";
     function copy(){

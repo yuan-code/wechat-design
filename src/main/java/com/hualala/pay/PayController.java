@@ -27,7 +27,7 @@ import java.util.UUID;
  */
 @Log4j2
 @RestController
-@RequestMapping("/wx")
+@RequestMapping("/pay")
 public class PayController {
 
     @Autowired
@@ -41,7 +41,7 @@ public class PayController {
      * 创建订单，发起预支付
      */
     @ResponseBody
-    @RequestMapping(value = "/order/create")
+    @RequestMapping(value = "/create")
     public Object create(@RequestParam("vipType") Integer vipType, @UserResolver User user) throws Exception {
         if(vipType == null || vipType == 0L) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"支付类型必传");
@@ -61,24 +61,4 @@ public class PayController {
         return ResultUtils.success(result);
     }
 
-    /**
-     * 微信支付回调
-     *
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/pay", produces = MediaType.APPLICATION_XML_VALUE)
-    public Object pay(@RequestBody WXPayResult payResult) throws Exception {
-        log.info("Msg接收到微信支付回调请求: payResult={}", payResult);
-        if (!payResult.getReturnCode().equals(WXConstant.SUCCESS)) {
-            return WxPaySuccess.INSTANCE;
-        }
-        if (!payResult.getResultCode().equals(WXConstant.SUCCESS)) {
-            return WxPaySuccess.INSTANCE;
-        }
-        //基础校验 签名 金额
-        payResult.baseValidate();
-        orderService.paySuccess(payResult);
-        return WxPaySuccess.INSTANCE;
-    }
 }
