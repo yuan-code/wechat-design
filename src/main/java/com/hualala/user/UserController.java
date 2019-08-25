@@ -6,7 +6,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.hualala.wechat.common.UserResolver;
+import com.hualala.user.component.UserResolver;
 import com.hualala.wechat.WXConfig;
 import com.hualala.user.domain.User;
 import com.hualala.wechat.WXService;

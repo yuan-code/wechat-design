@@ -11,7 +11,7 @@ import com.hualala.user.domain.User;
 import com.hualala.util.HttpUtils;
 import com.hualala.util.SnowflakeID;
 import com.hualala.util.TimeUtil;
-import com.hualala.wechat.util.UserHolder;
+import com.hualala.user.UserHolder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

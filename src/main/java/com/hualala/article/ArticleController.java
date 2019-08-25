@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hualala.article.domain.Article;
 import com.hualala.common.ResultCode;
 import com.hualala.util.TimeUtil;
-import com.hualala.wechat.common.UserResolver;
+import com.hualala.user.component.UserResolver;
 import com.hualala.common.BusinessException;
 import com.hualala.customer.domain.Customer;
 import com.hualala.user.domain.User;

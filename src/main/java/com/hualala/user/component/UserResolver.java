@@ -1,4 +1,4 @@
-package com.hualala.wechat.common;
+package com.hualala.user.component;
 
 import java.lang.annotation.*;
 

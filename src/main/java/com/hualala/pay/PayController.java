@@ -2,18 +2,14 @@ package com.hualala.pay;
 
 import com.hualala.common.BusinessException;
 import com.hualala.common.ResultCode;
-import com.hualala.pay.domain.WXPayResult;
 import com.hualala.pay.domain.WxPayRes;
-import com.hualala.pay.domain.WxPaySuccess;
 import com.hualala.user.domain.User;
 import com.hualala.util.ResultUtils;
 import com.hualala.util.SignUtil;
 import com.hualala.wechat.WXConfig;
-import com.hualala.wechat.common.UserResolver;
-import com.hualala.wechat.common.WXConstant;
+import com.hualala.user.component.UserResolver;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

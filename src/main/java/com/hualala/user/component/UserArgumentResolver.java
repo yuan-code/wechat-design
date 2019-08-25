@@ -1,7 +1,6 @@
-package com.hualala.wechat.component;
+package com.hualala.user.component;
 
-import com.hualala.wechat.common.UserResolver;
-import com.hualala.wechat.util.UserHolder;
+import com.hualala.user.UserHolder;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
