@@ -95,11 +95,11 @@
 <div class="container" id="container">
     <div class="weui-flex">
         <div class="weui-flex__item">
-            <h2>0</h2>
+            <h2>#{todayCount}</h2>
             <p>今天看了</p>
         </div>
         <div class="weui-flex__item">
-            <h2>0</h2>
+            <h2>#{allCount}</h2>
             <p>看我总数</p>
         </div>
         <#if (user.available)??>
@@ -127,8 +127,8 @@
       <#else>
        <div class="mask">
            <div class="mask-dialog">
-               <p>共有0人关注了我的文章</p>
-               <a href="<#--/vip/vip?path=/customer-->" class="weui-btn weui-btn_primary">立即查看</a>
+               <p>共有#{allCount}人关注了我的文章</p>
+               <a href="${user.available?string('javascript:;','/vip/vip')}" class="weui-btn weui-btn_primary">立即查看</a>
                <p>或者</p>
                <a href="/article/copy" class="weui-btn weui-btn_primary">发篇文章试试看</a>
            </div>
@@ -205,6 +205,7 @@
     var page = 0;
     var hasMore = true;
     var loading = false;
+    var pageSize = 10;
     function loadMore(){
         if(loading){
             return;
@@ -221,15 +222,14 @@
         $("#loadingMore").css("display","");
         $("#nonLoadingMore").css("display","none");
         page = page+1;
-        $.post('/customer/list', {page:page}, function (response) {
+        $.post('/customer/list', {pageNo:page,pageSize:pageSize}, function (response) {
             loading = false;
-            var json = eval("(" + response + ")")
-            console.log(json)
-            if (json["code"] != 0) {
+            if (!response.success) {
                 $("#nonLoadingMoreTips").html("加载失败");
             } else {
-                hasMore = json.hasMore;
-                var data = json.data;
+
+                hasMore = response.data.pages == page;
+                var data = response.data.records;
                 if(page==1&&data.length==0){
                     $("#loadMoreBtn").css("display","none");
                     $("#nonLoadingMore").css("display","");
@@ -240,13 +240,13 @@
                     for(var i=0;i<data.length;i++){
                         var o = data[i];
                         html += '<div class="weui-cell">';
-                        html += '<div class="weui-cell__hd"><img src="'+o.headImgUrl+'"></div>';
+                        html += '<div class="weui-cell__hd"><img src="'+o.customerUser.headimgurl+'"></div>';
                         html += '<div class="weui-cell__bd">';
-                        html += '    <p>'+o.nickName+'</p>';
+                        html += '    <p>'+o.customerUser.nickname+'</p>';
                         html += '</div>';
                         html += '<div class="weui-cell__ft">';
                         if(o.subscribe==1){
-                            html += '	<a href="/chat/'+sessionUserId+'/'+o.userId+'" class="weui-btn weui-btn_mini weui-btn_warn">撩TA</a>';
+                            html += '	<a href="/chat/'+sessionUserId+'/'+o.customerUser.userid+'" class="weui-btn weui-btn_mini weui-btn_warn">撩TA</a>';
                         }else{
                             html += '	<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" data-clipboard-text="'+o.nickName+'">复制TA</a>';
                         }

@@ -55,7 +55,7 @@ public class ArticleController {
     @RequestMapping("/detail/{articleid}")
     public String articleDetail(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) {
         Article article = articleService.getById(articleid);
-        if (article.getPid() != 0L) {
+        if (article.getUserid() != 0L) {
             //二次编辑文章查询所属用户
             User author = userService.getById(article.getUserid());
             modelMap.addAttribute("author", author);
@@ -66,6 +66,7 @@ public class ArticleController {
                 customer.setAuthorUserid(author.getUserid());
                 customer.setCustomerOpenid(user.getOpenid());
                 customer.setCustomerUserid(user.getUserid());
+                customer.setSubscibeTime(TimeUtil.currentDT());
                 customerService.save(customer);
             }
         }

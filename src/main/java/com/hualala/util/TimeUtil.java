@@ -96,4 +96,24 @@ public class TimeUtil {
                 time.getSecondOfMinute();
     }
 
+    public static Long todayStartTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Calendar todayStart = Calendar.getInstance();
+        todayStart.set(Calendar.HOUR_OF_DAY, 0);
+        todayStart.set(Calendar.MINUTE, 0);
+        todayStart.set(Calendar.SECOND, 0);
+        todayStart.set(Calendar.MILLISECOND, 0);
+        return Long.valueOf(sdf.format(todayStart.getTime()));
+    }
+
+    public static Long todayEndTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Calendar todayEnd = Calendar.getInstance();
+        todayEnd.set(Calendar.HOUR_OF_DAY, 23);
+        todayEnd.set(Calendar.MINUTE, 59);
+        todayEnd.set(Calendar.SECOND, 59);
+        todayEnd.set(Calendar.MILLISECOND, 999);
+        return Long.valueOf(sdf.format(todayEnd.getTime()));
+    }
+
 }
