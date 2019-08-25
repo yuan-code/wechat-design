@@ -1,4 +1,4 @@
-package com.hualala.order.common;
+package com.hualala.pay.common;
 
 import com.hualala.common.ResultCode;
 import com.hualala.common.BusinessException;

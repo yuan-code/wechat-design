@@ -79,7 +79,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             user.setSubscribeTime(convertTime);
         }
         Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", user.getAppid()).eq("openid", user.getOpenid());
-        User dbUser = userMapper.selectOne(wrapper);
+        User dbUser = queryByOpenid(user.getOpenid());
         if(dbUser == null) {
             //净增的人
             userMapper.insert(user);
@@ -88,6 +88,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             user.setNickname(null);
             userMapper.update(user,wrapper);
         }
+        return userMapper.selectOne(wrapper);
+    }
+
+    public User queryByOpenid(String openid) {
+        Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", openid);
         return userMapper.selectOne(wrapper);
     }
 

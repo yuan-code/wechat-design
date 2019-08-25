@@ -1,15 +1,16 @@
-package com.hualala.order.domain;
+package com.hualala.pay.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.hualala.order.common.PriceEnum;
-import com.hualala.common.ResultCode;
 import com.hualala.common.BusinessException;
-import com.hualala.order.util.MoneyUtil;
-import com.hualala.pay.domain.WXPayResult;
+import com.hualala.common.ResultCode;
+import com.hualala.pay.common.PriceEnum;
+import com.hualala.pay.util.MoneyUtil;
 import com.hualala.user.domain.User;
-import com.hualala.util.*;
+import com.hualala.util.HttpUtils;
+import com.hualala.util.SnowflakeID;
+import com.hualala.util.TimeUtil;
 import com.hualala.wechat.util.UserHolder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -154,18 +154,18 @@ public class ArticleController {
     /**
      * 跳转文章列表页面 有可能是被人分享过
      *
-     * @param userid
+     * @param openid
      * @param modelMap
      * @param user
      * @return
      */
-    @RequestMapping("/custom/{userid}")
-    public Object custom(@PathVariable("userid") Long userid, ModelMap modelMap, @UserResolver User user) {
+    @RequestMapping("/custom/{openid}")
+    public Object custom(@PathVariable("openid") String openid, ModelMap modelMap, @UserResolver User user) {
         User author = null;
-        if (userid != null && userid == -1) {
+        if (Objects.equals("-1",openid)) {
             author = user;
         } else {
-            author = userService.getById(userid);
+            author = userService.queryByOpenid(openid);
         }
         modelMap.put("author", author);
         return "article/custom";
@@ -177,11 +177,11 @@ public class ArticleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/list/{userid}")
-    public Object list(@PathVariable("userid") Long userid, Long pageNo, Long pageSize) {
+    @RequestMapping("/list/{openid}")
+    public Object list(@PathVariable("openid") Long openid, Long pageNo, Long pageSize) {
         Page<Article> page = new Page<>(pageNo, pageSize);
         page.addOrder(OrderItem.desc("modify_Time"));
-        QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("userid", userid);
+        QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("openid", openid);
         IPage<Article> result = articleService.page(page, wrapper);
         return ResultUtils.success(result);
     }

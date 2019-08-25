@@ -1,9 +1,8 @@
 package com.hualala.pay.domain;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.hualala.order.domain.Order;
+import com.hualala.pay.util.MoneyUtil;
 import com.hualala.util.HttpUtils;
-import com.hualala.order.util.MoneyUtil;
 import com.hualala.util.SignUtil;
 import lombok.Data;
 

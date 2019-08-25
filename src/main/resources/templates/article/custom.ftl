@@ -57,7 +57,7 @@
             if(wx.onMenuShareAppMessage){
                 wx.onMenuShareTimeline({
                     title: '${author.nickname}的文章列表',
-                    link: 'http://wechat.ictry.com/article/custom/${author.userid}',
+                    link: 'http://wechat.ictry.com/article/custom/${author.openid}',
                     imgUrl: 'http://wechat.ictry.com/image/icon.png',
                     success: function () {
                     },
@@ -67,7 +67,7 @@
                 wx.onMenuShareAppMessage({
                     title: '${author.nickname}的文章列表',
                     desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://wechat.ictry.com/article/custom/${author.userid}',
+                    link: 'http://wechat.ictry.com/article/custom/${author.openid}',
                     imgUrl: 'http://wechat.ictry.com/image/icon.png',
                     success: function () {
                     },
@@ -79,7 +79,7 @@
                 wx.updateTimelineShareData({
                     title: '${author.nickname}的文章列表',
                     desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://wechat.ictry.com/article/custom/${author.userid}',
+                    link: 'http://wechat.ictry.com/article/custom/${author.openid}',
                     imgUrl: 'http://wechat.ictry.com/image/icon.png',
                     success: function () {
                     },
@@ -89,7 +89,7 @@
                 wx.updateAppMessageShareData({
                     title: '${author.nickname}的文章列表',
                     desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://wechat.ictry.com/article/custom/${author.userid}',
+                    link: 'http://wechat.ictry.com/article/custom/${author.openid}',
                     imgUrl: 'http://wechat.ictry.com/image/icon.png',
                     success: function () {
                     },
@@ -122,7 +122,7 @@
         $("#loadingMore").css("display","");
         $("#nonLoadingMore").css("display","none");
         page = page+1;
-        $.post('/article/list/${author.userid}', {pageNo:page,pageSize:pageSize}, function (response) {
+        $.post('/article/list/${author.openid}', {pageNo:page,pageSize:pageSize}, function (response) {
             loading = false;
             if (!response.success) {
                 $("#nonLoadingMoreTips").html("加载失败");

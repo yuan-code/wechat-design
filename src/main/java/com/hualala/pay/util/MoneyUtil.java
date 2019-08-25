@@ -1,4 +1,4 @@
-package com.hualala.order.util;
+package com.hualala.pay.util;
 
 import java.math.BigDecimal;
 
