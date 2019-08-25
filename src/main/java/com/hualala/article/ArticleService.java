@@ -58,6 +58,8 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Map<String, String> variableMap = scriptVariable(document);
         String summary = variableMap.get("msg_desc");
         String thumbnail = variableMap.get("msg_cdn_url");
+        byte[] bytes = HttpClientUtil.downLoadFromUrl(thumbnail);
+        thumbnail = MediaUtils.uploadImage(bytes);
         article = new Article();
         article.setHead(head);
         article.setContent(content);
