@@ -51,7 +51,7 @@
     <!-- Mixed sync/async -->
     <Loggers>
         <!--additivity="false" 代表不继承Root内的属性 子Logger只会在自己的appender里输出-->
-        <logger name="com.hualala.mapper" level="debug" additivity="false">
+        <logger name="com.hualala" level="debug" additivity="false">
             <AppenderRef ref="infoFile"/>
         </logger>
         <AsyncRoot level="info">
