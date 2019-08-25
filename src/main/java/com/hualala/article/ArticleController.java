@@ -159,7 +159,7 @@ public class ArticleController {
      * @param user
      * @return
      */
-    @RequestMapping("/custom/${userid}")
+    @RequestMapping("/custom/{userid}")
     public Object custom(@PathVariable("userid") Long userid, ModelMap modelMap, @UserResolver User user) {
         User author = null;
         if (userid != null && userid == -1) {
@@ -177,7 +177,7 @@ public class ArticleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/list/${userid}")
+    @RequestMapping("/list/{userid}")
     public Object list(@PathVariable("userid") Long userid, Long pageNo, Long pageSize) {
         Page<Article> page = new Page<>(pageNo, pageSize);
         page.addOrder(OrderItem.desc("modify_Time"));
