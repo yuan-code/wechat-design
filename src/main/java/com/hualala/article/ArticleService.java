@@ -42,7 +42,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      * @throws IOException
      */
     public Article articleCopy(String source) throws IOException {
-        QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("source", source);
+        QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("source", source).eq("pid",0);
         Article article = articleMapper.selectOne(wrapper);
         if (article != null) {
             return article;
