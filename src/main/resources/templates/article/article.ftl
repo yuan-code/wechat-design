@@ -664,7 +664,6 @@ ${article.head}
                         success: function (res) {
                             var serverId = res.serverId;
                             $.post('/user/updateByID', {qrcode: serverId}, function (response) {
-                                var json = JSON.parse(response);
                                 location.reload();
                             })
                         }
