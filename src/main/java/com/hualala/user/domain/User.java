@@ -124,6 +124,7 @@ public class User implements Serializable {
      * 是否是有效的付费用户 1-是 其他-否
      */
     @TableField(exist = false)
+    @JSONField(serialize=false)
     private boolean available;
 
 }

@@ -84,29 +84,43 @@ public class CacheUtils {
 
     /**
      * 从小到大
+     *
      * @param key
      * @return
      */
-    public static Set<String> zRangeAll(String key,long start, long end) {
+    public static Set<String> zRangeAll(String key, long start, long end) {
         return stringRedisTemplate.opsForZSet().range(key, start, end);
     }
 
 
     /**
      * 从大到小
+     *
      * @param key
      * @return
      */
-    public static Set<String> zRangeRevertAll(String key,long start, long end) {
+    public static Set<String> zRangeRevertAll(String key, long start, long end) {
         return stringRedisTemplate.opsForZSet().reverseRange(key, start, end);
     }
 
     /**
      * 从大到小
+     *
      * @param key
      * @return
      */
     public static Long zSize(String key) {
         return stringRedisTemplate.opsForZSet().size(key);
+    }
+
+
+    /**
+     * 从大到小
+     *
+     * @param key
+     * @return
+     */
+    public static Long zDel(String key) {
+        return stringRedisTemplate.opsForZSet().removeRange(key, 0, -1);
     }
 }

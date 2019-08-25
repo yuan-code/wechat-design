@@ -85,9 +85,10 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         //如果有重复支付，计算订单的下次起止时间
         Long beginTime = payResult.getTimeEnd();
         //获取最后一次支付的订单
-        Order vipTime = successOrder(payResult.getOpenid(), 0, 1).iterator().next();
+        List<Order> orderList = successOrder(payResult.getOpenid(), 0, 1);
+        Order vipTime = orderList.isEmpty() ? null : orderList.get(0);
         if (vipTime != null && vipTime.getEndTime() >= beginTime) {
-            beginTime = TimeUtil.stepTime(vipTime.getEndTime(), Calendar.MILLISECOND, 1);
+            beginTime = TimeUtil.stepTime(vipTime.getEndTime(), Calendar.SECOND, 1);
         }
         order.validateMoney(MoneyUtil.Fen2Yuan(payResult.getCashFee()));
         order.calculateTime(beginTime).savePayResult(payResult);
@@ -165,7 +166,11 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
             Integer dbCount = orderMapper.selectCount(wrapper);
             String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxConfig.getAppID(), wxConfig.getMchId(), openid);
             Long redisCount = CacheUtils.zSize(redisKey);
-            return dbCount.equals(redisCount.intValue());
+            boolean result = dbCount.equals(redisCount.intValue());
+            if (!result) {
+                CacheUtils.zDel(redisKey);
+            }
+            return result;
         } catch (Exception e) {
             log.error("验证缓存数据是否同步出现异常，可能是缓存挂了", e);
             return false;

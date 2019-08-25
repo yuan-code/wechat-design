@@ -3,6 +3,7 @@ package com.hualala.article;
 
 import com.hualala.article.domain.Article;
 import com.hualala.common.ResultCode;
+import com.hualala.util.TimeUtil;
 import com.hualala.wechat.common.UserResolver;
 import com.hualala.common.BusinessException;
 import com.hualala.customer.domain.Customer;
@@ -123,15 +124,24 @@ public class ArticleController {
         if(!user.isAvailable()) {
             throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(),"用户未付费");
         }
-        Article copy = articleService.getById(article.getPid());
-        copy.setContent(article.getContent());
-        copy.setThumbnail(article.getTitle());
-        copy.setArticleid(null);
-        copy.setPid(article.getPid());
-        copy.setUserid(user.getUserid());
-        copy.setOpenid(user.getOpenid());
-        articleService.save(copy);
-        return ResultUtils.success(copy);
+        if(StringUtils.isNotEmpty(article.getOpenid()) && !Objects.equals(article.getOpenid(),user.getOpenid())) {
+            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(),"这篇文章不属于您");
+        }
+        Article source = articleService.getById(article.getPid());
+        if(StringUtils.isNotEmpty(article.getOpenid()) && Objects.equals(article.getOpenid(),user.getOpenid())) {
+            //这种情况是对自己做编辑
+            article.setPid(source.getPid());
+            article.setArticleid(article.getPid());
+        }
+        article.setSummary(source.getSummary());
+        article.setThumbnail(source.getThumbnail());
+        article.setHead(source.getHead());
+        article.setSource(source.getSource());
+        article.setUserid(user.getUserid());
+        article.setOpenid(user.getOpenid());
+        article.setCreateTime(TimeUtil.currentDT());
+        articleService.saveOrUpdate(article);
+        return ResultUtils.success(article);
     }
 
 

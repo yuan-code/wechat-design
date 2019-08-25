@@ -3,6 +3,7 @@ package com.hualala.config;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hualala.common.RedisKey;
+import com.hualala.order.domain.Order;
 import com.hualala.user.domain.User;
 import com.hualala.order.OrderService;
 import com.hualala.user.UserService;

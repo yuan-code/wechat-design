@@ -251,7 +251,7 @@
         <a href="/article/detail/${article.articleid}" class="weui-btn weui-btn_default">返回</a>
     </div>
     <div class="weui-flex__item">
-        <a href="/vip/vip?path=/art/a22b1d3a4265f526/edit" class="weui-btn weui-btn_primary">保存</a>
+        <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('save-btn','')} weui-btn weui-btn_primary">保存</a>
     </div>
 </div>
 <div id="loadingToast" style="opacity: 0; display: none;">
@@ -277,7 +277,7 @@
             var title = $(".art-title").html();
             var artId = "${article.articleid}";
             $loadingToast.fadeIn(100);
-            $.post('/article/save', {title: title, pid:artId,content: html}, function (result) {
+            $.post('/article/save', {title: title, pid:artId,content: html,openid:'${article.openid}'}, function (result) {
                 $loadingToast.fadeOut(100);
                 window.location.href = "/article/detail/" + result.data.articleid;
             });
@@ -367,7 +367,7 @@
                         success: function (res) {
                             $loadingToast.fadeIn(100);
                             var serverId = res.serverId;
-                            $.post('/wx/upload', {serverId: serverId}, function (response) {
+                            $.post('/cos/upload', {mediaID: serverId}, function (response) {
                                 $loadingToast.fadeOut(100);
                                 var json = JSON.parse(response);
                                 console.log(json.data);
@@ -405,7 +405,7 @@
                     success: function (res) {
                         var serverId = res.serverId;
                         $loadingToast.fadeIn(100);
-                        $.post('/wx/upload', {serverId: serverId}, function (response) {
+                        $.post('/cos/upload', {mediaID: serverId}, function (response) {
                             $loadingToast.fadeOut(100);
                             var json = JSON.parse(response);
                             //var path = "/res/i/30e22ad1-6a9c-4ed3-b4ad-7082fa57bbbd-jpeg";
