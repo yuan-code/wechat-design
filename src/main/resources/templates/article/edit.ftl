@@ -191,11 +191,11 @@
                 <div class="select-box__bd">
                 </div>
                 <div class="select-box__ft">
-                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('delete-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-chuyidong1-copy"></span>删除</a>
-                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('edit-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-edit"></span>插入文字</a>
-                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('img-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-tupian"></span>插入图片</a>
                 </div>
             </div>
