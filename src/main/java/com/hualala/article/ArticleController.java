@@ -59,11 +59,13 @@ public class ArticleController {
     @RequestMapping("/detail/{articleid}")
     public String articleDetail(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) {
         Article article = articleService.getById(articleid);
+        //所属用户ID
         if (article.getUserid() != 0L) {
             //二次编辑文章查询所属用户
             User author = userService.getById(article.getUserid());
             modelMap.addAttribute("author", author);
             if (!Objects.equals(author.getOpenid(), user.getOpenid())) {
+                //对于其他人点击来的情况 增加关注量
                 Customer customer = new Customer();
                 customer.setArticleid(article.getArticleid());
                 customer.setAuthorOpenid(author.getOpenid());
@@ -73,6 +75,9 @@ public class ArticleController {
                 customer.setSubscibeTime(TimeUtil.currentDT());
                 customerService.save(customer);
             }
+            //查询作者的文章关注量
+            Integer customerCount = customerService.queryCustomerCount(article.getOpenid(), articleid);
+            modelMap.addAttribute("customerCount", customerCount);
         }
         modelMap.addAttribute("article", article);
         return "article/article";
