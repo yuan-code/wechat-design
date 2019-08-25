@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>我</title>
+    <title>个人中心</title>
     <link rel="shortcut icon" type="image/x-icon" href="/image/icon.png">
     <link rel="stylesheet" href="/css/weui.min.css"/>
     <link rel="stylesheet" href="/css/app.css"/>
@@ -108,6 +108,15 @@
                 <img src="${user.qrcode}" id="wxQrcode">
             </div>
         </div>
+
+        <a class="weui-cell weui-cell_access" href="${user.available?string('javascript:;','/vip/vip')}">
+            <div class="weui-cell__bd">
+                ${user.available?string('会员到期日期','开通会员')}
+            </div>
+            <div class="weui-cell__ft endTime">
+            </div>
+        </a>
+
     </div>
     <div class="weui-cells__bottom">上传微信二维码快速获取销售线索</div>
 
@@ -116,6 +125,12 @@
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
 <script>
+    $.post('/pay/vipEndTime', {}, function (response) {
+        var endTime = response.data
+        if(endTime) {
+            $(".endTime").innerText = endTime;
+        }
+    })
     $("#qrcodeCell").on('click', function(e){
         wx.chooseImage({
             count: 1, // 默认9
