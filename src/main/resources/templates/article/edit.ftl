@@ -369,10 +369,8 @@
                             var serverId = res.serverId;
                             $.post('/cos/upload', {mediaID: serverId}, function (response) {
                                 $loadingToast.fadeOut(100);
-                                var json = JSON.parse(response);
-                                console.log(json.data);
                                 //var path = "/res/i/30e22ad1-6a9c-4ed3-b4ad-7082fa57bbbd-jpeg";
-                                var path = json.data;
+                                var path = response.data;
                                 $(".art-content").prepend('<p style="margin: 0em 0.5em;max-width: 100%;color: rgb(0, 0, 0);white-space: normal;line-height: 1.75em;box-sizing: border-box !important;word-wrap: break-word !important;"><img src="' + path + '" style="max-width:100%;height:auto;"></p>')
                                 bindContentClick();
                             })
