@@ -63,6 +63,11 @@ public class Customer implements Serializable {
      */
     private Long subscibeTime;
 
+    /**
+     * 点击次数
+     */
+    private Long clickCount;
+
     @TableField(exist = false)
     private User customerUser;
 

@@ -66,14 +66,7 @@ public class ArticleController {
             modelMap.addAttribute("author", author);
             if (!Objects.equals(author.getOpenid(), user.getOpenid())) {
                 //对于其他人点击来的情况 增加关注量
-                Customer customer = new Customer();
-                customer.setArticleid(article.getArticleid());
-                customer.setAuthorOpenid(author.getOpenid());
-                customer.setAuthorUserid(author.getUserid());
-                customer.setCustomerOpenid(user.getOpenid());
-                customer.setCustomerUserid(user.getUserid());
-                customer.setSubscibeTime(TimeUtil.currentDT());
-                customerService.save(customer);
+                customerService.addCustomer(author,user,article.getArticleid());
             }
             //查询作者的文章关注量
             Integer customerCount = customerService.queryCustomerCount(article.getOpenid(), articleid);

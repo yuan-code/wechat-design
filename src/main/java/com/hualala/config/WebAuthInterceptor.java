@@ -162,9 +162,9 @@ public class WebAuthInterceptor implements HandlerInterceptor {
                 String jsonUser = CacheUtils.get(token.get());
                 if (StringUtils.isNotEmpty(jsonUser)) {
                     User user = JSON.parseObject(jsonUser, User.class);
-                    //判断用户是否是有效的付费用户
                     UserHolder.setUser(user);
                     CacheUtils.expire(token.get(), RedisKey.COOKIE_EXPIRE_SECONDS);
+                    //判断用户是否是有效的付费用户
                     orderService.currentUserOrder(user.getOpenid()).ifPresent(order -> user.setAvailable(true));
                     return user;
                 }
