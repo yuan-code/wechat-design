@@ -10,6 +10,7 @@ import com.hualala.util.SignUtil;
 import com.hualala.wechat.WXConfig;
 import com.hualala.user.component.UserResolver;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,15 +61,15 @@ public class PayController {
 
     @RequestMapping("/vipEndTime")
     public Object vipEndTime(@UserResolver User user) throws ParseException {
-        List<Order> orderList = orderService.successOrder(user.getOpenid(), 0, 1);
-        String endTime = "";
-        if(!orderList.isEmpty()) {
+        Long endTime = orderService.selectVipEndTime(user.getOpenid(), null);
+        String result = "";
+        if (endTime != null && endTime != 0L) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            Date date = sdf.parse(orderList.get(0).getEndTime().toString());
+            Date date = sdf.parse(endTime.toString());
             SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            endTime = sdf2.format(date);
+            result = sdf2.format(date);
         }
-        return ResultUtils.success(endTime);
+        return ResultUtils.success(result);
     }
 
 }

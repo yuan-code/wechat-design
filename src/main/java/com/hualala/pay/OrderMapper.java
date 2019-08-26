@@ -3,6 +3,7 @@ package com.hualala.pay;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hualala.pay.domain.Order;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -15,6 +16,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface OrderMapper extends BaseMapper<Order> {
 
-
-
+    /**
+     * 查询vip结束时间
+     * @param appid
+     * @param openid
+     * @param excludeNo
+     * @return
+     */
+    Long selectVipEndTime(@Param("appid") String appid, @Param("openid") String openid, @Param("excludeNo") String excludeNo);
 }

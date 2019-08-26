@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: www
+    active: dev
   http:
     encoding:
       charset: utf-8

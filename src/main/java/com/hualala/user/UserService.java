@@ -72,6 +72,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @param user
      * @return 数据库里最新的数据
      */
+    @Transactional(rollbackFor = Exception.class)
     public User saveOrUpdateNew(User user) {
         if(user.getSubscribeTime() != null) {
             //转换微信给的时间戳到yyyyMMddHHmmss

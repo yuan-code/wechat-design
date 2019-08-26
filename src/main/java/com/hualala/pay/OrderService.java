@@ -73,6 +73,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      *
      * @param payResult
      */
+    @Transactional(rollbackFor = Exception.class)
     public void paySuccess(WXPayResult payResult) throws ParseException {
         Wrapper<Order> wrapper = new QueryWrapper<Order>()
                 .eq("appid", payResult.getAppid())
@@ -85,17 +86,26 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         }
         //如果有重复支付，计算订单的下次起止时间
         Long beginTime = payResult.getTimeEnd();
-        //获取最后一次支付的订单
-        List<Order> orderList = successOrder(payResult.getOpenid(), 0, 1);
-        Order vipTime = orderList.isEmpty() ? null : orderList.get(0);
-        if (vipTime != null && vipTime.getEndTime() >= beginTime) {
-            beginTime = TimeUtil.stepTime(vipTime.getEndTime(), Calendar.SECOND, 1);
+        //查询vip结束时间
+        Long vipEndTime = selectVipEndTime(payResult.getOpenid(), order.getOrderNo());
+        if (vipEndTime != null && vipEndTime >= beginTime) {
+            beginTime = TimeUtil.stepTime(vipEndTime, Calendar.SECOND, 1);
         }
         order.validateMoney(MoneyUtil.Fen2Yuan(payResult.getCashFee()));
         order.calculateTime(beginTime).savePayResult(payResult);
         orderMapper.updateById(order);
         //缓存订单
         cacheOrder(order);
+    }
+
+    /**
+     * 查询vip结束时间
+     * @param openid
+     * @param excludeNo
+     * @return
+     */
+    public Long selectVipEndTime(String openid, String excludeNo) {
+        return orderMapper.selectVipEndTime(wxConfig.getAppID(), openid, excludeNo);
     }
 
     /**

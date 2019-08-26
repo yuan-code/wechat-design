@@ -25,6 +25,12 @@
         <result column="action_time" property="actionTime" />
     </resultMap>
 
+    <select id="selectVipEndTime" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT MAX(end_time) FROM `order` WHERE openid = #{openid} AND status = 2 AND appid = #{appid}
+        <if test="excludeNo">
+           AND order_no != #{excludeNo}
+        </if>
+    </select>
 
 
 </mapper>

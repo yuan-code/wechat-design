@@ -1,6 +1,7 @@
 package com.hualala.wechat.component;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.hualala.util.LockHelper;
 import com.hualala.wechat.common.NotifyEnum;
 import com.hualala.wechat.common.NotifyType;
 import com.hualala.wechat.WXConfig;
@@ -167,8 +168,7 @@ public class NotifyFactory implements ApplicationContextAware {
             switch (xmlMap.get("EventKey")) {
                 case HOT_ARTICLE_CLICK_TYPE:
                     Article article = articleService.findAny();
-                    String articleUrl = "http://wechat.ictry.com/article/detail/" + article.getArticleid();
-                    return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),articleUrl);
+                    return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),article.resolveUrl());
                 case HOT_ARTICLE_CONTACT_US:
                     return wxReply.replyImage(mediaID);
                 default:
@@ -190,6 +190,9 @@ public class NotifyFactory implements ApplicationContextAware {
         @Autowired
         private ArticleService articleService;
 
+        @Autowired
+        private LockHelper lockHelper;
+
         @Override
         public String wechatNotify(Map<String, String> xmlMap) throws Exception {
 
@@ -198,9 +201,9 @@ public class NotifyFactory implements ApplicationContextAware {
             WXReply wxReply = new WXReply(appID, openID);
             String content = xmlMap.get("Content");
             if(content.startsWith("https://mp.weixin.qq.com/")) {
-                Article article = articleService.articleCopy(content);
-                String articleUrl = "http://wechat.ictry.com/article/detail/" + article.getArticleid();
-                return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),articleUrl);
+                String lockKey = "copyArticle/" + content;
+                Article article = lockHelper.doSync(lockKey,() -> articleService.articleCopy(content));
+                return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),article.resolveUrl());
             }
             String msg = "回复公众号，内容为要复制的文章链接地址，即可获得文章推送（仅支持mp.weixin.qq.com域名下的原创文章）";
             return wxReply.replyMsg(msg);

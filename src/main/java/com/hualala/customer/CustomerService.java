@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.customer.domain.Customer;
 import com.hualala.user.domain.User;
+import com.hualala.util.LockHelper;
 import com.hualala.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -22,6 +24,9 @@ public class CustomerService extends ServiceImpl<CustomerMapper, Customer> {
 
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private LockHelper lockHelper;
 
     /**
      * 查询某个作者的文章的阅读量
@@ -43,7 +48,8 @@ public class CustomerService extends ServiceImpl<CustomerMapper, Customer> {
      * @param user
      * @param articleid
      */
-    public void addCustomer(User author, User user, Long articleid) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean addCustomer(User author, User user, Long articleid) {
         Wrapper<Customer> wrapper = new QueryWrapper<Customer>()
                 .eq("author_openid", author.getOpenid())
                 .eq("customer_openid", user.getOpenid())
@@ -62,6 +68,6 @@ public class CustomerService extends ServiceImpl<CustomerMapper, Customer> {
             Long clickCount = customer.getClickCount() + 1;
             customer.setClickCount(clickCount);
         }
-        this.saveOrUpdate(customer);
+        return this.saveOrUpdate(customer);
     }
 }

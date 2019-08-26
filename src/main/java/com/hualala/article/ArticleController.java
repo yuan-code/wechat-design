@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hualala.article.domain.Article;
 import com.hualala.common.ResultCode;
+import com.hualala.util.LockHelper;
 import com.hualala.util.TimeUtil;
 import com.hualala.user.component.UserResolver;
 import com.hualala.common.BusinessException;
@@ -48,6 +49,9 @@ public class ArticleController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private LockHelper lockHelper;
+
     /**
      * 查看文章详情 需要微信基础授权
      *
@@ -57,7 +61,7 @@ public class ArticleController {
      * @throws IOException
      */
     @RequestMapping("/detail/{articleid}")
-    public String articleDetail(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) {
+    public String articleDetail(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) throws Exception {
         Article article = articleService.getById(articleid);
         //所属用户ID
         if (article.getUserid() != 0L) {
@@ -66,7 +70,8 @@ public class ArticleController {
             modelMap.addAttribute("author", author);
             if (!Objects.equals(author.getOpenid(), user.getOpenid())) {
                 //对于其他人点击来的情况 增加关注量
-                customerService.addCustomer(author,user,article.getArticleid());
+                String lockKey = "addCustomer/" + author.getOpenid() + user.getOpenid();
+                lockHelper.doSync(lockKey,() -> customerService.addCustomer(author,user,article.getArticleid()));
             }
             //查询作者的文章关注量
             Integer customerCount = customerService.queryCustomerCount(article.getOpenid(), articleid);
@@ -100,8 +105,9 @@ public class ArticleController {
      */
     @ResponseBody
     @RequestMapping("/copyArticle")
-    public Object articleCopy(Article article, @UserResolver User user) throws IOException {
-        Article copy = articleService.articleCopy(article.getSource());
+    public Object articleCopy(Article article, @UserResolver User user) throws Exception {
+        String lockKey = "copyArticle/" + article.getSource();
+        Article copy = lockHelper.doSync(lockKey,() -> articleService.articleCopy(article.getSource()));
         return ResultUtils.success(copy);
     }
 

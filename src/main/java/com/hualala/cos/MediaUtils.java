@@ -27,21 +27,25 @@ public class MediaUtils {
     }
 
 
-    public static String upload(InputStream inputStream,String contentType) throws IOException {
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentLength(inputStream.available());
-        objectMetadata.setContentType(contentType);
-        String key = UUID.randomUUID().toString();
-        PutObjectResult putObjectResult = CosConfig.COS_CLIENT.putObject(cosConfig.getBucket(), key, inputStream, objectMetadata);
-        return cosConfig.getServer() + key;
+    public static String upload(InputStream inputStream,String contentType) {
+        try {
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(inputStream.available());
+            objectMetadata.setContentType(contentType);
+            String key = UUID.randomUUID().toString();
+            PutObjectResult putObjectResult = CosConfig.COS_CLIENT.putObject(cosConfig.getBucket(), key, inputStream, objectMetadata);
+            return cosConfig.getServer() + key;
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
-    public static String uploadImage(InputStream inputStream) throws IOException {
+    public static String uploadImage(InputStream inputStream) {
         return upload(inputStream,"image/jpeg");
     }
 
-    public static String uploadImage(byte[] bytes) throws IOException {
+    public static String uploadImage(byte[] bytes) {
         return upload(new ByteArrayInputStream(bytes),"image/jpeg");
     }
 }

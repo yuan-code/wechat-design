@@ -3,9 +3,13 @@ package com.hualala.article;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.article.domain.Article;
+import com.hualala.common.BusinessException;
+import com.hualala.common.ResultCode;
 import com.hualala.util.HttpClientUtil;
 import com.hualala.cos.MediaUtils;
+import com.hualala.util.LockHelper;
 import com.hualala.util.TimeUtil;
+import lombok.extern.log4j.Log4j2;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,6 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,6 +31,7 @@ import java.util.Map;
  * @author YuanChong
  * @since 2019-07-08
  */
+@Log4j2
 @Service
 public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
 
@@ -41,14 +47,15 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      * @return
      * @throws IOException
      */
-    public Article articleCopy(String source) throws IOException {
-        QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("source", source).eq("pid",0);
+    @Transactional(rollbackFor = Exception.class)
+    public Article articleCopy(String source) {
+        QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("source", source).eq("pid", 0);
+        //这行代码块是同步的
         Article article = articleMapper.selectOne(wrapper);
         if (article != null) {
             return article;
         }
-        Connection connect = Jsoup.connect(source);
-        Document document = connect.get();
+        Document document = connetUrl(source);
         String head = document.head().toString();
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
@@ -72,6 +79,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         return article;
     }
 
+
     /**
      * 随机取一条原创文章
      *
@@ -82,9 +90,22 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     }
 
 
-    public Element replaceImage(Element element) throws IOException {
+
+    private Document connetUrl(String source) {
+        try {
+            Connection connect = Jsoup.connect(source);
+            return connect.get();
+        } catch (Exception e) {
+            log.error("复制文章url: {} 地址连接失败", source, e);
+            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(), "文章地址不合法");
+        }
+    }
+
+
+
+    public Element replaceImage(Element element) {
         Elements images = element.select("img");
-        for(Element ele : images) {
+        for (Element ele : images) {
             String imgUrl = ele.attr("data-src");
             byte[] bytes = HttpClientUtil.downLoadFromUrl(imgUrl);
             String newUrl = MediaUtils.uploadImage(bytes);
