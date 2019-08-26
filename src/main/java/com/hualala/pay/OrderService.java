@@ -18,6 +18,7 @@ import com.hualala.util.TimeUtil;
 import com.hualala.wechat.WXConfig;
 import com.hualala.pay.util.MoneyUtil;
 import com.hualala.wechat.WXService;
+import freemarker.template.utility.CollectionUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -129,6 +130,15 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         List<Order> orderList = queryDBSuccessOrder(openid);
         orderList.stream().forEach(order -> cacheOrder(order));
         orderList = orderList.stream().sorted(Comparator.comparing(Order::getEndTime).reversed()).collect(Collectors.toList());
+        if (start < 0) {
+            start = 0;
+        }
+        if (end > orderList.size()) {
+            end = orderList.size();
+        }
+        if (start > end) {
+            start = end;
+        }
         return end == -1 ? orderList : orderList.subList(start, end);
     }
 
