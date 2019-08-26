@@ -56,6 +56,7 @@ public class CustomerService extends ServiceImpl<CustomerMapper, Customer> {
             customer.setAuthorUserid(author.getUserid());
             customer.setCustomerOpenid(user.getOpenid());
             customer.setCustomerUserid(user.getUserid());
+            customer.setClickCount(1L);
             customer.setSubscibeTime(TimeUtil.currentDT());
         }else {
             Long clickCount = customer.getClickCount() + 1;
