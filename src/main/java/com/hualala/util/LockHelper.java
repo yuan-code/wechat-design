@@ -17,9 +17,9 @@ import java.util.function.Supplier;
 public class LockHelper {
 
     @Autowired
-    private static CuratorFramework client;
+    private CuratorFramework client;
 
-    private static final String rootPath = "/distribution/lock/";
+    private final String rootPath = "/distribution/lock/";
 
     /**
      * 同步代码块
