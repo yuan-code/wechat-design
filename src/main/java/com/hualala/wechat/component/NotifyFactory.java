@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -201,7 +202,7 @@ public class NotifyFactory implements ApplicationContextAware {
             WXReply wxReply = new WXReply(appID, openID);
             String content = xmlMap.get("Content");
             if(content.startsWith("https://mp.weixin.qq.com/")) {
-                String lockKey = "copyArticle/" + content;
+                String lockKey = "copyArticle/" + URLEncoder.encode(content,"UTF-8");
                 Article article = lockHelper.doSync(lockKey,() -> articleService.articleCopy(content));
                 return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),article.resolveUrl());
             }

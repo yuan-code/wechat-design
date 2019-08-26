@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 /**
@@ -70,7 +71,7 @@ public class ArticleController {
             modelMap.addAttribute("author", author);
             if (!Objects.equals(author.getOpenid(), user.getOpenid())) {
                 //对于其他人点击来的情况 增加关注量
-                String lockKey = "addCustomer/" + author.getOpenid() + user.getOpenid();
+                String lockKey = "addCustomer/" + URLEncoder.encode(author.getOpenid() + "/" + user.getOpenid(), "UTF-8");
                 lockHelper.doSync(lockKey,() -> customerService.addCustomer(author,user,article.getArticleid()));
             }
             //查询作者的文章关注量
@@ -106,7 +107,7 @@ public class ArticleController {
     @ResponseBody
     @RequestMapping("/copyArticle")
     public Object articleCopy(Article article, @UserResolver User user) throws Exception {
-        String lockKey = "copyArticle/" + article.getSource();
+        String lockKey = "copyArticle/" + URLEncoder.encode(article.getSource(), "UTF-8");
         Article copy = lockHelper.doSync(lockKey,() -> articleService.articleCopy(article.getSource()));
         return ResultUtils.success(copy);
     }
