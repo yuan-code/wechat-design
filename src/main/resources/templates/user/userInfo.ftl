@@ -109,13 +109,6 @@
             </div>
         </div>
 
-        <a class="weui-cell weui-cell_access" href="${user.available?string('javascript:;','/vip/vip')}">
-            <div class="weui-cell__bd">
-                ${user.available?string('会员到期日期','开通会员')}
-            </div>
-            <div class="weui-cell__ft endTime">
-            </div>
-        </a>
 
     </div>
     <div class="weui-cells__bottom">上传微信二维码快速获取销售线索</div>
@@ -125,12 +118,6 @@
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
 <script>
-    $.post('/pay/vipEndTime', {}, function (response) {
-        var endTime = response.data
-        if(endTime) {
-            $(".endTime").innerText = endTime;
-        }
-    })
     $("#qrcodeCell").on('click', function(e){
         wx.chooseImage({
             count: 1, // 默认9

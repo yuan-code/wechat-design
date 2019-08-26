@@ -126,9 +126,28 @@
             ${user.slogan}
         </div>
     </div>
+    <div class="weui-cells">
+
+        <a class="weui-cell weui-cell_access" href="/vip">
+            <div class="weui-cell__bd">
+                ${user.available?string('会员到期日期','开通会员')}
+            </div>
+            <div class="weui-cell__ft" id="endTime">
+
+            </div>
+        </a>
+
+    </div>
 </div>
 
-
+<script>
+    $.post('/pay/vipEndTime', {}, function (response) {
+        var endTime = response.data
+        if(endTime) {
+            $("#endTime").innerText = endTime;
+        }
+    })
+</script>
 
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
