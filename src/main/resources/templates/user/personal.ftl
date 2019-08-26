@@ -106,9 +106,7 @@
         $(function(){
             $.post('/pay/vipEndTime', {}, function (response) {
                 var endTime = response.data
-                if(endTime) {
-                    $("#endTime").innerHTML = endTime;
-                }
+                $("#aaaaa").innerHTML = endTime;
             })
         })
     </script>
@@ -151,6 +149,7 @@
             <div class="weui-cell__bd">
                 ${user.available?string('会员到期日期','开通会员')}
             </div>
+            <div id="aaaaa"></div>
             <div class="weui-cell__ft" id="endTime">
 
             </div>
