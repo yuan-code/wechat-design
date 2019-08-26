@@ -107,7 +107,7 @@
             $.post('/pay/vipEndTime', {}, function (response) {
                 var endTime = response.data
                 if(endTime) {
-                    $("#endTime").innerText = endTime;
+                    $("#endTime").innerHTML = endTime;
                 }
             })
         })
