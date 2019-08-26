@@ -101,6 +101,17 @@
             border-radius: 5px;
         }
     </style>
+
+    <script>
+        $(function(){
+            $.post('/pay/vipEndTime', {}, function (response) {
+                var endTime = response.data
+                if(endTime) {
+                    $("#endTime").innerText = endTime;
+                }
+            })
+        }
+    </script>
 </head>
 <body ontouchstart>
 
@@ -128,7 +139,7 @@
     </div>
     <div class="weui-cells">
 
-        <a class="weui-cell weui-cell_access" href="/vip">
+        <a class="weui-cell weui-cell_access" href="${user.available?string('javascript:;','/vip/vip')}">
             <div class="weui-cell__bd">
                 ${user.available?string('会员到期日期','开通会员')}
             </div>
@@ -140,14 +151,6 @@
     </div>
 </div>
 
-<script>
-    $.post('/pay/vipEndTime', {}, function (response) {
-        var endTime = response.data
-        if(endTime) {
-            $("#endTime").innerText = endTime;
-        }
-    })
-</script>
 
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
