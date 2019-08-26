@@ -110,7 +110,7 @@
                     $("#endTime").innerText = endTime;
                 }
             })
-        }
+        })
     </script>
 </head>
 <body ontouchstart>
