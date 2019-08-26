@@ -101,7 +101,7 @@
             border-radius: 5px;
         }
     </style>
-
+    <script src="/js/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
     <script>
         $(function(){
             $.post('/pay/vipEndTime', {}, function (response) {
