@@ -107,6 +107,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
         String msg = "有人购买会员了，openID={} 支付金额={}元 order信息:{}";
         String content = String.format(msg,order.getOpenid(),order.getCashFee(),JSON.toJSONString(order));
+        log.info(content);
         mailUser.stream().forEach(toUser -> mailService.sendMail(toUser,"青山高创公众号新增一个会员订单",content));
     }
 
