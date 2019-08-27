@@ -29,8 +29,6 @@ public class MailService {
     private ExecutorService mailThreadPool = Executors.newSingleThreadExecutor();
 
 
-
-
     public void sendMail(String to, String subject, String content) {
         mailThreadPool.execute(() -> doSend(to, subject, content));
     }
@@ -41,6 +39,7 @@ public class MailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(content);
+        log.info("准备发送邮件 from:{} to:{} subject:{} content:{}", from, to, subject, content);
         mailSender.send(message);
     }
 

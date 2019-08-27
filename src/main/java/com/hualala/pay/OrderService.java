@@ -105,7 +105,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         //缓存订单
         cacheOrder(order);
 
-        String msg = "有人购买会员了，openID={} 支付金额={}元 order信息:{}";
+        String msg = "有人购买会员了，openID=%s 支付金额=%s元 order信息:%s";
         String content = String.format(msg,order.getOpenid(),order.getCashFee(),JSON.toJSONString(order));
         log.info(content);
         mailUser.stream().forEach(toUser -> mailService.sendMail(toUser,"青山高创公众号新增一个会员订单",content));
