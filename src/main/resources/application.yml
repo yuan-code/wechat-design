@@ -14,6 +14,14 @@ spring:
     template-loader-path: classpath:/templates   # 设置ftl文件路径
     mvc:
       static-path-pattern: /static         # 设置静态文件路径，js,css等
+  mail:
+    host: smtp.163.com
+    username: qingshangaochuang@163.com
+    password: 92CB3F75188C6DDF
+    default-encoding: UTF-8
+    toUser:
+      - 918968972@qq.com
+      - 705366435@qq.com
 
 server:
   port: 8080
@@ -23,10 +31,6 @@ server:
 mybatis-plus:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
-
-logging:
-  level:
-    com.hualala: DEBUG
 
 cos:
   secretID: AKIDvmPp0vr00sVt2wNyBF4dw0qSvCIB8Iah

@@ -5,10 +5,12 @@ import com.hualala.wechat.WXService;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
@@ -29,16 +31,22 @@ public class RefreshOAuth implements ApplicationListener<ContextRefreshedEvent> 
     /**
      * 刷新token与js-ticket的定时线程
      */
-    private ScheduledThreadPoolExecutor oathPool = new ScheduledThreadPoolExecutor(1,
-            new BasicThreadFactory.Builder().namingPattern("refresh-wx-oath-%d").daemon(true).build());
+    @Autowired
+    private ScheduledThreadPoolExecutor oAuthPool;
 
 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        oathPool.scheduleAtFixedRate(() -> wxService.refreshToken(),0, wxConfig.getExpire(), TimeUnit.SECONDS);
-        oathPool.scheduleAtFixedRate(() -> wxService.refreshJSTicket(),0, wxConfig.getExpire(), TimeUnit.SECONDS);
+        oAuthPool.scheduleAtFixedRate(() -> wxService.refreshToken(),0, wxConfig.getExpire(), TimeUnit.SECONDS);
+        oAuthPool.scheduleAtFixedRate(() -> wxService.refreshJSTicket(),0, wxConfig.getExpire(), TimeUnit.SECONDS);
 
     }
+
+    @Bean(destroyMethod = "shutdown")
+    public ThreadPoolExecutor oAuthPool() {
+        return new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("refresh-wx-oath-%d").daemon(true).build());
+    }
+
 
 }

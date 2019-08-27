@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.common.BusinessException;
 import com.hualala.common.RedisKey;
 import com.hualala.common.ResultCode;
+import com.hualala.mail.MailService;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WXPayResult;
 import com.hualala.pay.domain.WxPayReq;
@@ -21,6 +22,7 @@ import com.hualala.wechat.WXService;
 import freemarker.template.utility.CollectionUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +47,12 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
     @Autowired
     private WXService wxService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Value("${spring.mail.toUser}")
+    private List<String> mailUser;
 
 
     /**
@@ -96,6 +104,10 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         orderMapper.updateById(order);
         //缓存订单
         cacheOrder(order);
+
+        String msg = "有人购买会员了，openID={} 支付金额={}元 order信息:{}";
+        String content = String.format(msg,order.getOpenid(),order.getCashFee(),JSON.toJSONString(order));
+        mailUser.stream().forEach(toUser -> mailService.sendMail(toUser,"青山高创公众号新增一个会员订单",content));
     }
 
     /**
