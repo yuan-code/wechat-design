@@ -20,6 +20,18 @@ spring:
     password: 92CB3F75188C6DDF
     default-encoding: UTF-8
     toUser: 918968972@qq.com,705366435@qq.com
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
 
 server:
   port: 8080
