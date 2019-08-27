@@ -39,8 +39,8 @@ public class MailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(content);
-        log.info("准备发送邮件 from:{} to:{} subject:{} content:{}", from, to, subject, content);
         mailSender.send(message);
+        log.info("发送邮件成功 from:{} to:{} subject:{} content:{}", from, to, subject, content);
     }
 
 }
