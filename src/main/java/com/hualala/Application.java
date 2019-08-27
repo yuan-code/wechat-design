@@ -9,15 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
-        System.out.println(UUID.randomUUID().toString().replaceAll("-","").toUpperCase().substring(16));
-//        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 
