@@ -51,7 +51,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     @Autowired
     private MailService mailService;
 
-    @Value("${spring.mail.toUser}")
+    @Value("#{'${spring.mail.toUser}'.split(',')}")
     private List<String> mailUser;
 
 

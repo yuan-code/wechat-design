@@ -19,9 +19,7 @@ spring:
     username: qingshangaochuang@163.com
     password: 92CB3F75188C6DDF
     default-encoding: UTF-8
-    toUser:
-      - 918968972@qq.com
-      - 705366435@qq.com
+    toUser: 918968972@qq.com,705366435@qq.com
 
 server:
   port: 8080

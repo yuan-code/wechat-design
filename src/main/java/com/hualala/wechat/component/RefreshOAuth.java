@@ -31,8 +31,7 @@ public class RefreshOAuth implements ApplicationListener<ContextRefreshedEvent> 
     /**
      * 刷新token与js-ticket的定时线程
      */
-    @Autowired
-    private ScheduledThreadPoolExecutor oAuthPool;
+    private ScheduledThreadPoolExecutor oAuthPool = new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("refresh-wx-oath-%d").daemon(true).build());;
 
 
 
@@ -43,10 +42,6 @@ public class RefreshOAuth implements ApplicationListener<ContextRefreshedEvent> 
 
     }
 
-    @Bean(destroyMethod = "shutdown")
-    public ThreadPoolExecutor oAuthPool() {
-        return new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("refresh-wx-oath-%d").daemon(true).build());
-    }
 
 
 }
