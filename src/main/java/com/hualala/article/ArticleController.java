@@ -64,6 +64,9 @@ public class ArticleController {
     @RequestMapping("/detail/{articleid}")
     public String articleDetail(@PathVariable("articleid") Long articleid, ModelMap modelMap, @UserResolver User user) throws Exception {
         Article article = articleService.getById(articleid);
+        //1- 代表路人甲
+        Integer userStatus = 0;
+        Integer customerCount = 0;
         //所属用户ID
         if (article.getUserid() != 0L) {
             //二次编辑文章查询所属用户
@@ -73,12 +76,14 @@ public class ArticleController {
                 //对于其他人点击来的情况 增加关注量
                 String lockKey = "addCustomer/" + URLEncoder.encode(author.getOpenid() + "/" + user.getOpenid(), "UTF-8");
                 lockHelper.doSync(lockKey,() -> customerService.addCustomer(author,user,article.getArticleid()));
+                userStatus = 1;
             }
             //查询作者的文章关注量
-            Integer customerCount = customerService.queryCustomerCount(article.getOpenid(), articleid);
-            modelMap.addAttribute("customerCount", customerCount);
+            customerCount = customerService.queryCustomerCount(article.getOpenid(), articleid);
         }
+        modelMap.addAttribute("customerCount", customerCount);
         modelMap.addAttribute("article", article);
+        modelMap.addAttribute("userStatus",userStatus);
         return "article/article";
     }
 

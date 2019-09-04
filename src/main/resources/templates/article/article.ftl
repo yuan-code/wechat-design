@@ -175,11 +175,11 @@ ${article.head}
 
 <body id="activity-detail" class="zh_CN mm_appmsg  appmsg_skin_default appmsg_style_default">
     <#--只有二次编辑的文章 并且是作者 或者原创文章 才显示这个-->
-    <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
+    <#if userStatus = 0>
         <a href="/customer/customer?source=top" class="toptip">
-            共有<span>0人</span>阅读了该文章，点击查看
+            共有<span>#{customerCount}人</span>阅读了该文章，点击查看
         </a>
-    <#--</#if>-->
+    </#if>
     <div id="js_article" class="rich_media">
         <div id="js_top_ad_area" class="top_banner"></div>
         <div class="rich_media_inner">
@@ -199,11 +199,12 @@ ${article.head}
                                 <h2>${user.nickname}</h2>
                                 <p>
                                     <#--如果是原创文章 显示设置 如果是二次编辑 设置了显示内容 没设置显示编辑 如果是分享 显示内容-->
-                                    <#--<#if user?? && (author.slogan?? || author.openID != openID)>-->
+                                    <#if userStatus = 0>
                                         ${user.slogan}
-                                    <#--<#else>-->
                                         <a href="/user/slogan?path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
-                                    <#--</#if>-->
+                                    <#else>
+                                        ${user.slogan}
+                                    </#if>
                                 </p>
                             </div>
                             <div class="rich_media_author__ft">
@@ -224,20 +225,21 @@ ${article.head}
 
     <p style="padding-left:10px;text-align:left;font-size:14px;">
         阅读量：
-        <span style="color:#1296db">0
+        <span style="color:#1296db">
+            #{customerCount}
             <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
-            <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
-                <a href="/customer/customer?source=bottom" class="right-customer-btn">0人关注</a>
-            <#--</#if>-->
+            <#if userStatus = 0>
+                <a href="/customer/customer?source=bottom" class="right-customer-btn">#{customerCount}人关注</a>
+            </#if>
         </span>
     </p>
     <div class="weui-footer">
         <p class="weui-footer__text">Copyright © 2019 青山高创</p>
     </div>
     <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
-    <#--<#if !user?? || (user?? && openID?? && author.openid = openid)>-->
+    <#if userStatus = 0>
         <a href="/article/edit/${article.articleid}" class="right-edit-btn">修改文章</a>
-    <#--</#if>-->
+    </#if>
 
     <div class="mask mask_gzh" style="display:none">
         <div class="mask-dialog" style="padding-top:20px;">
