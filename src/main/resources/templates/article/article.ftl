@@ -193,17 +193,25 @@ ${article.head}
                         </h2>
                         <div class="rich_media_author">
                             <div class="rich_media_author__hd">
-                                <img src="${user.headimgurl}">
+                                <#if userStatus = 0>
+                                    <img src="${user.headimgurl}">
+                                <#else>
+                                    <h2>${author.headimgurl}</h2>
+                                </#if>
                             </div>
                             <div class="rich_media_author_body">
-                                <h2>${user.nickname}</h2>
+                                <#if userStatus = 0>
+                                    <h2>${user.nickname}</h2>
+                                <#else>
+                                    <h2>${author.nickname}</h2>
+                                </#if>
                                 <p>
                                     <#--如果是原创文章 显示设置 如果是二次编辑 设置了显示内容 没设置显示编辑 如果是分享 显示内容-->
                                     <#if userStatus = 0>
                                         ${user.slogan}
                                         <a href="/user/slogan?path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
                                     <#else>
-                                        ${user.slogan}
+                                        ${author.slogan}
                                     </#if>
                                 </p>
                             </div>
