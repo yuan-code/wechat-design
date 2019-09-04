@@ -159,6 +159,9 @@ ${article.head}
         padding-left:5px;
         padding-right:5px;
     }
+    .qrcodeContent > img {
+        width: 40%;
+    }
 </style>
 <script src="/js/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
@@ -256,7 +259,7 @@ ${article.head}
         </div>
     </div>
     <div class="mask mask_gr" style="display:none">
-        <div class="mask-dialog" style="padding-top:20px;">
+        <div class="mask-dialog qrcodeContent" style="padding-top:20px;">
             <#if userStatus = 0>
                 <img src="${user.qrcode}">
             <#else>
