@@ -196,7 +196,7 @@ ${article.head}
                                 <#if userStatus = 0>
                                     <img src="${user.headimgurl}">
                                 <#else>
-                                    <h2>${author.headimgurl}</h2>
+                                    <h2><img src="${author.headimgurl}"></h2>
                                 </#if>
                             </div>
                             <div class="rich_media_author_body">
