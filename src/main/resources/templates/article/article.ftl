@@ -257,7 +257,11 @@ ${article.head}
     </div>
     <div class="mask mask_gr" style="display:none">
         <div class="mask-dialog" style="padding-top:20px;">
-            <img src="${userStatus=0? string(user.qrcode,author.qrcode)}" style="width:80%;height:80%">
+            <#if userStatus = 0>
+                <img src="${user.qrcode}">
+            <#else>
+                <h2><img src="${author.qrcode}"></h2>
+            </#if>
             <p style="color:red;margin-bottom:20px;">长按二维码加我微信</p>
         </div>
     </div>
