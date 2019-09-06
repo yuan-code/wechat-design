@@ -94,7 +94,7 @@
         <#if FREE ??>
             <label class="weui-cell weui-check__label" for="level0">
                 <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check vip-level" name="level" id="level0" vipType="#{FREE.type}">
+                    <input type="checkbox" class="weui-check vip-level" name="level0" id="level0" vipType="#{FREE.type}">
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__ft">
@@ -106,7 +106,7 @@
         </#if>
         <label class="weui-cell weui-check__label" for="level1">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" name="level" id="level1" value="#{ONE.price}" vipType="#{ONE.type}">
+                <input type="checkbox" class="weui-check vip-level" name="level1" id="level1" value="#{ONE.price}" vipType="#{ONE.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
@@ -117,7 +117,7 @@
         </label>
         <label class="weui-cell weui-check__label" for="level2">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" value="#{TWO.price}" name="level" checked="checked" id="level2" vipType="#{TWO.type}">
+                <input type="checkbox" class="weui-check vip-level" value="#{TWO.price}" name="level2" checked="checked" id="level2" vipType="#{TWO.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
@@ -128,7 +128,7 @@
         </label>
         <label class="weui-cell weui-check__label" for="level3">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" value="#{THREE.price}" name="level" id="level3" vipType="#{THREE.type}">
+                <input type="checkbox" class="weui-check vip-level" value="#{THREE.price}" name="level3" id="level3" vipType="#{THREE.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
@@ -157,15 +157,12 @@
         }
     });
     $("#payBtn").on('click', function(e){
-        if(vipType == 0) {
-            $.post('/pay/free', {}, function (response) {
-                if(response.success) {
+        var url = vipType == 0 ? '/pay/free' : '/pay/create'
+        $.post(url, {vipType: vipType}, function (response) {
+            if (response.success) {
+                if (vipType == 0) {
                     alert("已具备体验资格~",true);
-                }
-            }）
-        }else {
-            $.post('/pay/create', {vipType: vipType}, function (response) {
-                if (response.success) {
+                } else {
                     wx.chooseWXPay({
                         appId: response.data.appId,
                         nonceStr: response.data.nonceStr,
@@ -178,11 +175,11 @@
                             // window.location.href = "/art/a22b1d3a4265f526/edit"+"?id="+10000*Math.random();
                         }
                     });
-                } else {
-                    alert("操作失败", false);
                 }
-            })
-        }
+            } else {
+                alert("操作失败", false);
+            }
+        })
     });
 
     window.alert = function (msg, back) {
