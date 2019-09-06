@@ -162,7 +162,7 @@
             if (response.success) {
                 if (vipType == 0) {
                     alert("已具备体验资格~",true);
-                    #{"#free-level"}.hide();
+                    $("#free-level").hide();
                 } else {
                     wx.chooseWXPay({
                         appId: response.data.appId,
