@@ -162,7 +162,7 @@
             if (response.success) {
                 if (vipType == 0) {
                     alert("已具备体验资格~",true);
-                    setTimeout(funtion() {
+                    setTimeout(function() {
                         window.location.href=document.referrer;
                     }, 1000)
                 } else {
@@ -175,7 +175,7 @@
                         paySign: response.data.paySign,
                         success: function (res) {
                             alert("支付成功", true);
-                            setTimeout(funtion() {
+                            setTimeout(function() {
                                 window.location.href=document.referrer;
                             }, 1000)
                         }
