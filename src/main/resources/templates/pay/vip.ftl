@@ -160,9 +160,7 @@
         if(vipType == 0) {
             $.post('/pay/free', {}, function (response) {
                 if(response.success) {
-                    alert("操作失败",true);
-                }else {
-                    alert("操作失败", false);
+                    alert("已具备体验资格~",true);
                 }
             }
         }else {
