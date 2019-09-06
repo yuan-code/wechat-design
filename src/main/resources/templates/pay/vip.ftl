@@ -161,8 +161,10 @@
         $.post(url, {vipType: vipType}, function (response) {
             if (response.success) {
                 if (vipType == 0) {
-                    // alert("已具备体验资格~",true);
-                    // window.location.href=document.referrer;
+                    alert("已具备体验资格~",true);
+                    setTimeout(funtion() {
+                        window.location.href=document.referrer;
+                    }, 1000)
                 } else {
                     wx.chooseWXPay({
                         appId: response.data.appId,
@@ -173,7 +175,9 @@
                         paySign: response.data.paySign,
                         success: function (res) {
                             alert("支付成功", true);
-                            window.location.href=document.referrer;
+                            setTimeout(funtion() {
+                                window.location.href=document.referrer;
+                            }, 1000)
                         }
                     });
                 }
