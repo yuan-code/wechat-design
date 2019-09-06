@@ -173,7 +173,7 @@
                         paySign: response.data.paySign,
                         success: function (res) {
                             alert("支付成功", true);
-                            // window.location.href = "/art/a22b1d3a4265f526/edit"+"?id="+10000*Math.random();
+                            window.location.href=document.referrer;
                         }
                     });
                 }
