@@ -74,8 +74,8 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         //授权码
         String code = request.getParameter("code");
         if (StringUtils.isEmpty(code)) {
-            StringBuffer requestURL = request.getRequestURL();
-            String encoderUrl = URLEncoder.encode(requestURL.toString(), StandardCharsets.UTF_8.name());
+            String requestURL = getUrl(request);
+            String encoderUrl = URLEncoder.encode(requestURL, StandardCharsets.UTF_8.name());
             String redirectUrl = String.format(JS_PRE_AUTH_URL, wxConfig.getAppID(), encoderUrl, "snsapi_userinfo", request.getRequestURI());
             log.info("微信JS授权统一处理 redirectUrl=[{}]", redirectUrl);
             response.sendRedirect(redirectUrl);
@@ -113,9 +113,7 @@ public class WebAuthInterceptor implements HandlerInterceptor {
             modelMap.addAttribute("user", user);
             //有视图 freemarker请求
             //补充js-api数据
-            String requestURL = request.getRequestURL().toString();
-            String queryString = request.getQueryString();
-            String url = StringUtils.isEmpty(queryString) ? requestURL : requestURL + "?" + queryString;
+            String url = getUrl(request);
             wxService.jsApiSignature(modelAndView.getModelMap(), url);
         }
         //返回给前端cookie
@@ -171,6 +169,13 @@ public class WebAuthInterceptor implements HandlerInterceptor {
             }
         }
         return null;
+    }
+
+
+    private String getUrl(HttpServletRequest request) {
+        StringBuffer requestURL = request.getRequestURL();
+        String queryString = request.getQueryString();
+        return StringUtils.isEmpty(queryString) ? requestURL.toString() : requestURL.append("?").append(queryString).toString();
     }
 
 }

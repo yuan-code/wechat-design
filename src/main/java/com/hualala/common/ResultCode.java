@@ -12,7 +12,8 @@ public enum ResultCode {
     HTTP_CLIENT_ERROR("007","HTTP_CLIENT_ERROR"),
     PARAMS_ERROR("008","参数错误"),
     PAY_ERROR("009","支付异常"),
-    SIGN_ERROR("010","签名错误");
+    SIGN_ERROR("010","签名错误"),
+    FREE_ERROR("011","您已经不具备免费试用资格");
 
     private String code;
     private String msg;

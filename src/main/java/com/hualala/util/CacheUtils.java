@@ -88,8 +88,8 @@ public class CacheUtils {
      * @param key
      * @return
      */
-    public static Set<String> zRangeAll(String key, long start, long end) {
-        return stringRedisTemplate.opsForZSet().range(key, start, end);
+    public static Set<String> zRangeAll(String key) {
+        return stringRedisTemplate.opsForZSet().range(key, 0, -1);
     }
 
 
@@ -99,8 +99,8 @@ public class CacheUtils {
      * @param key
      * @return
      */
-    public static Set<String> zRangeRevertAll(String key, long start, long end) {
-        return stringRedisTemplate.opsForZSet().reverseRange(key, start, end);
+    public static Set<String> zRangeRevertAll(String key) {
+        return stringRedisTemplate.opsForZSet().reverseRange(key, 0, -1);
     }
 
     /**

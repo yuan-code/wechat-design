@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.hualala.common.BusinessException;
 import com.hualala.common.ResultCode;
-import com.hualala.pay.common.PriceEnum;
+import com.hualala.pay.common.VipTypeEnum;
 import com.hualala.pay.util.MoneyUtil;
 import com.hualala.user.domain.User;
 import com.hualala.util.HttpUtils;
@@ -18,8 +18,6 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.Calendar;
 
 /**
  * <p>
@@ -157,7 +155,6 @@ public class Order implements Serializable {
         this.appid = user.getAppid();
         this.userid = user.getUserid();
         this.createTime = TimeUtil.currentDT();
-        this.status = 1;
         return this;
     }
 
@@ -170,7 +167,7 @@ public class Order implements Serializable {
         if (this.orderType == null) {
             throw new BusinessException(ResultCode.SYSTEM_ERROR);
         }
-        PriceEnum priceEnum = PriceEnum.resolveType(this.orderType);
+        VipTypeEnum priceEnum = VipTypeEnum.resolveType(this.orderType);
         this.orderAmount = priceEnum.getPrice();
         this.orderDesc = priceEnum.getDesc();
         return this;
@@ -215,10 +212,10 @@ public class Order implements Serializable {
     }
 
 
-    public Order calculateTime(Long time) throws ParseException {
+    public Order calculateTime(Long time) {
         this.beginTime = time;
-        PriceEnum priceEnum = PriceEnum.resolveType(this.getOrderType());
-        this.endTime = TimeUtil.stepTime(time, Calendar.MONTH, priceEnum.getMonth());
+        VipTypeEnum priceEnum = VipTypeEnum.resolveType(this.getOrderType());
+        this.endTime = TimeUtil.stepTime(time, priceEnum.getCalendarType(), priceEnum.getCalendarCount());
         return this;
     }
 }

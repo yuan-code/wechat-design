@@ -9,6 +9,7 @@ import com.hualala.common.BusinessException;
 import com.hualala.common.RedisKey;
 import com.hualala.common.ResultCode;
 import com.hualala.mail.MailService;
+import com.hualala.pay.common.VipTypeEnum;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WXPayResult;
 import com.hualala.pay.domain.WxPayReq;
@@ -19,7 +20,6 @@ import com.hualala.util.TimeUtil;
 import com.hualala.wechat.WXConfig;
 import com.hualala.pay.util.MoneyUtil;
 import com.hualala.wechat.WXService;
-import freemarker.template.utility.CollectionUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +66,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         order.setOrderType(vipType);
         order.setMchid(wxConfig.getMchId());
         //生成订单号 计算金额 绑定用户 IP
-        order.generateNo().computeMoney().findIP().binding();
+        order.generateNo().computeMoney().findIP().setStatus(1).binding();
         orderMapper.insert(order);
         //微信支付订单
         WxPayReq wxPayOrder = new WxPayReq(order);
@@ -75,6 +75,30 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         WxPayRes wxPayRes = wxService.payOrder(xml);
         return wxPayRes;
     }
+
+    /**
+     * 免费试用
+     *
+     * @param openid
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Integer createFreeOrder(String openid) {
+        List<Order> orders = this.successOrder(openid);
+        if(orders.size() > 0) {
+            throw new BusinessException(ResultCode.FREE_ERROR);
+        }
+        Order order = new Order();
+        Long currentDT = TimeUtil.currentDT();
+        order.setOrderType(VipTypeEnum.FREE.getType())
+                .computeMoney().generateNo().calculateTime(currentDT).findIP().binding();
+        order.setCreateTime(currentDT);
+        order.setActionTime(currentDT);
+        order.setStatus(2);
+        return orderMapper.insert(order);
+    }
+
+
 
     /**
      * 支付成功 订单会被缓存 这里的缓存仅仅起到了缓存的作用 缓存失效会从DB重新查
@@ -102,14 +126,23 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         order.validateMoney(MoneyUtil.Fen2Yuan(payResult.getCashFee()));
         order.calculateTime(beginTime).savePayResult(payResult);
         orderMapper.updateById(order);
-        //缓存订单
-        cacheOrder(order);
 
         String msg = "有人购买会员了，openID=%s 支付金额=%s元 order信息:%s";
         String content = String.format(msg,order.getOpenid(),order.getCashFee(),JSON.toJSONString(order));
         log.info(content);
         mailUser.stream().forEach(toUser -> mailService.sendMail(toUser,"青山高创公众号新增一个会员订单",content));
     }
+
+
+    /**
+     * 查询vip结束时间
+     * @param openid
+     * @return
+     */
+    public Long selectVipEndTime(String openid) {
+        return selectVipEndTime(openid,null);
+    }
+
 
     /**
      * 查询vip结束时间
@@ -128,7 +161,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      * @return
      */
     public Optional<Order> currentUserOrder(String openid) {
-        List<Order> orderList = successOrder(openid, 0, -1);
+        List<Order> orderList = successOrder(openid);
         Long currentTime = TimeUtil.currentDT();
         return orderList.stream().filter(order -> currentTime >= order.getBeginTime() && currentTime <= order.getEndTime()).findAny();
     }
@@ -139,11 +172,11 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      * @param openid
      * @return
      */
-    public List<Order> successOrder(String openid, Integer start, Integer end) {
+    public List<Order> successOrder(String openid) {
         if (validateCacheOrder(openid)) {
             try {
                 String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxConfig.getAppID(), wxConfig.getMchId(), openid);
-                Set<String> jsonSet = CacheUtils.zRangeRevertAll(redisKey, start, end);
+                Set<String> jsonSet = CacheUtils.zRangeRevertAll(redisKey);
                 return jsonSet.stream().map(json -> JSON.parseObject(json, Order.class)).collect(Collectors.toList());
             } catch (Exception e) {
                 //do nothing
@@ -152,17 +185,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         }
         List<Order> orderList = queryDBSuccessOrder(openid);
         orderList.stream().forEach(order -> cacheOrder(order));
-        orderList = orderList.stream().sorted(Comparator.comparing(Order::getEndTime).reversed()).collect(Collectors.toList());
-        if (start < 0) {
-            start = 0;
-        }
-        if (end > orderList.size()) {
-            end = orderList.size();
-        }
-        if (start > end) {
-            start = end;
-        }
-        return end == -1 ? orderList : orderList.subList(start, end);
+        return orderList.stream().sorted(Comparator.comparing(Order::getEndTime).reversed()).collect(Collectors.toList());
     }
 
 
@@ -222,7 +245,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .eq("openid", openid)
                 .eq("mchid", wxConfig.getMchId())
                 .eq("status", 2);
-        log.info("缓存失效，开始从DB中获取支付订单数据 openid: [{}]", openid);
+        log.info("开始从DB中获取支付成功订单数据 openid: [{}]", openid);
         return orderMapper.selectList(wrapper);
     }
 

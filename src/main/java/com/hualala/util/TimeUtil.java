@@ -24,13 +24,17 @@ public class TimeUtil {
      * @return
      * @throws ParseException
      */
-    public static Long stepTime(Long time,int calendarType, int step) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        Date date = sdf.parse(time.toString());
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        c.add(calendarType, step);
-        return Long.valueOf(sdf.format(c.getTime()));
+    public static Long stepTime(Long time,int calendarType, int step) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            Date date = sdf.parse(time.toString());
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(calendarType, step);
+            return Long.valueOf(sdf.format(c.getTime()));
+        }catch (Exception e) {
+            throw new RuntimeException(time + "时间解析异常");
+        }
     }
 
     /**
