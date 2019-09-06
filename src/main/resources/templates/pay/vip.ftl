@@ -94,7 +94,7 @@
         <#if FREE ??>
             <label class="weui-cell weui-check__label" for="level0">
                 <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check vip-level" name="level0" id="level0" vipType="#{FREE.type}">
+                    <input type="checkbox" class="weui-check vip-level" name="level" id="level0" vipType="#{FREE.type}">
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__ft">
@@ -106,7 +106,7 @@
         </#if>
         <label class="weui-cell weui-check__label" for="level1">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" name="level1" id="level1" value="#{ONE.price}" vipType="#{ONE.type}">
+                <input type="checkbox" class="weui-check vip-level" name="level" id="level1" value="#{ONE.price}" vipType="#{ONE.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
@@ -117,7 +117,7 @@
         </label>
         <label class="weui-cell weui-check__label" for="level2">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" value="#{TWO.price}" name="level2" checked="checked" id="level2" vipType="#{TWO.type}">
+                <input type="checkbox" class="weui-check vip-level" value="#{TWO.price}" name="level" checked="checked" id="level2" vipType="#{TWO.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
@@ -128,7 +128,7 @@
         </label>
         <label class="weui-cell weui-check__label" for="level3">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" value="#{THREE.price}" name="level3" id="level3" vipType="#{THREE.type}">
+                <input type="checkbox" class="weui-check vip-level" value="#{THREE.price}" name="level" id="level3" vipType="#{THREE.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
