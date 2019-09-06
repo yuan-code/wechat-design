@@ -14,6 +14,7 @@ import com.hualala.wechat.WXConfig;
 import com.hualala.user.component.UserResolver;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -43,7 +44,7 @@ public class PayController {
      * 创建订单，发起预支付
      */
     @ResponseBody
-    @RequestMapping(value = "/create")
+    @RequestMapping("/create")
     public Object create(@RequestParam("vipType") Integer vipType, @UserResolver User user) throws Exception {
         if (vipType == null || vipType == 0L) {
             throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "支付类型必传");
@@ -65,10 +66,11 @@ public class PayController {
 
     /**
      * 创建一个免费订单
+     *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/free")
+    @RequestMapping("/free")
     public Object free(@UserResolver User user) throws Exception {
         //同步锁
         lockHelper.doSync("createFreeOrder/" + user.getOpenid(), () -> orderService.createFreeOrder(user.getOpenid()));
@@ -78,19 +80,19 @@ public class PayController {
 
     /**
      * 查询可支付的vip类型
+     *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/vipType")
+    @RequestMapping(value = "/vipType", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object vipType(@UserResolver User user) {
         List<VipTypeEnum> priceList = Lists.newArrayList(VipTypeEnum.values());
         List<Order> orderList = orderService.successOrder(user.getOpenid());
-        if(orderList.size() > 0) {
+        if (orderList.size() > 0) {
             priceList.remove(VipTypeEnum.FREE);
         }
         return ResultUtils.success(priceList);
     }
-
 
 
     @RequestMapping("/vipEndTime")
