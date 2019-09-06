@@ -98,7 +98,7 @@
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__ft">
-                    <p>免费3天
+                    <p>免费试用
                         <span>(新用户免费试用3天)</span>
                     </p>
                 </div>
@@ -162,7 +162,7 @@
                 if(response.success) {
                     alert("已具备体验资格~",true);
                 }
-            }
+            }）
         }else {
             $.post('/pay/create', {vipType: vipType}, function (response) {
                 if (response.success) {
