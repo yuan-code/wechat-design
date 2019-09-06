@@ -19,7 +19,7 @@ public enum VipTypeEnum {
     FREE(0, BigDecimal.ZERO, "青山高创免费试用三天", Calendar.DATE,3),
     ONE(1, BigDecimal.valueOf(0.01), "青山高创一个月会员", Calendar.MONTH,1),
     TWO(2, BigDecimal.valueOf(0.02), "青山高创六个月会员",  Calendar.MONTH,6),
-    THREE(3, BigDecimal.valueOf(0.03), "青山高创一年会员",  Calendar.YEAR,1);
+    THREE(3, BigDecimal.valueOf(0.03), "青山高创一年会员",  Calendar.MONTH,12);
 
     private Integer type;
     private BigDecimal price;

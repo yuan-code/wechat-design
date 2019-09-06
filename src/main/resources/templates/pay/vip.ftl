@@ -110,7 +110,7 @@
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
-                <p>1月#{ONE.price}元
+                <p>#{ONE.calendarCount}月#{ONE.price}元
                     <span>(原价78.9 约0.9元/天)</span>
                 </p>
             </div>
@@ -121,7 +121,7 @@
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
-                <p>6月#{TWO.price}元
+                <p>#{TWO.calendarCount}月#{TWO.price}元
                     <span>(原价288.9 约0.5元/天)</span>
                 </p>
             </div>
@@ -132,14 +132,14 @@
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
-                <p>12月#{THREE.price}元
+                <p>#{THREE.calendarCount}月#{THREE.price}元
                     <span>(原价588.9 约0.4元/天)</span>
                 </p>
             </div>
         </label>
     </div>
-    <a href="javascript:;" id="payBtn" class="weui-btn weui-btn_primary" style="margin:20px 10px;">微信支付
-        <span id="agentAmount">#{TWO.price}</span>元
+    <a href="javascript:;" id="payBtn" class="weui-btn weui-btn_primary" style="margin:20px 10px;">
+        微信支付#{TWO.price}元
     </a>
 </div>
 <script src="/js/zepto.min.js"></script>
@@ -149,28 +149,42 @@
     $(".vip-level").on('change', function(e){
         $(".vip-level").prop("checked", false);
         $(this).prop("checked", true);
-        $("#agentAmount").html($(this).val())
         vipType = $(this).attr("vipType");
+        if(vipType == 0) {
+            $("#payBtn").html("免费试用")
+        }else {
+            $("#payBtn").html("微信支付" + $(this).val() + "元")
+        }
     });
     $("#payBtn").on('click', function(e){
-        $.post('/pay/create', {vipType:vipType}, function (response) {
-            if (response.success) {
-                wx.chooseWXPay({
-                    appId: response.data.appId,
-                    nonceStr: response.data.nonceStr,
-                    timestamp: response.data.timeStamp,
-                    package: response.data.package,
-                    signType: response.data.signType,
-                    paySign: response.data.paySign,
-                    success: function (res) {
-                        alert("支付成功",true);
-                        // window.location.href = "/art/a22b1d3a4265f526/edit"+"?id="+10000*Math.random();
-                    }
-                });
-            }else {
-                alert("操作失败",false);
+        if(vipType == 0) {
+            $.post('/pay/free', {}, function (response) {
+                if(response.success) {
+                    alert("操作失败",true);
+                }else {
+                    alert("操作失败", false);
+                }
             }
-        })
+        }else {
+            $.post('/pay/create', {vipType: vipType}, function (response) {
+                if (response.success) {
+                    wx.chooseWXPay({
+                        appId: response.data.appId,
+                        nonceStr: response.data.nonceStr,
+                        timestamp: response.data.timeStamp,
+                        package: response.data.package,
+                        signType: response.data.signType,
+                        paySign: response.data.paySign,
+                        success: function (res) {
+                            alert("支付成功", true);
+                            // window.location.href = "/art/a22b1d3a4265f526/edit"+"?id="+10000*Math.random();
+                        }
+                    });
+                } else {
+                    alert("操作失败", false);
+                }
+            })
+        }
     });
 
     window.alert = function (msg, back) {
