@@ -92,7 +92,7 @@
     <div class="weui-cells  weui-cells_checkbox">
 
         <#if FREE ??>
-            <label class="weui-cell weui-check__label" for="level0">
+            <label class="weui-cell weui-check__label" for="level0" id="free-level">
                 <div class="weui-cell__hd">
                     <input type="checkbox" class="weui-check vip-level" name="level0" id="level0" vipType="#{FREE.type}">
                     <i class="weui-icon-checked"></i>
@@ -162,6 +162,7 @@
             if (response.success) {
                 if (vipType == 0) {
                     alert("已具备体验资格~",true);
+                    #{"#free-level"}.hide();
                 } else {
                     wx.chooseWXPay({
                         appId: response.data.appId,
