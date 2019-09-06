@@ -137,7 +137,7 @@
     </div>
     <div class="weui-cells">
         <#if user.available>
-            <a class="weui-cell weui-cell_access" href="/vip/vip">
+            <a class="weui-cell weui-cell_access" href="/pay/vip">
                 <div class="weui-cell__bd">
                     续费
                 </div>
@@ -145,7 +145,7 @@
                 </div>
             </a>
         </#if>
-        <a class="weui-cell weui-cell_access" href="${user.available?string('javascript:;','/vip/vip')}">
+        <a class="weui-cell weui-cell_access" href="${user.available?string('javascript:;','/pay/vip')}">
             <div class="weui-cell__bd">
                 ${user.available?string('会员到期日期','开通会员')}
             </div>

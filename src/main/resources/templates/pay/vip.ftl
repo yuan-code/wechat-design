@@ -90,42 +90,56 @@
         </div>
     </div>
     <div class="weui-cells  weui-cells_checkbox">
+
+        <#if FREE ??>
+            <label class="weui-cell weui-check__label" for="level0">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check vip-level" name="level0" id="level0" vipType="#{FREE.type}">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__ft">
+                    <p>免费3天
+                        <span>(新用户免费试用3天)</span>
+                    </p>
+                </div>
+            </label>
+        </#if>
         <label class="weui-cell weui-check__label" for="level1">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" name="level1" id="level1" value="28.9" vipType="1">
+                <input type="checkbox" class="weui-check vip-level" name="level1" id="level1" value="#{ONE.price}" vipType="#{ONE.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
-                <p>1月28.9元
+                <p>1月#{ONE.price}元
                     <span>(原价78.9 约0.9元/天)</span>
                 </p>
             </div>
         </label>
         <label class="weui-cell weui-check__label" for="level2">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" value="98.9" name="level2" checked="checked" id="level2" vipType="2">
+                <input type="checkbox" class="weui-check vip-level" value="#{TWO.price}" name="level2" checked="checked" id="level2" vipType="#{TWO.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
-                <p>6月98.9元
+                <p>6月#{TWO.price}元
                     <span>(原价288.9 约0.5元/天)</span>
                 </p>
             </div>
         </label>
         <label class="weui-cell weui-check__label" for="level3">
             <div class="weui-cell__hd">
-                <input type="checkbox" class="weui-check vip-level" value="148.9" name="level3" id="level3" vipType="3">
+                <input type="checkbox" class="weui-check vip-level" value="#{THREE.price}" name="level3" id="level3" vipType="#{THREE.type}">
                 <i class="weui-icon-checked"></i>
             </div>
             <div class="weui-cell__ft">
-                <p>12月148.9元
+                <p>12月#{THREE.price}元
                     <span>(原价588.9 约0.4元/天)</span>
                 </p>
             </div>
         </label>
     </div>
     <a href="javascript:;" id="payBtn" class="weui-btn weui-btn_primary" style="margin:20px 10px;">微信支付
-        <span id="agentAmount">98.9</span>元
+        <span id="agentAmount">#{TWO.price}</span>元
     </a>
 </div>
 <script src="/js/zepto.min.js"></script>

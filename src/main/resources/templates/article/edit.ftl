@@ -177,11 +177,11 @@
 
         <div class="insert-box">
             <div class="weui-flex__item">
-                <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('edit-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
+                <a href="${user.available?string('javascript:;','/pay/vip')}" class="${user.available?string('edit-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                         class="iconfont icon-edit"></span>插入文本</a>
             </div>
             <div class="weui-flex__item">
-                <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('insert-image-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
+                <a href="${user.available?string('javascript:;','/pay/vip')}" class="${user.available?string('insert-image-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                         class="iconfont icon-tupian"></span>插入图片</a>
             </div>
         </div>
@@ -191,11 +191,11 @@
                 <div class="select-box__bd">
                 </div>
                 <div class="select-box__ft">
-                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('delete-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="${user.available?string('javascript:;','/pay/vip')}" class="${user.available?string('delete-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-chuyidong1-copy"></span>删除</a>
-                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('edit-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="${user.available?string('javascript:;','/pay/vip')}" class="${user.available?string('edit-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-edit"></span>插入文字</a>
-                    <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('img-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
+                    <a href="${user.available?string('javascript:;','/pay/vip')}" class="${user.available?string('img-btn','')} weui-btn weui-btn_mini weui-btn_warn"><span
                             class="iconfont icon-tupian"></span>插入图片</a>
                 </div>
             </div>
@@ -251,7 +251,7 @@
         <a href="/article/detail/${article.articleid}" class="weui-btn weui-btn_default">返回</a>
     </div>
     <div class="weui-flex__item">
-        <a href="${user.available?string('javascript:;','/vip/vip')}" class="${user.available?string('save-btn','')} weui-btn weui-btn_primary">保存</a>
+        <a href="${user.available?string('javascript:;','/pay/vip')}" class="${user.available?string('save-btn','')} weui-btn weui-btn_primary">保存</a>
     </div>
 </div>
 <div id="loadingToast" style="opacity: 0; display: none;">

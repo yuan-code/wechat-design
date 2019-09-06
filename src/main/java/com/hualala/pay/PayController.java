@@ -15,6 +15,7 @@ import com.hualala.user.component.UserResolver;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -73,7 +74,8 @@ public class PayController {
     @RequestMapping("/free")
     public Object free(@UserResolver User user) throws Exception {
         //同步锁
-        lockHelper.doSync("createFreeOrder/" + user.getOpenid(), () -> orderService.createFreeOrder(user.getOpenid()));
+        String lock = "createFreeOrder/" + user.getOpenid();
+        lockHelper.doSync(lock, () -> orderService.createFreeOrder(user.getOpenid()));
         return ResultUtils.success();
     }
 
@@ -84,14 +86,13 @@ public class PayController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/vipType", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object vipType(@UserResolver User user) {
-        List<VipTypeEnum> priceList = Lists.newArrayList(VipTypeEnum.values());
+    @RequestMapping(value = "/vip", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object vipType(@UserResolver User user, ModelMap modelMap) {
         List<Order> orderList = orderService.successOrder(user.getOpenid());
-        if (orderList.size() > 0) {
-            priceList.remove(VipTypeEnum.FREE);
-        }
-        return ResultUtils.success(priceList);
+        Arrays.stream(VipTypeEnum.values())
+                .filter(type -> orderList.size() == 0? true: !VipTypeEnum.FREE.equals(type))
+                .forEach(type -> modelMap.addAttribute(type.name(),type));
+        return "pay/vip";
     }
 
 

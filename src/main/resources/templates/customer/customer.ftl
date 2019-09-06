@@ -128,7 +128,7 @@
        <div class="mask">
            <div class="mask-dialog">
                <p>共有#{allCount}人关注了我的文章</p>
-               <a href="${user.available?string('javascript:;','/vip/vip')}" class="weui-btn weui-btn_primary">立即查看</a>
+               <a href="${user.available?string('javascript:;','/pay/vip')}" class="weui-btn weui-btn_primary">立即查看</a>
                <p>或者</p>
                <a href="/article/copy" class="weui-btn weui-btn_primary">发篇文章试试看</a>
            </div>
