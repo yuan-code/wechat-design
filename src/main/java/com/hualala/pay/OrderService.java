@@ -92,6 +92,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         Long currentDT = TimeUtil.currentDT();
         order.setOrderType(VipTypeEnum.FREE.getType())
                 .computeMoney().generateNo().calculateTime(currentDT).findIP().binding();
+        order.setMchid(wxConfig.getMchId());
         order.setCreateTime(currentDT);
         order.setActionTime(currentDT);
         order.setStatus(2);
