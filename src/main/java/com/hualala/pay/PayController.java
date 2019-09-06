@@ -1,22 +1,24 @@
 package com.hualala.pay;
 
-import com.google.common.collect.Lists;
 import com.hualala.common.BusinessException;
 import com.hualala.common.ResultCode;
 import com.hualala.pay.common.VipTypeEnum;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WxPayRes;
+import com.hualala.user.component.UserResolver;
 import com.hualala.user.domain.User;
 import com.hualala.util.LockHelper;
 import com.hualala.util.ResultUtils;
 import com.hualala.util.SignUtil;
 import com.hualala.wechat.WXConfig;
-import com.hualala.user.component.UserResolver;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +30,7 @@ import java.util.*;
  * @desc
  */
 @Log4j2
-@RestController
+@Controller
 @RequestMapping("/pay")
 public class PayController {
 
@@ -81,11 +83,10 @@ public class PayController {
 
 
     /**
-     * 查询可支付的vip类型
+     * 跳转vip页面
      *
      * @return
      */
-    @ResponseBody
     @RequestMapping(value = "/vip", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object vipType(@UserResolver User user, ModelMap modelMap) {
         List<Order> orderList = orderService.successOrder(user.getOpenid());
@@ -95,7 +96,13 @@ public class PayController {
         return "pay/vip";
     }
 
-
+    /**
+     * 查询vip结束时间
+     * @param user
+     * @return
+     * @throws ParseException
+     */
+    @ResponseBody
     @RequestMapping("/vipEndTime")
     public Object vipEndTime(@UserResolver User user) throws ParseException {
         Long endTime = orderService.selectVipEndTime(user.getOpenid());
