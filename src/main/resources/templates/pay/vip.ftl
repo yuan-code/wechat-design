@@ -161,7 +161,7 @@
         $.post(url, {vipType: vipType}, function (response) {
             if (response.success) {
                 if (vipType == 0) {
-                    alert("已具备体验资格~",true);
+                    // alert("已具备体验资格~",true);
                     // window.location.href=document.referrer;
                 } else {
                     wx.chooseWXPay({
