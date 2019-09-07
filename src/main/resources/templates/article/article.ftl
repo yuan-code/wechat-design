@@ -252,9 +252,18 @@ ${article.head}
         <a href="/article/edit/${article.articleid}" class="right-edit-btn">修改文章</a>
     </#if>
 
+    <#if userStatus = 1 && user.subscribeStatus != 1>
+        <a href="javascript:void(0);" class="right-edit-btn follow-weixin">关注公众号</a>
+        <div class="footer-btn">
+            <a href="javascript:void(0)">免费转换成我的文章</a>
+        </div>
+    </#if>
+
+
+
     <div class="mask mask_gzh" style="display:none">
         <div class="mask-dialog" style="padding-top:20px;">
-            <img src="" style="width:80%;height:80%">
+            <img src="https://wechat-design-1257895402.cos.ap-beijing.myqcloud.com/d69f2ed8-0720-43dd-b27c-cc7862e1f882" style="width:80%;height:80%">
             <p style="color:red;margin-bottom:20px;">长按二维码关注公众号</p>
         </div>
     </div>

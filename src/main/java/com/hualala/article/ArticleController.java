@@ -190,7 +190,7 @@ public class ArticleController {
     @RequestMapping("/list/{openid}")
     public Object list(@PathVariable("openid") String openid, Long pageNo, Long pageSize) {
         Page<Article> page = new Page<>(pageNo, pageSize);
-        page.addOrder(OrderItem.desc("modify_Time"));
+        page.addOrder(OrderItem.asc("modify_Time"));
         QueryWrapper<Article> wrapper = new QueryWrapper<Article>()
                 .select(Article.class, info -> !info.getColumn().equals("content") && !info.getColumn().equals("head"))
                 .eq("openid", openid);

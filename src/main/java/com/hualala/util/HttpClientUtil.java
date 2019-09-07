@@ -55,6 +55,10 @@ public class HttpClientUtil {
         return post(url,content,"application/xml; charset=utf-8");
     }
 
+    public static HttpClientUtil.HttpResult postJson(String url,String content) {
+        return post(url,content,"application/json; charset=utf-8");
+    }
+
 
     public static HttpClientUtil.HttpResult post(String url,String content,String contentType)  {
         CloseableHttpClient httpClient = HttpClients.createDefault();

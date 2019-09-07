@@ -172,6 +172,38 @@ public class WXService {
         return user;
     }
 
+    /**
+     * 获取微信临时二维码
+     *
+     * 创建二维码ticket
+     *      http请求方式: POST
+     *      URL: https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN
+     *      POST数据例子：{"expire_seconds": 604800, "action_name": "QR_STR_SCENE", "action_info": {"scene": {"scene_str": "test"}}}
+     *      微信返回数据: {"ticket":"gQH47joAAAAAAAAA....","expire_seconds":60,"url":"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI"}
+     *
+     * 通过ticket换取二维码
+     *      HTTP 请求（请使用https协议）https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=TICKET
+     *      提醒：TICKET记得进行UrlEncode
+     * @return
+     * @param sceneStr
+     * @param seconds
+     */
+    public String qrcodeTicket(String sceneStr, Integer seconds) {
+        //二维码的参数
+        String accessToken = getAccessToken();
+        String url = String.format(QRCODE_TICKET_URL, accessToken);
+        String ticketReq = "{\"expire_seconds\": %s, \"action_name\": \"QR_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"%s\"}}}";
+        ticketReq = String.format(ticketReq, seconds, sceneStr);
+        HttpClientUtil.HttpResult ticketRes = HttpClientUtil.postJson(url, ticketReq);
+        String ticket = JSON.parseObject(ticketRes.getContent()).getString("ticket");
+        if(StringUtils.isEmpty(ticket)) {
+            log.error("获取微信临时二维码 url {} result {}", url, ticketRes);
+            throw new BusinessException(ResultCode.WECHAT_ERROR);
+        }
+        return ticket;
+    }
+
+
 
     /**
      * 生成微信JS-SDK签名

@@ -73,4 +73,10 @@ public class WXConstant {
      */
     public static final String WX_ORDER_PAY = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
+    /**
+     * 获取二维码的ticket url
+     */
+    public static final String QRCODE_TICKET_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s";
+
+
 }
