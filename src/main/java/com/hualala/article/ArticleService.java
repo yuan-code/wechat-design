@@ -116,7 +116,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
                     .findAny();
             if(url.isPresent()) {
                 String newUrl = MediaUtils.uploadImage(url.get());
-                String replace = style.replaceAll(url.get(), newUrl);
+                String replace = style.replace(url.get(), newUrl);
                 ele.attr("style",replace);
             }
         }
