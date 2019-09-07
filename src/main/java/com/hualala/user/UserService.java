@@ -124,6 +124,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public void deleteSession(String openid) {
         String cookieKey = generateCookieKey(openid);
         CacheUtils.del(cookieKey);
+        User user = queryByOpenid(openid);
+        UserHolder.setUser(user);
     }
 
     private String generateCookieKey(String openid) {

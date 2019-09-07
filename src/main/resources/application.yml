@@ -42,9 +42,25 @@ mybatis-plus:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
 
+wechat:
+  appID: wx0abd83b135ccb8e5
+  secret: 9a5eb79bb7f4f89a6d15eef2a2601c09
+  token: WX_DESIGN_TOKEN
+  encodingAESKey: PJKtnHu74965O2WOfdxQgI3FOXrxrXd9YssgsaumzIW
+  expire: 5000
+  mchId: 1547520731
+  mchKey: 04b19705b97f4d07bf57f4f455438d2d
+
 cos:
   secretID: AKIDvmPp0vr00sVt2wNyBF4dw0qSvCIB8Iah
   secretKey: 73lHm5B3jCSVLvFI6sPffQyLVTCNIyQc
   region: ap-beijing
   bucket: wechat-design-1257895402
   server: https://wechat-design-1257895402.cos.ap-beijing.myqcloud.com/
+
+curator:
+  retryCount: 5  #重试次数
+  elapsedTimeMs: 5000   #重试间隔时间
+  connectString: 127.0.0.1:2181,127.0.0.1:3181,127.0.0.1:4181   # zookeeper 地址
+  sessionTimeoutMs: 60000 # session超时时间
+  connectionTimeoutMs: 5000  # 连接超时时间
