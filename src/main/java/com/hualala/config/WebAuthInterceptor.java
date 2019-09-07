@@ -117,15 +117,8 @@ public class WebAuthInterceptor implements HandlerInterceptor {
             wxService.jsApiSignature(modelAndView.getModelMap(), url);
         }
         //返回给前端cookie
-        //cookie内的token一小时过期
-        String cookieToken = DigestUtils.md5Hex(user.getAppid() + user.getOpenid());
-        user.setToken(cookieToken);
-        if (CacheUtils.exists(cookieToken)) {
-            CacheUtils.expire(cookieToken, RedisKey.COOKIE_EXPIRE_SECONDS);
-        } else {
-            CacheUtils.set(cookieToken, JSON.toJSONString(user), RedisKey.COOKIE_EXPIRE_SECONDS);
-        }
-        Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME, cookieToken);
+        String cookieKey = userService.addSession(user);
+        Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME, cookieKey);
         cookie.setPath("/");
         response.addCookie(cookie);
     }

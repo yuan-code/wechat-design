@@ -113,6 +113,7 @@ public class NotifyFactory implements ApplicationContextAware {
             String appID = xmlMap.get("ToUserName");
             User user = wxService.userBaseInfo(openID);
             userService.saveUser(user);
+            userService.deleteSession(user.getOpenid());
             WXReply wxReply = new WXReply(appID, openID);
             return wxReply.replyMsg("我见青山多妩媚，料青山见我应如是");
         }
@@ -142,6 +143,7 @@ public class NotifyFactory implements ApplicationContextAware {
             user.setSubscribeStatus(2);
             UpdateWrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", openID);
             userService.update(user,wrapper);
+            userService.deleteSession(openID);
             return "";
         }
     }

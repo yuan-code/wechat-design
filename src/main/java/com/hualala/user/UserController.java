@@ -62,12 +62,7 @@ public class UserController {
         }
         Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());
         userService.update(params,wrapper);
-        //获取缓存的登陆用户
-        String json = CacheUtils.get(user.getToken());
-        User loginUser = JSON.parseObject(json, User.class);
-        //把本次修改同步到缓存
-        BeanUtil.copyProperties(params,loginUser, CopyOptions.create().setIgnoreNullValue(true));
-        CacheUtils.set(user.getToken(), JSON.toJSONString(loginUser));
+        userService.deleteSession(user.getOpenid());
         return ResultUtils.success(params);
     }
 

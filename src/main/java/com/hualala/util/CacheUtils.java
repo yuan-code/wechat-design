@@ -3,6 +3,7 @@ package com.hualala.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -34,6 +35,18 @@ public class CacheUtils {
     public static void set(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
     }
+
+
+    /**
+     * 删除缓存<br>
+     * 根据key精确匹配删除
+     *
+     * @param key
+     */
+    public static void del(String... key) {
+        stringRedisTemplate.delete(CollectionUtils.arrayToList(key));
+    }
+
 
     /**
      * 普通缓存放入并设置时间

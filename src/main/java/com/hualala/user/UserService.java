@@ -1,12 +1,16 @@
 package com.hualala.user;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hualala.common.RedisKey;
+import com.hualala.util.CacheUtils;
 import com.hualala.wechat.WXConfig;
 import com.hualala.user.domain.User;
 import com.hualala.util.TimeUtil;
 import com.hualala.wechat.WXService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,4 +101,32 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userMapper.selectOne(wrapper);
     }
 
+    /**
+     * 添加session
+     * @param user
+     */
+    public String addSession(User user) {
+        //返回给前端cookie
+        //cookie内的token一小时过期
+        String cookieKey = generateCookieKey(user.getOpenid());
+        if (CacheUtils.exists(cookieKey)) {
+            CacheUtils.expire(cookieKey, RedisKey.COOKIE_EXPIRE_SECONDS);
+        } else {
+            CacheUtils.set(cookieKey, JSON.toJSONString(user), RedisKey.COOKIE_EXPIRE_SECONDS);
+        }
+        return cookieKey;
+    }
+
+    /**
+     * 删除cookie
+     * @param openid
+     */
+    public void deleteSession(String openid) {
+        String cookieKey = generateCookieKey(openid);
+        CacheUtils.del(cookieKey);
+    }
+
+    private String generateCookieKey(String openid) {
+        return DigestUtils.md5Hex(wxConfig.getAppID() + openid);
+    }
 }
