@@ -43,8 +43,8 @@ public class CacheUtils {
      *
      * @param key
      */
-    public static void del(String... key) {
-        stringRedisTemplate.delete(CollectionUtils.arrayToList(key));
+    public static void del(String key) {
+        stringRedisTemplate.delete(key);
     }
 
 
