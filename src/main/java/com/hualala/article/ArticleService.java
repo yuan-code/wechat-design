@@ -20,8 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <p>
@@ -104,11 +106,24 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
 
 
     public Element replaceImage(Element element) {
+        Elements stylesEle = element.getElementsByAttribute("style");
+        for(Element ele : stylesEle) {
+            String style = ele.attr("style");
+
+            Optional<String> url = Arrays.stream(style.split(";"))
+                    .filter(s -> s.contains("background-image") && s.contains("\""))
+                    .map(s -> s.substring(s.indexOf("\"") + 1, s.lastIndexOf("\"")))
+                    .findAny();
+            if(url.isPresent()) {
+                String newUrl = MediaUtils.uploadImage(url.get());
+                String replace = style.replaceAll(url.get(), newUrl);
+                ele.attr("style",replace);
+            }
+        }
         Elements images = element.select("img");
         for (Element ele : images) {
             String imgUrl = ele.attr("data-src");
-            byte[] bytes = HttpClientUtil.downLoadFromUrl(imgUrl);
-            String newUrl = MediaUtils.uploadImage(bytes);
+            String newUrl = MediaUtils.uploadImage(imgUrl);
             ele.attr("src", newUrl);
         }
         return element;
