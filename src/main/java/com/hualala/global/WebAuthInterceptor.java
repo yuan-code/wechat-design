@@ -1,8 +1,7 @@
-package com.hualala.config;
+package com.hualala.global;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hualala.common.RedisKey;
 import com.hualala.user.domain.User;
 import com.hualala.pay.OrderService;
 import com.hualala.user.UserService;
@@ -11,7 +10,6 @@ import com.hualala.wechat.WXService;
 import com.hualala.util.CacheUtils;
 import com.hualala.user.UserHolder;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

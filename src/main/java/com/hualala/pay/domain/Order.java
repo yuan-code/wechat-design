@@ -3,15 +3,13 @@ package com.hualala.pay.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.hualala.common.BusinessException;
-import com.hualala.common.ResultCode;
 import com.hualala.pay.common.VipTypeEnum;
 import com.hualala.pay.util.MoneyUtil;
+import com.hualala.user.UserHolder;
 import com.hualala.user.domain.User;
 import com.hualala.util.HttpUtils;
 import com.hualala.util.SnowflakeID;
 import com.hualala.util.TimeUtil;
-import com.hualala.user.UserHolder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -149,7 +147,7 @@ public class Order implements Serializable {
     public Order binding() {
         User user = UserHolder.getUser();
         if (user == null) {
-            throw new BusinessException(ResultCode.SYSTEM_ERROR);
+            throw new RuntimeException("非法用户");
         }
         this.openid = user.getOpenid();
         this.appid = user.getAppid();
@@ -165,7 +163,7 @@ public class Order implements Serializable {
      */
     public Order computeMoney() {
         if (this.orderType == null) {
-            throw new BusinessException(ResultCode.SYSTEM_ERROR);
+            throw new IllegalArgumentException("orderType必填");
         }
         VipTypeEnum priceEnum = VipTypeEnum.resolveType(this.orderType);
         this.orderAmount = priceEnum.getPrice();
@@ -191,7 +189,7 @@ public class Order implements Serializable {
      */
     public Order validateMoney(BigDecimal money) {
         if (this.getOrderAmount().compareTo(money) != 0) {
-            throw new BusinessException(ResultCode.PAY_ERROR);
+            throw new RuntimeException("非法请求");
         }
         return this;
     }

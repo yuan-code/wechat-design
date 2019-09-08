@@ -1,8 +1,6 @@
 package com.hualala.pay.domain;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.hualala.common.ResultCode;
-import com.hualala.common.BusinessException;
 import com.hualala.util.SignUtil;
 import lombok.Data;
 
@@ -94,10 +92,10 @@ public class WXPayResult {
     public WXPayResult baseValidate() throws IllegalAccessException {
         String sign = SignUtil.genarate(this);
         if(!sign.equals(this.getSign())) {
-            throw new BusinessException(ResultCode.SIGN_ERROR);
+            throw new RuntimeException("签名失败");
         }
         if(!this.getTotalFee().equals(this.getCashFee())) {
-            throw new BusinessException(ResultCode.PAY_ERROR);
+            throw new RuntimeException("非法请求");
         }
         return this;
     }

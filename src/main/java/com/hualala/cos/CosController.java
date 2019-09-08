@@ -1,9 +1,7 @@
 package com.hualala.cos;
 
-import com.hualala.common.ResultCode;
-import com.hualala.common.BusinessException;
-import com.hualala.wechat.WXService;
 import com.hualala.util.ResultUtils;
+import com.hualala.wechat.WXService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +32,7 @@ public class CosController {
     @RequestMapping("/upload")
     public Object upload(String mediaID) throws IOException {
         if(StringUtils.isEmpty(mediaID)) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(),"mediaID必传");
+            throw new IllegalArgumentException("mediaID必传");
         }
         //上传图片
         byte[] images = wxService.downloadMedia(mediaID);

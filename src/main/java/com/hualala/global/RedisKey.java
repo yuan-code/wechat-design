@@ -1,4 +1,4 @@
-package com.hualala.common;
+package com.hualala.global;
 
 /**
  * @author YuanChong

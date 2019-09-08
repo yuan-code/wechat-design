@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hualala.common.RedisKey;
+import com.hualala.global.RedisKey;
 import com.hualala.util.CacheUtils;
 import com.hualala.wechat.WXConfig;
 import com.hualala.user.domain.User;

@@ -277,7 +277,7 @@
             var title = $(".art-title").html();
             var artId = "${article.articleid}";
             $loadingToast.fadeIn(100);
-            $.post('/article/save', {title: title, pid:artId,content: html,openid:'${article.openid}'}, function (result) {
+            $.post('/article/save', {title: title, articleid:artId,content: html,openid:'${article.openid}'}, function (result) {
                 $loadingToast.fadeOut(100);
                 window.location.href = "/article/detail/" + result.data.articleid;
             });

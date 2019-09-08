@@ -1,7 +1,6 @@
 package com.hualala.pay;
 
-import com.hualala.common.BusinessException;
-import com.hualala.common.ResultCode;
+import com.google.common.base.Preconditions;
 import com.hualala.pay.common.VipTypeEnum;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WxPayRes;
@@ -49,11 +48,8 @@ public class PayController {
     @ResponseBody
     @RequestMapping("/create")
     public Object create(@RequestParam("vipType") Integer vipType, @UserResolver User user) throws Exception {
-        if (vipType == null || vipType == 0L) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "支付类型必传");
-        }
+        Preconditions.checkArgument(vipType != null && vipType > 0L, "支付类型必传");
         WxPayRes wxPayRes = orderService.create(vipType);
-
         Map<String, Object> result = new TreeMap<>();
         result.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
         result.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));

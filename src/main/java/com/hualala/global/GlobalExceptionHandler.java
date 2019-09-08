@@ -1,4 +1,4 @@
-package com.hualala.config;
+package com.hualala.global;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.servlet.error.ErrorController;

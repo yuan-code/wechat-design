@@ -1,7 +1,5 @@
 package com.hualala.util;
 
-import com.hualala.common.ResultCode;
-import com.hualala.common.BusinessException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -51,24 +49,23 @@ public class HttpClientUtil {
         return getHttpResult(httpClient, httpPost);
     }
 
-    public static HttpClientUtil.HttpResult postXML(String url,String content) {
-        return post(url,content,"application/xml; charset=utf-8");
+    public static HttpClientUtil.HttpResult postXML(String url, String content) {
+        return post(url, content, "application/xml; charset=utf-8");
     }
 
-    public static HttpClientUtil.HttpResult postJson(String url,String content) {
-        return post(url,content,"application/json; charset=utf-8");
+    public static HttpClientUtil.HttpResult postJson(String url, String content) {
+        return post(url, content, "application/json; charset=utf-8");
     }
 
 
-    public static HttpClientUtil.HttpResult post(String url,String content,String contentType)  {
+    public static HttpClientUtil.HttpResult post(String url, String content, String contentType) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(requestConfig);
         httpPost.setHeader("Content-Type", contentType);
-        httpPost.setEntity(new StringEntity(content,"utf-8"));
+        httpPost.setEntity(new StringEntity(content, "utf-8"));
         return getHttpResult(httpClient, httpPost);
     }
-
 
 
     public static HttpClientUtil.HttpResult get(String url, Map<String, String> params) {
@@ -94,7 +91,8 @@ public class HttpClientUtil {
             inputStream = result.getEntity().getContent();
             return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
-            throw new BusinessException(ResultCode.HTTP_CLIENT_ERROR);
+            log.error("从网络Url中下载文件失败 url {}", url, e);
+            throw new RuntimeException("url = " + url + "下载失败");
         } finally {
             try {
                 inputStream.close();
@@ -112,6 +110,7 @@ public class HttpClientUtil {
 
     /**
      * 构建get请求
+     *
      * @param url
      * @param params
      * @return
@@ -129,12 +128,14 @@ public class HttpClientUtil {
             }
             return new HttpGet(uriBuilder.build());
         } catch (Exception e) {
-            throw new BusinessException(ResultCode.HTTP_CLIENT_ERROR);
+            log.error("构建get请求 url {}", url, e);
+            throw new RuntimeException("HTTP_CLIENT_ERROR");
         }
     }
 
     /**
      * 获取结果
+     *
      * @param httpClient
      * @param httpMethod
      * @return
@@ -170,6 +171,7 @@ public class HttpClientUtil {
 
     /**
      * 释放资源
+     *
      * @param httpResponse
      * @param httpClient
      */
@@ -207,10 +209,10 @@ public class HttpClientUtil {
                 httpMethod.setEntity(new UrlEncodedFormEntity(nvps, "utf-8"));
             }
         } catch (Exception e) {
-            throw new BusinessException(ResultCode.HTTP_CLIENT_ERROR);
+            log.error("Description: 封装请求参数 ", e);
+            throw new RuntimeException("HTTP_CLIENT_ERROR");
         }
     }
-
 
 
     @Data

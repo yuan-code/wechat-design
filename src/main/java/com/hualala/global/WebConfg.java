@@ -1,4 +1,4 @@
-package com.hualala.config;
+package com.hualala.global;
 
 import com.hualala.user.component.UserArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;

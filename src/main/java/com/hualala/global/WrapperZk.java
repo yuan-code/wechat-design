@@ -1,4 +1,4 @@
-package com.hualala.config;
+package com.hualala.global;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -2,15 +2,13 @@ package com.hualala.wechat;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hualala.common.RedisKey;
-import com.hualala.common.ResultCode;
-import com.hualala.wechat.common.WXConstant;
-import com.hualala.common.BusinessException;
-import com.hualala.user.domain.User;
+import com.hualala.global.RedisKey;
 import com.hualala.pay.domain.WxPayRes;
+import com.hualala.user.domain.User;
 import com.hualala.util.BeanParse;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.HttpClientUtil;
+import com.hualala.wechat.common.WXConstant;
 import com.hualala.weixin.mp.JSApiUtil;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -121,7 +119,7 @@ public class WXService {
         User user = JSONObject.parseObject(result.getContent(), User.class);
         if (StringUtils.isEmpty(user.getOpenid())) {
             log.error("通过OpenID来获取用户基本信息微信返回错误 url {} result {}", url, result);
-            throw new BusinessException(ResultCode.WECHAT_ERROR);
+            throw new RuntimeException("openID查询用户基本信息失败");
         }
         return user;
     }
@@ -143,7 +141,7 @@ public class WXService {
         JSONObject result = JSONObject.parseObject(tokenResult.getContent());
         if (StringUtils.isEmpty(result.getString("access_token"))) {
             log.error("通过code授权码换取网页授权access_token微信返回错误 url {} result {}", url, result);
-            throw new BusinessException(ResultCode.WECHAT_ERROR);
+            throw new RuntimeException("通过code授权码换取网页授权access_token失败");
         }
         return result;
     }
@@ -167,7 +165,7 @@ public class WXService {
         User user = JSONObject.parseObject(result.getContent(), User.class);
         if (StringUtils.isEmpty(user.getOpenid())) {
             log.error("网页授权拉取用户信息微信返回错误 url {} result {}", url, result);
-            throw new BusinessException(ResultCode.WECHAT_ERROR);
+            throw new RuntimeException("网页授权拉取用户信息失败");
         }
         return user;
     }
@@ -198,7 +196,7 @@ public class WXService {
         String ticket = JSON.parseObject(ticketRes.getContent()).getString("ticket");
         if(StringUtils.isEmpty(ticket)) {
             log.error("获取微信临时二维码 url {} result {}", url, ticketRes);
-            throw new BusinessException(ResultCode.WECHAT_ERROR);
+            throw new RuntimeException("获取微信临时二维码失败");
         }
         return ticket;
     }
@@ -251,10 +249,10 @@ public class WXService {
         WxPayRes wxPayRes = BeanParse.XMLToBean(result.getContent(), WxPayRes.class);
         log.info("微信支付创建订单 wxPayRes: {}", wxPayRes);
         if (!wxPayRes.getReturnCode().equals(WXConstant.SUCCESS)) {
-            throw new BusinessException(ResultCode.PAY_ERROR.getCode(), "【微信统一支付】发起支付, returnCode != SUCCESS, returnMsg = " + wxPayRes.getReturnMsg());
+            throw new RuntimeException("【微信统一支付】发起支付, returnCode != SUCCESS, returnMsg = " + wxPayRes.getReturnMsg());
         }
         if (!wxPayRes.getResultCode().equals(WXConstant.SUCCESS)) {
-            throw new BusinessException(ResultCode.PAY_ERROR.getCode(), "【微信统一支付】发起支付, resultCode != SUCCESS, err_code = " + wxPayRes.getErrCode() + " err_code_des=" + wxPayRes.getErrCodeDes());
+            throw new RuntimeException("【微信统一支付】发起支付, resultCode != SUCCESS, err_code = " + wxPayRes.getErrCode() + " err_code_des=" + wxPayRes.getErrCodeDes());
         }
         return wxPayRes;
     }

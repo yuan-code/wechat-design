@@ -1,4 +1,4 @@
-package com.hualala.config;
+package com.hualala.global;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;

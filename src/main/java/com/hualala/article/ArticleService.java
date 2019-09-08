@@ -3,11 +3,8 @@ package com.hualala.article;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.article.domain.Article;
-import com.hualala.common.BusinessException;
-import com.hualala.common.ResultCode;
-import com.hualala.util.HttpClientUtil;
 import com.hualala.cos.MediaUtils;
-import com.hualala.util.LockHelper;
+import com.hualala.util.HttpClientUtil;
 import com.hualala.util.TimeUtil;
 import lombok.extern.log4j.Log4j2;
 import org.jsoup.Connection;
@@ -97,7 +94,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             return connect.get();
         } catch (Exception e) {
             log.error("复制文章url: {} 地址连接失败", source, e);
-            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(), "文章地址不合法");
+            throw new RuntimeException("文章地址不合法");
         }
     }
 

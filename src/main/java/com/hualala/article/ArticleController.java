@@ -5,17 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.base.Preconditions;
 import com.hualala.article.domain.Article;
-import com.hualala.common.ResultCode;
-import com.hualala.util.LockHelper;
-import com.hualala.util.TimeUtil;
-import com.hualala.user.component.UserResolver;
-import com.hualala.common.BusinessException;
-import com.hualala.customer.domain.Customer;
-import com.hualala.user.domain.User;
 import com.hualala.customer.CustomerService;
 import com.hualala.user.UserService;
+import com.hualala.user.component.UserResolver;
+import com.hualala.user.domain.User;
+import com.hualala.util.LockHelper;
 import com.hualala.util.ResultUtils;
+import com.hualala.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -126,27 +124,17 @@ public class ArticleController {
     @ResponseBody
     @RequestMapping("/save")
     public Object articleSave(Article article, @UserResolver User user) {
-        if (StringUtils.isEmpty(article.getContent())) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "文章内容必传");
-        }
-        if (StringUtils.isEmpty(article.getTitle())) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "文章标题必传");
-        }
-        if (article.getPid() == null || article.getPid() == 0L) {
-            throw new BusinessException(ResultCode.PARAMS_LOST.getCode(), "父文章ID必传");
-        }
-        if (!user.isAvailable()) {
-            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(), "用户未付费");
-        }
-        if (StringUtils.isNotEmpty(article.getOpenid()) && !Objects.equals(article.getOpenid(), user.getOpenid())) {
-            throw new BusinessException(ResultCode.BUSINESS_ERROR.getCode(), "这篇文章不属于您");
-        }
-        Article source = articleService.getById(article.getPid());
-        if (source.getPid() != null && source.getPid() != 0L) {
-            //这种情况是对自己做编辑
-            article.setPid(source.getPid());
-            article.setArticleid(source.getArticleid());
-        } else {
+        Preconditions.checkArgument(StringUtils.isNotEmpty(article.getContent()),"文章内容必传");
+        Preconditions.checkArgument(StringUtils.isNotEmpty(article.getTitle()),"文章标题必传");
+        Preconditions.checkArgument(user.isAvailable(),"用户未付费");
+        Preconditions.checkArgument(StringUtils.isEmpty(article.getOpenid()) ||
+                Objects.equals(article.getOpenid(), user.getOpenid()),"这篇文章不属于您");
+        Preconditions.checkArgument(article.getArticleid() != null &&
+                article.getArticleid() > 0,"文章ID必传");
+        Article source = articleService.getById(article.getArticleid());
+        //对原创文章做的编辑
+        if (StringUtils.isEmpty(source.getOpenid())) {
+            article.setArticleid(null);
             article.setPid(source.getArticleid());
             article.setCreateTime(TimeUtil.currentDT());
         }

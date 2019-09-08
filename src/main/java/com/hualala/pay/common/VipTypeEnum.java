@@ -1,8 +1,5 @@
 package com.hualala.pay.common;
 
-import com.hualala.common.ResultCode;
-import com.hualala.common.BusinessException;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -61,7 +58,7 @@ public enum VipTypeEnum {
     public static VipTypeEnum resolveType(Integer type) {
         Optional<VipTypeEnum> priceEnum = Arrays.stream(VipTypeEnum.values()).filter(price -> price.type.equals(type)).findAny();
         if (!priceEnum.isPresent()) {
-            throw new BusinessException(ResultCode.PARAMS_ERROR);
+            throw new IllegalArgumentException("非法参数type");
         }
         return priceEnum.get();
     }
