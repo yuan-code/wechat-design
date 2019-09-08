@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html style="-webkit-text-size-adjust: 100%;">
+${article.head}
 <head>
     <link rel="shortcut icon" type="image/x-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico">
     <link rel="mask-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/MjliNWVm.svg" color="#4C4C4C">
