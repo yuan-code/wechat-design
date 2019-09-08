@@ -152,7 +152,6 @@ public class ArticleController {
         }
         article.setSummary(source.getSummary());
         article.setThumbnail(source.getThumbnail());
-        article.setHead(source.getHead());
         article.setSource(source.getSource());
         article.setUserid(user.getUserid());
         article.setOpenid(user.getOpenid());

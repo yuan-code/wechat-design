@@ -57,10 +57,6 @@ public class Article implements Serializable {
      */
     private String thumbnail;
 
-    /**
-     * 样式+meta
-     */
-    private String head;
 
     /**
      * 用户ID
@@ -72,10 +68,6 @@ public class Article implements Serializable {
      */
     private String openid;
 
-    /**
-     * 状态
-     */
-    private Integer status;
 
     /**
      * 创建日期
@@ -86,11 +78,6 @@ public class Article implements Serializable {
      * 最后更新日期
      */
     private Long modifyTime;
-
-    /**
-     * 备注信息
-     */
-    private String remarks;
 
     /**
      * 文章来源

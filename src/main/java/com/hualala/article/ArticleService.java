@@ -58,7 +58,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             return article;
         }
         Document document = connetUrl(source);
-        String head = document.head().toString();
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
         String content = replaceImage(jsContent).toString();
@@ -70,7 +69,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         byte[] bytes = HttpClientUtil.downLoadFromUrl(thumbnail);
         thumbnail = MediaUtils.uploadImage(bytes);
         article = new Article();
-        article.setHead(head);
         article.setContent(content);
         article.setTitle(title);
         article.setSummary(summary);
