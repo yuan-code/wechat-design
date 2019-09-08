@@ -1,18 +1,14 @@
 package com.hualala.user;
 
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.hualala.user.component.UserResolver;
-import com.hualala.wechat.WXConfig;
-import com.hualala.user.domain.User;
-import com.hualala.wechat.WXService;
-import com.hualala.util.CacheUtils;
 import com.hualala.cos.MediaUtils;
+import com.hualala.user.component.UserResolver;
+import com.hualala.user.domain.User;
 import com.hualala.util.ResultUtils;
+import com.hualala.wechat.WXConfig;
+import com.hualala.wechat.WXService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
