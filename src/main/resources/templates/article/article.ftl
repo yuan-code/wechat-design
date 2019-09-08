@@ -4,20 +4,11 @@
     <link rel="shortcut icon" type="image/x-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico">
     <link rel="mask-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/MjliNWVm.svg" color="#4C4C4C">
     <link rel="apple-touch-icon-precomposed" href="//res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png">
-    <meta property="twitter:description" content="数据同步下，如何解决数据回环、数据冲突、数据重复等典型问题？">
-    <script nonce="1182273103" type="text/javascript">
+    <script nonce="1230290202" type="text/javascript">
         window.logs = {
             pagetime: {}
         };
         window.logs.pagetime['html_begin'] = (+new Date());
-        wx.config({
-            debug: false,
-            appId: '${appID}',
-            timestamp:${timestamp},
-            nonceStr: '${noncestr}',
-            signature: '${signature}',
-            jsApiList: ['checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'updateAppMessageShareData', 'updateTimelineShareData']
-        });
     </script>
     <link rel="stylesheet" href="/css/article.css">
     <link rel="stylesheet" href="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/style/page/middle/middle476532.css">
@@ -188,6 +179,16 @@
     </style>
     <script src="/js/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        wx.config({
+            debug: false,
+            appId: '${appID}',
+            timestamp:${timestamp},
+            nonceStr: '${noncestr}',
+            signature: '${signature}',
+            jsApiList: ['checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'updateAppMessageShareData', 'updateTimelineShareData']
+        });
+    </script>
 </head>
 
 <body id="activity-detail" class="zh_CN mm_appmsg  appmsg_skin_default appmsg_style_default">
