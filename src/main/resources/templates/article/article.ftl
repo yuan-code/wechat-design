@@ -1,180 +1,194 @@
 <!DOCTYPE html>
 <html style="-webkit-text-size-adjust: 100%;">
-${article.head}
-<style>
-    .rich_media_author{
-        position: relative;
-        overflow: hidden;
-        font-size: 14px;
-        background-color: #fff;
-        background-clip: padding-box;
-        border-radius: 2px;
-        box-shadow: 0 1px 2px rgba(0,0,0,.3);
-        padding: 10px;
-        background:#F1F1F1;
-        margin-bottom:10px;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: flex;
-    }
-    .rich_media_author img{
-        width: 70px;
-        height: 70px;
-        font-size: 0;
-        line-height: 0;
-        border-radius: 70px;
-    }
-    .rich_media_author  .rich_media_author_body {
-        margin-bottom: 0;
-        padding-left:10px;
-        -webkit-box-flex: 1;
-        -webkit-flex: 1;
-        flex: 1;
-    }
-    .rich_media_author  .rich_media_author_body h2{
-        font-size: 18px;
-        font-weight: 500;
-        line-height: 40px;
-        color: #333;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-    .rich_media_author  .rich_media_author_body p{
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-    .rich_media_author .rich_media_author__ft{
-        line-height:70px;
-    }
-    .footer-btn{
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 45px;
-        line-height: 45px;
-        text-align: center;
-        z-index: 2000;
-        background-color: #d81e06;
-        color: #FFF;
-    }
-    .footer-btn a{
-        height: 45px;
-        line-height: 45px;
-        color: #FFF;
-        text-align: center;
-        width:100%;
-    }
-    .rich_media{
-        margin-bottom:10px;
-    }
-    .weui-footer{
-        margin-top:20px;
-        margin-bottom:20px;
-    }
-    .mask{
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 2002;
-        background: rgba(17, 17, 17, 0.7);
-    }
-    .mask-dialog {
-        position: fixed;
-        z-index: 5000;
-        width: 80%;
-        max-width: 300px;
-        top: 40%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        background-color: #FFFFFF;
-        text-align: center;
-        border-radius: 3px;
-        overflow: hidden;
-    }
-    .right-edit-btn{
-        position: fixed;
-        right: 0;
-        bottom: 70px;
-        padding: 3px 10px;
-        background: red;
-        color: #FFF;
-        border-bottom-left-radius: 20px;
-        border-top-left-radius: 20px;
-        font-size:14px;
-        text-align:center;
-        min-width: 65px;
-    }
-    .right-customer-btn{
-        background: #1296db;
-        position: fixed;
-        bottom: 110px;
-        right: 0;
-        padding: 3px 10px;
-        color: #FFF;
-        border-bottom-left-radius: 20px;
-        border-top-left-radius: 20px;
-        font-size:14px;
-        text-align:center;
-        min-width: 65px;
-    }
-    .toptip{
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 2002;
-        background: rgba(0, 0, 0, 0.6);
-        height:40px;
-        line-height:40px;
-        text-align:center;
-        color:#FFF;
-        font-size:14px;
-    }
-    .toptip:after {
-        content: " ";
-        display: inline-block;
-        height: 6px;
-        width: 6px;
-        border-width: 2px 2px 0 0;
-        border-color: #E64340;
-        border-style: solid;
-        -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-        transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-        position: relative;
-        top: -2px;
-        position: absolute;
-        top: 50%;
-        margin-top: -4px;
-        right: 10px;
-    }
-    .toptip span{
-        font-size:15px;
-        color:#E64340;
-        padding-left:5px;
-        padding-right:5px;
-    }
-    .qrcodeContent > img {
-        width: 40%;
-    }
-</style>
-<script src="/js/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript">
-    wx.config({
-        debug: false,
-        appId: '${appID}',
-        timestamp:${timestamp},
-        nonceStr: '${noncestr}',
-        signature: '${signature}',
-        jsApiList: ['checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'updateAppMessageShareData', 'updateTimelineShareData']
-    });
-</script>
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico">
+    <link rel="mask-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/MjliNWVm.svg" color="#4C4C4C">
+    <link rel="apple-touch-icon-precomposed" href="//res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png">
+    <meta property="twitter:description" content="数据同步下，如何解决数据回环、数据冲突、数据重复等典型问题？">
+    <script nonce="1182273103" type="text/javascript">
+        window.logs = {
+            pagetime: {}
+        };
+        window.logs.pagetime['html_begin'] = (+new Date());
+        wx.config({
+            debug: false,
+            appId: '${appID}',
+            timestamp:${timestamp},
+            nonceStr: '${noncestr}',
+            signature: '${signature}',
+            jsApiList: ['checkJsApi', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'updateAppMessageShareData', 'updateTimelineShareData']
+        });
+    </script>
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/style/page/middle/middle476532.css">
+    <style type="text/css">
+        .original_panel{
+            border-radius: 8px;
+        }
+        .rich_media_author{
+            position: relative;
+            overflow: hidden;
+            font-size: 14px;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-radius: 2px;
+            box-shadow: 0 1px 2px rgba(0,0,0,.3);
+            padding: 10px;
+            background:#F1F1F1;
+            margin-bottom:10px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+        }
+        .rich_media_author img{
+            width: 70px;
+            height: 70px;
+            font-size: 0;
+            line-height: 0;
+            border-radius: 70px;
+        }
+        .rich_media_author  .rich_media_author_body {
+            margin-bottom: 0;
+            padding-left:10px;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+        .rich_media_author  .rich_media_author_body h2{
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 40px;
+            color: #333;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .rich_media_author  .rich_media_author_body p{
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .rich_media_author .rich_media_author__ft{
+            line-height:70px;
+        }
+        .footer-btn{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            z-index: 2000;
+            background-color: #d81e06;
+            color: #FFF;
+        }
+        .footer-btn a{
+            height: 45px;
+            line-height: 45px;
+            color: #FFF;
+            text-align: center;
+            width:100%;
+        }
+        .rich_media{
+            margin-bottom:10px;
+        }
+        .weui-footer{
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .mask{
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2002;
+            background: rgba(17, 17, 17, 0.7);
+        }
+        .mask-dialog {
+            position: fixed;
+            z-index: 5000;
+            width: 80%;
+            max-width: 300px;
+            top: 40%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            background-color: #FFFFFF;
+            text-align: center;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .right-edit-btn{
+            position: fixed;
+            right: 0;
+            bottom: 70px;
+            padding: 3px 10px;
+            background: red;
+            color: #FFF;
+            border-bottom-left-radius: 20px;
+            border-top-left-radius: 20px;
+            font-size:14px;
+            text-align:center;
+            min-width: 65px;
+        }
+        .right-customer-btn{
+            background: #1296db;
+            position: fixed;
+            bottom: 110px;
+            right: 0;
+            padding: 3px 10px;
+            color: #FFF;
+            border-bottom-left-radius: 20px;
+            border-top-left-radius: 20px;
+            font-size:14px;
+            text-align:center;
+            min-width: 65px;
+        }
+        .toptip{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2002;
+            background: rgba(0, 0, 0, 0.6);
+            height:40px;
+            line-height:40px;
+            text-align:center;
+            color:#FFF;
+            font-size:14px;
+        }
+        .toptip:after {
+            content: " ";
+            display: inline-block;
+            height: 6px;
+            width: 6px;
+            border-width: 2px 2px 0 0;
+            border-color: #E64340;
+            border-style: solid;
+            -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+            transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+            position: relative;
+            top: -2px;
+            position: absolute;
+            top: 50%;
+            margin-top: -4px;
+            right: 10px;
+        }
+        .toptip span{
+            font-size:15px;
+            color:#E64340;
+            padding-left:5px;
+            padding-right:5px;
+        }
+        .qrcodeContent > img {
+            width: 40%;
+        }
+    </style>
+    <script src="/js/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
 
 <body id="activity-detail" class="zh_CN mm_appmsg  appmsg_skin_default appmsg_style_default">
     <#--只有二次编辑的文章 并且是作者 或者原创文章 才显示这个-->
