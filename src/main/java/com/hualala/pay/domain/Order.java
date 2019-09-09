@@ -3,9 +3,8 @@ package com.hualala.pay.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.hualala.pay.common.VipTypeEnum;
-import com.hualala.pay.util.MoneyUtil;
-import com.hualala.user.UserHolder;
+import com.hualala.pay.common.VipType;
+import com.hualala.user.CurrentUser;
 import com.hualala.user.domain.User;
 import com.hualala.util.HttpUtils;
 import com.hualala.util.SnowflakeID;
@@ -16,6 +15,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * <p>
@@ -145,7 +145,7 @@ public class Order implements Serializable {
      * @return
      */
     public Order binding() {
-        User user = UserHolder.getUser();
+        User user = CurrentUser.getUser();
         if (user == null) {
             throw new RuntimeException("非法用户");
         }
@@ -165,7 +165,7 @@ public class Order implements Serializable {
         if (this.orderType == null) {
             throw new IllegalArgumentException("orderType必填");
         }
-        VipTypeEnum priceEnum = VipTypeEnum.resolveType(this.orderType);
+        VipType priceEnum = VipType.resolveType(this.orderType);
         this.orderAmount = priceEnum.getPrice();
         this.orderDesc = priceEnum.getDesc();
         return this;
@@ -187,10 +187,12 @@ public class Order implements Serializable {
      * @param money
      * @return
      */
-    public Order validateMoney(BigDecimal money) {
-        if (this.getOrderAmount().compareTo(money) != 0) {
+    public Order validateMoney(String feeType, BigDecimal money) {
+        if (!Objects.equals("CNY", feeType) || this.getOrderAmount().compareTo(money) != 0) {
             throw new RuntimeException("非法请求");
         }
+        this.feeType = feeType;
+        this.cashFee = money;
         return this;
     }
 
@@ -201,18 +203,16 @@ public class Order implements Serializable {
      */
     public Order savePayResult(WXPayResult payResult) {
         this.bankType = payResult.getBankType();
-        this.cashFee = MoneyUtil.Fen2Yuan(payResult.getCashFee());
         this.transactionid = payResult.getTransactionid();
         this.status = 2;
         this.actionTime = payResult.getTimeEnd();
-        this.feeType = payResult.getFeeType();
         return this;
     }
 
 
     public Order calculateTime(Long time) {
         this.beginTime = time;
-        VipTypeEnum priceEnum = VipTypeEnum.resolveType(this.getOrderType());
+        VipType priceEnum = VipType.resolveType(this.getOrderType());
         this.endTime = TimeUtil.stepTime(time, priceEnum.getCalendarType(), priceEnum.getCalendarCount());
         return this;
     }

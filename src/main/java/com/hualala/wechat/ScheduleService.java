@@ -1,16 +1,13 @@
-package com.hualala.wechat.component;
+package com.hualala.wechat;
 
-import com.hualala.wechat.WXConfig;
-import com.hualala.wechat.WXService;
+import com.hualala.wechat.component.WXConfig;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
@@ -20,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @desc
  */
 @Component
-public class RefreshOAuth implements ApplicationListener<ContextRefreshedEvent> {
+public class ScheduleService implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     private WXService wxService;
@@ -31,7 +28,7 @@ public class RefreshOAuth implements ApplicationListener<ContextRefreshedEvent> 
     /**
      * 刷新token与js-ticket的定时线程
      */
-    private ScheduledThreadPoolExecutor oAuthPool = new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("refresh-wx-oath-%d").daemon(true).build());;
+    private ScheduledThreadPoolExecutor oAuthPool = new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("refresh-wx-oath-%d").daemon(true).build());
 
 
 
@@ -39,7 +36,6 @@ public class RefreshOAuth implements ApplicationListener<ContextRefreshedEvent> 
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         oAuthPool.scheduleAtFixedRate(() -> wxService.refreshToken(),0, wxConfig.getExpire(), TimeUnit.SECONDS);
         oAuthPool.scheduleAtFixedRate(() -> wxService.refreshJSTicket(),0, wxConfig.getExpire(), TimeUnit.SECONDS);
-
     }
 
 

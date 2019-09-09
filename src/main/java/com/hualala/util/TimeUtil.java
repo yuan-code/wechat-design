@@ -120,4 +120,11 @@ public class TimeUtil {
         return Long.valueOf(sdf.format(todayEnd.getTime()));
     }
 
+    public static String formatTime(Long time) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = sdf.parse(time.toString());
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return sdf2.format(date);
+    }
+
 }

@@ -48,6 +48,8 @@ wechat:
   token: WX_DESIGN_TOKEN
   encodingAESKey: PJKtnHu74965O2WOfdxQgI3FOXrxrXd9YssgsaumzIW
   expire: 5000
+
+pay:
   mchId: 1547520731
   mchKey: 04b19705b97f4d07bf57f4f455438d2d
 

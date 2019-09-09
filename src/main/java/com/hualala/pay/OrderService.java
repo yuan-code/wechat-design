@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hualala.global.RedisKey;
-import com.hualala.mail.MailService;
-import com.hualala.pay.common.VipTypeEnum;
+import com.hualala.pay.common.PayConfig;
+import com.hualala.pay.common.RedisKey;
+import com.hualala.pay.common.VipType;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WXPayResult;
 import com.hualala.pay.domain.WxPayReq;
@@ -16,15 +16,12 @@ import com.hualala.pay.util.MoneyUtil;
 import com.hualala.util.BeanParse;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.TimeUtil;
-import com.hualala.wechat.WXConfig;
 import com.hualala.wechat.WXService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,16 +38,11 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     private OrderMapper orderMapper;
 
     @Autowired
-    private WXConfig wxConfig;
+    private PayConfig payConfig;
 
     @Autowired
     private WXService wxService;
 
-    @Autowired
-    private MailService mailService;
-
-    @Value("#{'${spring.mail.toUser}'.split(',')}")
-    private List<String> mailUser;
 
 
     /**
@@ -62,7 +54,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     public WxPayRes create(Integer vipType) throws Exception {
         Order order = new Order();
         order.setOrderType(vipType);
-        order.setMchid(wxConfig.getMchId());
+        order.setMchid(payConfig.getMchId());
         //生成订单号 计算金额 绑定用户 IP
         order.generateNo().computeMoney().findIP().setStatus(1).binding();
         orderMapper.insert(order);
@@ -81,20 +73,21 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public Integer createFreeOrder(String openid) {
+    public Order createFreeOrder(String openid) {
         List<Order> orders = this.successOrder(openid);
         if(orders.size() > 0) {
             throw new RuntimeException("非法请求");
         }
         Order order = new Order();
         Long currentDT = TimeUtil.currentDT();
-        order.setOrderType(VipTypeEnum.FREE.getType())
+        order.setOrderType(VipType.FREE.getType())
                 .computeMoney().generateNo().calculateTime(currentDT).findIP().binding();
-        order.setMchid(wxConfig.getMchId());
+        order.setMchid(payConfig.getMchId());
         order.setCreateTime(currentDT);
         order.setActionTime(currentDT);
         order.setStatus(2);
-        return orderMapper.insert(order);
+        orderMapper.insert(order);
+        return order;
     }
 
 
@@ -105,7 +98,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      * @param payResult
      */
     @Transactional(rollbackFor = Exception.class)
-    public void paySuccess(WXPayResult payResult) throws ParseException {
+    public Order paySuccess(WXPayResult payResult) {
         Wrapper<Order> wrapper = new QueryWrapper<Order>()
                 .eq("appid", payResult.getAppid())
                 .eq("openid", payResult.getOpenid())
@@ -122,14 +115,10 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         if (vipEndTime != null && vipEndTime >= beginTime) {
             beginTime = TimeUtil.stepTime(vipEndTime, Calendar.SECOND, 1);
         }
-        order.validateMoney(MoneyUtil.Fen2Yuan(payResult.getCashFee()));
+        order.validateMoney(payResult.getFeeType(),MoneyUtil.Fen2Yuan(payResult.getCashFee()));
         order.calculateTime(beginTime).savePayResult(payResult);
         orderMapper.updateById(order);
-
-        String msg = "有人购买会员了，openID=%s 支付金额=%s元 order信息:%s";
-        String content = String.format(msg,order.getOpenid(),order.getCashFee(),JSON.toJSONString(order));
-        log.info(content);
-        mailUser.stream().forEach(toUser -> mailService.sendMail(toUser,"青山高创公众号新增一个会员订单",content));
+        return order;
     }
 
 
@@ -150,7 +139,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      * @return
      */
     public Long selectVipEndTime(String openid, String excludeNo) {
-        return orderMapper.selectVipEndTime(wxConfig.getAppID(), openid, excludeNo);
+        return orderMapper.selectVipEndTime(wxService.getAppID(), openid, excludeNo);
     }
 
     /**
@@ -174,7 +163,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     public List<Order> successOrder(String openid) {
         if (validateCacheOrder(openid)) {
             try {
-                String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxConfig.getAppID(), wxConfig.getMchId(), openid);
+                String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxService.getAppID(), payConfig.getMchId(), openid);
                 Set<String> jsonSet = CacheUtils.zRangeRevertAll(redisKey);
                 return jsonSet.stream().map(json -> JSON.parseObject(json, Order.class)).collect(Collectors.toList());
             } catch (Exception e) {
@@ -195,7 +184,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      */
     private void cacheOrder(Order order) {
         try {
-            String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxConfig.getAppID(), wxConfig.getMchId(), order.getOpenid());
+            String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxService.getAppID(), payConfig.getMchId(), order.getOpenid());
             CacheUtils.zAdd(redisKey, JSON.toJSONString(order), order.getEndTime().doubleValue());
             CacheUtils.expire(redisKey, RedisKey.ORDER_EXPIRE_SECONDS);
         } catch (Exception e) {
@@ -214,12 +203,12 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     private Boolean validateCacheOrder(String openid) {
         try {
             Wrapper<Order> wrapper = new QueryWrapper<Order>()
-                    .eq("appid", wxConfig.getAppID())
+                    .eq("appid", wxService.getAppID())
                     .eq("openid", openid)
-                    .eq("mchid", wxConfig.getMchId())
+                    .eq("mchid", payConfig.getMchId())
                     .eq("status", 2);
             Integer dbCount = orderMapper.selectCount(wrapper);
-            String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxConfig.getAppID(), wxConfig.getMchId(), openid);
+            String redisKey = String.format(RedisKey.PAY_ORDER_KEY, wxService.getAppID(), payConfig.getMchId(), openid);
             Long redisCount = CacheUtils.zSize(redisKey);
             boolean result = dbCount.equals(redisCount.intValue());
             if (!result) {
@@ -240,9 +229,9 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      */
     private List<Order> queryDBSuccessOrder(String openid) {
         Wrapper<Order> wrapper = new QueryWrapper<Order>()
-                .eq("appid", wxConfig.getAppID())
+                .eq("appid", wxService.getAppID())
                 .eq("openid", openid)
-                .eq("mchid", wxConfig.getMchId())
+                .eq("mchid", payConfig.getMchId())
                 .eq("status", 2);
         log.info("开始从DB中获取支付成功订单数据 openid: [{}]", openid);
         return orderMapper.selectList(wrapper);

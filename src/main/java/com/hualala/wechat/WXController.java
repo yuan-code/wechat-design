@@ -1,20 +1,29 @@
 package com.hualala.wechat;
 
+import com.alibaba.fastjson.JSON;
+import com.hualala.mail.MailService;
 import com.hualala.pay.OrderService;
+import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WXPayResult;
 import com.hualala.pay.domain.WxPaySuccess;
+import com.hualala.util.TimeUtil;
 import com.hualala.wechat.common.NotifyEnum;
+import com.hualala.wechat.common.TemplateCode;
 import com.hualala.wechat.common.WXConstant;
 import com.hualala.wechat.component.NotifyFactory;
+import com.hualala.wechat.component.WXConfig;
 import com.hualala.wechat.component.WechatNotify;
 import com.hualala.util.BeanParse;
+import com.hualala.wechat.domain.TemplateMsg;
 import com.hualala.weixin.mp.WXBizMsgCrypt;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,6 +43,15 @@ public class WXController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Value("#{'${spring.mail.toUser}'.split(',')}")
+    private List<String> mailUser;
+
+    @Autowired
+    private WXService wxService;
 
 
     /**
@@ -88,7 +106,20 @@ public class WXController {
         }
         //基础校验 签名 金额
         payResult.baseValidate();
-        orderService.paySuccess(payResult);
+        Order order = orderService.paySuccess(payResult);
+
+        //异步发模板消息
+        TemplateMsg templateMsg = TemplateMsg.builder(order.getOpenid(), TemplateCode.BECOME_VIP_SUCCESS)
+                .buildFirst("Hi，亲爱的会员，你已成功开通青山高创高级会员！")
+                .buildKeyword(order.getOrderNo(), "高级会员", order.getCashFee().toString(), "至" + TimeUtil.formatTime(order.getEndTime()))
+                .buildRemark("如有任何疑问，可联系客服")
+                .build();
+        wxService.asynSendMsg(templateMsg);
+
+        //异步发邮件
+        String msg = "有人购买会员了，openID=%s 支付金额=%s元 order信息:%s";
+        String content = String.format(msg,order.getOpenid(),order.getCashFee(), JSON.toJSONString(order));
+        mailUser.stream().forEach(toUser -> mailService.sendMail(toUser,"青山高创公众号新增一个会员订单",content));
         return WxPaySuccess.INSTANCE;
     }
 }

@@ -4,13 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hualala.global.RedisKey;
-import com.hualala.util.CacheUtils;
-import com.hualala.wechat.WXConfig;
+import com.hualala.pay.OrderService;
+import com.hualala.user.common.Constant;
 import com.hualala.user.domain.User;
+import com.hualala.util.CacheUtils;
 import com.hualala.util.TimeUtil;
 import com.hualala.wechat.WXService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,10 +32,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     private UserMapper userMapper;
 
     @Autowired
-    private WXConfig wxConfig;
+    private WXService wxService;
 
     @Autowired
-    private WXService wxService;
+    private OrderService orderService;
+
 
     /**
      * 如果是收到的关注事件 saveOrUpdate
@@ -50,7 +52,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      */
     @Transactional(rollbackFor = Exception.class)
     public User saveUser(User user) {
-        user.setAppid(wxConfig.getAppID());
+        user.setAppid(wxService.getAppID());
         if(user.getSubscribeStatus() != null && user.getSubscribeStatus() == 1) {
             //这里是抓取到的关注的请求
             user.setSubscribeStatus(1);
@@ -97,7 +99,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     }
 
     public User queryByOpenid(String openid) {
-        Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", openid);
+        Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", wxService.getAppID()).eq("openid", openid);
         return userMapper.selectOne(wrapper);
     }
 
@@ -110,9 +112,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         //cookie内的token一小时过期
         String cookieKey = generateCookieKey(user.getOpenid());
         if (CacheUtils.exists(cookieKey)) {
-            CacheUtils.expire(cookieKey, RedisKey.COOKIE_EXPIRE_SECONDS);
+            CacheUtils.expire(cookieKey, Constant.SESSION_EXPIRE_SECONDS);
         } else {
-            CacheUtils.set(cookieKey, JSON.toJSONString(user), RedisKey.COOKIE_EXPIRE_SECONDS);
+            CacheUtils.set(cookieKey, JSON.toJSONString(user), Constant.SESSION_EXPIRE_SECONDS);
         }
         return cookieKey;
     }
@@ -125,10 +127,28 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         String cookieKey = generateCookieKey(openid);
         CacheUtils.del(cookieKey);
         User user = queryByOpenid(openid);
-        UserHolder.setUser(user);
+        CurrentUser.setUser(user);
     }
 
+    /**
+     * token 认证
+     * @param token
+     * @return
+     */
+    public User tokenAuth(String token) {
+        String jsonUser = CacheUtils.get(token);
+        if (StringUtils.isNotEmpty(jsonUser)) {
+            User user = JSON.parseObject(jsonUser, User.class);
+            CacheUtils.expire(token, Constant.SESSION_EXPIRE_SECONDS);
+            //判断用户是否是有效的付费用户
+            orderService.currentUserOrder(user.getOpenid()).ifPresent(order -> user.setAvailable(true));
+            return user;
+        }
+        return null;
+    }
+
+
     private String generateCookieKey(String openid) {
-        return DigestUtils.md5Hex(wxConfig.getAppID() + openid);
+        return DigestUtils.md5Hex(wxService.getAppID() + openid);
     }
 }

@@ -1,4 +1,4 @@
-package com.hualala.user.component;
+package com.hualala.user.common;
 
 import java.lang.annotation.*;
 

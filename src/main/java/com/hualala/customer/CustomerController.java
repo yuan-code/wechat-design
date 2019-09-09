@@ -9,7 +9,7 @@ import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
 import com.hualala.util.ResultUtils;
 import com.hualala.util.TimeUtil;
-import com.hualala.user.component.UserResolver;
+import com.hualala.user.common.UserResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

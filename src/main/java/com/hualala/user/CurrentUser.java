@@ -7,7 +7,7 @@ import com.hualala.user.domain.User;
  * @create 2019-06-01 13:22
  * @desc
  */
-public class UserHolder {
+public class CurrentUser {
     private static ThreadLocal<User> currentUser = new ThreadLocal();
 
 

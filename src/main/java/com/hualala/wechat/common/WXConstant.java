@@ -11,11 +11,6 @@ public class WXConstant {
 
     public static final String SUCCESS = "SUCCESS";
 
-    /**
-     * cookie name for access_token
-     */
-    public static final String COOKIE_ACCESS_TOKEN_NAME = "accessToken";
-
 
     /**
      * JS ticket 签名参数格式
@@ -78,5 +73,13 @@ public class WXConstant {
      */
     public static final String QRCODE_TICKET_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s";
 
+    /**
+     * 添加模板
+     */
+    public static final String ADD_TEMPLATEID_URL = "https://api.weixin.qq.com/cgi-bin/template/api_add_template?access_token=%s";
 
+    /**
+     * 发送模板消息
+     */
+    public static final String SEND_TEMPLATE_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s";
 }

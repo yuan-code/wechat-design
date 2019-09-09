@@ -1,6 +1,6 @@
 package com.hualala.wechat.util;
 
-import com.hualala.wechat.WXConfig;
+import com.hualala.wechat.component.WXConfig;
 import com.hualala.util.BeanParse;
 import com.hualala.weixin.mp.AesException;
 import com.hualala.weixin.mp.WXBizMsgCrypt;

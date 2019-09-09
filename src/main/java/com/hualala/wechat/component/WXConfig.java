@@ -1,4 +1,4 @@
-package com.hualala.wechat;
+package com.hualala.wechat.component;
 
 import com.hualala.weixin.mp.WXBizMsgCrypt;
 import lombok.Data;
@@ -23,8 +23,6 @@ public class WXConfig implements InitializingBean {
     private String encodingAESKey;
     private Integer expire;
 
-    private String mchId;
-    private String mchKey;
 
     /**
      * 微信加解密工具

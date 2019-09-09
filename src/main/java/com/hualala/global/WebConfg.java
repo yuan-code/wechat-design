@@ -1,6 +1,6 @@
 package com.hualala.global;
 
-import com.hualala.user.component.UserArgumentResolver;
+import com.hualala.user.common.UserArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

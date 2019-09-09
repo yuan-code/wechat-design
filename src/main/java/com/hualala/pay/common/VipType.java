@@ -10,7 +10,7 @@ import java.util.Optional;
  * @create 2019-08-11 09:49
  * @desc
  */
-public enum VipTypeEnum {
+public enum VipType {
 
 
     FREE(0, BigDecimal.ZERO, "青山高创免费试用三天", Calendar.DATE,3),
@@ -26,7 +26,7 @@ public enum VipTypeEnum {
 
 
 
-    VipTypeEnum(Integer type, BigDecimal price, String desc, Integer calendarType, Integer calendarCount) {
+    VipType(Integer type, BigDecimal price, String desc, Integer calendarType, Integer calendarCount) {
         this.type = type;
         this.price = price;
         this.desc = desc;
@@ -55,8 +55,8 @@ public enum VipTypeEnum {
     }
 
 
-    public static VipTypeEnum resolveType(Integer type) {
-        Optional<VipTypeEnum> priceEnum = Arrays.stream(VipTypeEnum.values()).filter(price -> price.type.equals(type)).findAny();
+    public static VipType resolveType(Integer type) {
+        Optional<VipType> priceEnum = Arrays.stream(VipType.values()).filter(price -> price.type.equals(type)).findAny();
         if (!priceEnum.isPresent()) {
             throw new IllegalArgumentException("非法参数type");
         }

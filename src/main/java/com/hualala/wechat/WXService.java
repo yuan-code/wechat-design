@@ -2,14 +2,18 @@ package com.hualala.wechat;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hualala.global.RedisKey;
 import com.hualala.pay.domain.WxPayRes;
 import com.hualala.user.domain.User;
 import com.hualala.util.BeanParse;
 import com.hualala.util.CacheUtils;
 import com.hualala.util.HttpClientUtil;
+import com.hualala.wechat.common.RedisKey;
+import com.hualala.wechat.common.TemplateCode;
 import com.hualala.wechat.common.WXConstant;
+import com.hualala.wechat.component.WXConfig;
+import com.hualala.wechat.domain.TemplateMsg;
 import com.hualala.weixin.mp.JSApiUtil;
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +21,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.hualala.wechat.common.WXConstant.*;
 
@@ -34,6 +42,11 @@ public class WXService {
 
     @Autowired
     private WXConfig wxConfig;
+
+    /**
+     * 发模板消息线程
+     */
+    private ExecutorService templatePool = Executors.newSingleThreadExecutor();
 
 
     /**
@@ -58,6 +71,9 @@ public class WXService {
         return ticket;
     }
 
+    public String getAppID() {
+        return wxConfig.getAppID();
+    }
 
     /**
      * 刷新微信公众号的access_token
@@ -143,6 +159,11 @@ public class WXService {
             log.error("通过code授权码换取网页授权access_token微信返回错误 url {} result {}", url, result);
             throw new RuntimeException("通过code授权码换取网页授权access_token失败");
         }
+        String openid = result.getString("openid");
+        Integer expiresIn = result.getInteger("expires_in");
+        String tokenKey = String.format(RedisKey.WEB_ACCESS_TOKEN_KEY, wxConfig.getAppID(), openid);
+        //先保存起来这个web token 暂时没什么用
+        CacheUtils.set(tokenKey, result.toJSONString(), expiresIn);
         return result;
     }
 
@@ -172,19 +193,20 @@ public class WXService {
 
     /**
      * 获取微信临时二维码
-     *
+     * <p>
      * 创建二维码ticket
-     *      http请求方式: POST
-     *      URL: https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN
-     *      POST数据例子：{"expire_seconds": 604800, "action_name": "QR_STR_SCENE", "action_info": {"scene": {"scene_str": "test"}}}
-     *      微信返回数据: {"ticket":"gQH47joAAAAAAAAA....","expire_seconds":60,"url":"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI"}
-     *
+     * http请求方式: POST
+     * URL: https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=TOKEN
+     * POST数据例子：{"expire_seconds": 604800, "action_name": "QR_STR_SCENE", "action_info": {"scene": {"scene_str": "test"}}}
+     * 微信返回数据: {"ticket":"gQH47joAAAAAAAAA....","expire_seconds":60,"url":"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI"}
+     * <p>
      * 通过ticket换取二维码
-     *      HTTP 请求（请使用https协议）https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=TICKET
-     *      提醒：TICKET记得进行UrlEncode
-     * @return
+     * HTTP 请求（请使用https协议）https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=TICKET
+     * 提醒：TICKET记得进行UrlEncode
+     *
      * @param sceneStr
      * @param seconds
+     * @return
      */
     public String qrcodeTicket(String sceneStr, Integer seconds) {
         //二维码的参数
@@ -194,13 +216,12 @@ public class WXService {
         ticketReq = String.format(ticketReq, seconds, sceneStr);
         HttpClientUtil.HttpResult ticketRes = HttpClientUtil.postJson(url, ticketReq);
         String ticket = JSON.parseObject(ticketRes.getContent()).getString("ticket");
-        if(StringUtils.isEmpty(ticket)) {
+        if (StringUtils.isEmpty(ticket)) {
             log.error("获取微信临时二维码 url {} result {}", url, ticketRes);
             throw new RuntimeException("获取微信临时二维码失败");
         }
         return ticket;
     }
-
 
 
     /**
@@ -256,5 +277,74 @@ public class WXService {
         }
         return wxPayRes;
     }
+
+    /**
+     * 获取预授权重定向的url
+     *
+     * @param requestURL
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public String preAuthUrl(String requestURL) throws UnsupportedEncodingException {
+        String encoderUrl = URLEncoder.encode(requestURL, StandardCharsets.UTF_8.name());
+        return String.format(JS_PRE_AUTH_URL, wxConfig.getAppID(), encoderUrl, "snsapi_userinfo", "NOTHING");
+    }
+
+
+    /**
+     * 异步发模板消息
+     *
+     * @param msg
+     */
+    public void asynSendMsg(TemplateMsg msg) {
+        templatePool.execute(() -> this.sendMsg(msg));
+    }
+
+    /**
+     * 发送模板消息
+     *
+     * @param message
+     * @return
+     */
+    public HttpClientUtil.HttpResult sendMsg(TemplateMsg message) {
+        //获取模板ID
+        String templateID = syncTemplateID(message.getTemplateCode());
+        message.setTemplateID(templateID);
+        //推送消息
+        String accessToken = getAccessToken();
+        String url = String.format(SEND_TEMPLATE_URL, accessToken);
+        String body = JSON.toJSONString(message);
+        log.info("微信公众号推送 url: {}, body: {}", url, body);
+        HttpClientUtil.HttpResult ticketRes = HttpClientUtil.postJson(url, body);
+        return ticketRes;
+    }
+
+    /**
+     * 通过模板编码获取模板ID
+     *
+     * @param templateCode
+     * @return
+     */
+    public String syncTemplateID(String templateCode) {
+        String redisKey = String.format(RedisKey.TEMPLATEID_KEY, wxConfig.getAppID(), templateCode);
+        String templateID = CacheUtils.get(redisKey);
+        if (StringUtils.isEmpty(templateID)) {
+            String accessToken = getAccessToken();
+            String idUrl = String.format(ADD_TEMPLATEID_URL, accessToken);
+            JSONObject idReq = new JSONObject();
+            idReq.put("template_id_short", templateCode);
+            HttpClientUtil.HttpResult idRes = HttpClientUtil.postJson(idUrl, idReq.toJSONString());
+            log.info("模板ID从缓存获取失败，通过模板编码获取模板ID url: {}, body: {} result:{}", idUrl, idReq, idRes);
+            templateID = JSON.parseObject(idRes.getContent()).getString("template_id");
+            CacheUtils.set(redisKey, templateID);
+        }
+        return templateID;
+    }
+
+
+    public String getVipSuccessTemplateCode() {
+        return TemplateCode.BECOME_VIP_SUCCESS;
+    }
+
 
 }

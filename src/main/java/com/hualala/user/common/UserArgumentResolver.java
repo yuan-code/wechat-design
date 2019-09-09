@@ -1,6 +1,6 @@
-package com.hualala.user.component;
+package com.hualala.user.common;
 
-import com.hualala.user.UserHolder;
+import com.hualala.user.CurrentUser;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -23,6 +23,6 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) {
-        return UserHolder.getUser();
+        return CurrentUser.getUser();
     }
 }

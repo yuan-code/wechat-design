@@ -4,10 +4,10 @@ package com.hualala.user;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hualala.cos.MediaUtils;
-import com.hualala.user.component.UserResolver;
+import com.hualala.user.common.UserResolver;
 import com.hualala.user.domain.User;
 import com.hualala.util.ResultUtils;
-import com.hualala.wechat.WXConfig;
+import com.hualala.wechat.component.WXConfig;
 import com.hualala.wechat.WXService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,6 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private WXConfig wxConfig;
-
-    @Autowired
     private WXService wxService;
 
 
@@ -49,14 +46,14 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/updateByID")
-    public Object updateByID(User params, @UserResolver User user) throws Exception {
+    public Object updateByID(User params, @UserResolver User user) {
         if(StringUtils.isNotEmpty(params.getQrcode())){
             //上传图片
             byte[] images = wxService.downloadMedia(params.getQrcode());
             String url = MediaUtils.uploadImage(images);
             params.setQrcode(url);
         }
-        Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", user.getOpenid());
+        Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxService.getAppID()).eq("openid", user.getOpenid());
         userService.update(params,wrapper);
         userService.deleteSession(user.getOpenid());
         return ResultUtils.success(params);

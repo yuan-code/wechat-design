@@ -1,7 +1,8 @@
-package com.hualala.util;
+package com.hualala.pay.util;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.hualala.wechat.WXConfig;
+import com.hualala.pay.common.PayConfig;
+import com.hualala.wechat.component.WXConfig;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,16 +19,16 @@ import java.util.TreeMap;
 @Component
 public class SignUtil {
 
-    private static WXConfig wxConfig;
+    private static PayConfig payConfig;
 
     @Autowired
-    public void setWXConfig(WXConfig wxConfig) {
-        SignUtil.wxConfig = wxConfig;
+    public void setWXConfig(PayConfig payConfig) {
+        SignUtil.payConfig = payConfig;
     }
 
     public static String genarate(Map<String, Object> params) {
         StringBuilder toSign = toSign(params);
-        toSign.append("key=").append(wxConfig.getMchKey());
+        toSign.append("key=").append(payConfig.getMchKey());
         return DigestUtils.md5Hex(toSign.toString()).toUpperCase();
     }
 
@@ -45,7 +46,7 @@ public class SignUtil {
             }
         }
         StringBuilder toSign = toSign(params);
-        toSign.append("key=").append(wxConfig.getMchKey());
+        toSign.append("key=").append(payConfig.getMchKey());
         return DigestUtils.md5Hex(toSign.toString()).toUpperCase();
     }
 

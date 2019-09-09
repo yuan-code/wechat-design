@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hualala.util.LockHelper;
 import com.hualala.wechat.common.NotifyEnum;
 import com.hualala.wechat.common.NotifyType;
-import com.hualala.wechat.WXConfig;
 import com.hualala.article.domain.Article;
 import com.hualala.user.domain.User;
 import com.hualala.article.ArticleService;

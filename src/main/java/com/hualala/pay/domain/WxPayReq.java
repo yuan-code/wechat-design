@@ -3,7 +3,7 @@ package com.hualala.pay.domain;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.hualala.pay.util.MoneyUtil;
 import com.hualala.util.HttpUtils;
-import com.hualala.util.SignUtil;
+import com.hualala.pay.util.SignUtil;
 import lombok.Data;
 
 import java.lang.reflect.Field;

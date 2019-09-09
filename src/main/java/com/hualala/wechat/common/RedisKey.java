@@ -1,4 +1,4 @@
-package com.hualala.global;
+package com.hualala.wechat.common;
 
 /**
  * @author YuanChong
@@ -23,15 +23,8 @@ public class RedisKey {
     public static final String WEB_ACCESS_TOKEN_KEY = "wechat:%s:webAccessToken:%s";
 
     /**
-     * token过期时间
+     * 微信模板消息ID
      */
-    public static final Long COOKIE_EXPIRE_SECONDS = 60 * 60L;
+    public static final String TEMPLATEID_KEY = "wechat:%s:templateID:%s";
 
-    /**
-     * 用户付费订单
-     */
-    public static final String PAY_ORDER_KEY = "wechat:%s:payorder:%s:%s";
-
-
-    public static final Long ORDER_EXPIRE_SECONDS = 60 * 60L;
 }

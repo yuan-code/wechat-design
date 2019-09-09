@@ -1,15 +1,17 @@
 package com.hualala.pay;
 
 import com.google.common.base.Preconditions;
-import com.hualala.pay.common.VipTypeEnum;
+import com.hualala.pay.common.VipType;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WxPayRes;
-import com.hualala.user.component.UserResolver;
+import com.hualala.pay.util.SignUtil;
+import com.hualala.user.common.UserResolver;
 import com.hualala.user.domain.User;
 import com.hualala.util.LockHelper;
 import com.hualala.util.ResultUtils;
-import com.hualala.util.SignUtil;
-import com.hualala.wechat.WXConfig;
+import com.hualala.util.TimeUtil;
+import com.hualala.wechat.WXService;
+import com.hualala.wechat.domain.TemplateMsg;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -37,7 +38,7 @@ public class PayController {
     private OrderService orderService;
 
     @Autowired
-    private WXConfig wxConfig;
+    private WXService wxService;
 
     @Autowired
     private LockHelper lockHelper;
@@ -55,7 +56,7 @@ public class PayController {
         result.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
         result.put("package", "prepay_id=" + wxPayRes.getPrepayId());
         result.put("signType", "MD5");
-        result.put("appId", wxConfig.getAppID());
+        result.put("appId", wxService.getAppID());
 
         String paySign = SignUtil.genarate(result);
         result.put("paySign", paySign);
@@ -73,7 +74,14 @@ public class PayController {
     public Object free(@UserResolver User user) throws Exception {
         //同步锁
         String lock = "createFreeOrder/" + user.getOpenid();
-        lockHelper.doSync(lock, () -> orderService.createFreeOrder(user.getOpenid()));
+        Order order = lockHelper.doSync(lock, () -> orderService.createFreeOrder(user.getOpenid()));
+        //异步发模板消息
+        TemplateMsg templateMsg = TemplateMsg.builder(order.getOpenid(), wxService.getVipSuccessTemplateCode())
+                .buildFirst("Hi，亲爱的会员，你已成功开通青山高创高级会员！")
+                .buildKeyword(order.getOrderNo(), "试用会员", order.getCashFee().toString(), "至" + TimeUtil.formatTime(order.getEndTime()))
+                .buildRemark("如有任何疑问，可联系客服")
+                .build();
+        wxService.asynSendMsg(templateMsg);
         return ResultUtils.success();
     }
 
@@ -86,8 +94,8 @@ public class PayController {
     @RequestMapping(value = "/vip", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object vipType(@UserResolver User user, ModelMap modelMap) {
         List<Order> orderList = orderService.successOrder(user.getOpenid());
-        Arrays.stream(VipTypeEnum.values())
-                .filter(type -> orderList.size() == 0? true: !VipTypeEnum.FREE.equals(type))
+        Arrays.stream(VipType.values())
+                .filter(type -> orderList.size() == 0? true: !VipType.FREE.equals(type))
                 .forEach(type -> modelMap.addAttribute(type.name(),type));
         return "pay/vip";
     }
@@ -104,10 +112,7 @@ public class PayController {
         Long endTime = orderService.selectVipEndTime(user.getOpenid());
         String result = "";
         if (endTime != null && endTime != 0L) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            Date date = sdf.parse(endTime.toString());
-            SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            result = sdf2.format(date);
+            result = TimeUtil.formatTime(endTime);
         }
         return ResultUtils.success(result);
     }

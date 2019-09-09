@@ -1,7 +1,7 @@
 package com.hualala.pay.domain;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.hualala.util.SignUtil;
+import com.hualala.pay.util.SignUtil;
 import lombok.Data;
 
 /**
