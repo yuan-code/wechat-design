@@ -226,11 +226,13 @@
                                 <#else>
                                     <h2>${author.nickname}</h2>
                                 </#if>
-                                <p>
+                                  
+                                  <div style="word-break:break-all; word-wrap:break-word ;">
                                     <#if userStatus = 0>${user.slogan}
-                                        <a href="/user/slogan?path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
+                                        
                                     <#else>${author.slogan}</#if>
-                                </p>
+                                  </div>
+                                <a href="/user/slogan?path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
                             </div>
                             <div class="rich_media_author__ft">
                                 <a href="javascript:void(0);" style="color:#d6613f;font-size: 16px;" class="add-myweixin">加我微信</a>
