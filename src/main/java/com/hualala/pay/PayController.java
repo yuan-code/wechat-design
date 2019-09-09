@@ -78,7 +78,7 @@ public class PayController {
         //异步发模板消息
         TemplateMsg templateMsg = TemplateMsg.builder(order.getOpenid(), wxService.getVipSuccessTemplateCode())
                 .buildFirst("Hi，亲爱的会员，你已成功开通青山高创高级会员！")
-                .buildKeyword(order.getOrderNo(), "试用会员", order.getCashFee().toString(), "至" + TimeUtil.formatTime(order.getEndTime()))
+                .buildKeyword(order.getOrderNo(), "试用会员", "0", "至" + TimeUtil.formatTime(order.getEndTime()))
                 .buildRemark("如有任何疑问，可联系客服")
                 .build();
         wxService.asynSendMsg(templateMsg);
