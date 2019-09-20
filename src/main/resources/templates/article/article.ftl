@@ -232,7 +232,8 @@
                                         
                                     <#else>${author.slogan}</#if>
                                   </div>
-                                <a href="/user/slogan?slogan=${user.slogan?html}&path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
+                                <a href="/user/slogan?slogan=<#if userStatus = 0>${user.slogan}
+<#else>${author.slogan}</#if>&path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
                             </div>
                             <div class="rich_media_author__ft">
                                 <a href="javascript:void(0);" style="color:#d6613f;font-size: 16px;" class="add-myweixin">加我微信</a>
