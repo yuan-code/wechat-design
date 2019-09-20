@@ -261,7 +261,7 @@
         </span>
     </p>
     <div class="weui-footer">
-        <p class="weui-footer__text">Copyright © 2019 青山高创</p>
+        <#--<p class="weui-footer__text">Copyright © 2019 青山高创</p>-->
     </div>
     <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
     <#if userStatus = 0>

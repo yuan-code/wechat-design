@@ -81,7 +81,7 @@
     </div>
 
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="/user/slogan?path=/user/userInfo">
+        <a class="weui-cell weui-cell_access" href="/user/slogan?slogan=${user.slogan}&path=/user/userInfo/">
             <div class="weui-cell__bd">
                 签名
             </div>
