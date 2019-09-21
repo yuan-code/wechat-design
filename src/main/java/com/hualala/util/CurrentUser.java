@@ -1,4 +1,4 @@
-package com.hualala.user;
+package com.hualala.util;
 
 import com.hualala.user.domain.User;
 

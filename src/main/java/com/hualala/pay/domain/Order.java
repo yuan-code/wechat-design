@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.hualala.pay.common.VipType;
-import com.hualala.user.CurrentUser;
+import com.hualala.util.CurrentUser;
 import com.hualala.user.domain.User;
 import com.hualala.util.HttpUtils;
 import com.hualala.util.SnowflakeID;
