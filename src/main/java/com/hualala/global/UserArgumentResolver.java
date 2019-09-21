@@ -1,4 +1,4 @@
-package com.hualala.user.common;
+package com.hualala.global;
 
 import com.hualala.user.CurrentUser;
 import org.springframework.core.MethodParameter;
