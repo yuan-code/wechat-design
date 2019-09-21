@@ -232,7 +232,7 @@
                                         
                                     <#else>${author.slogan}</#if>
                                   </div>
-                                <a href="/user/slogan?path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
+                                <a href="/user/slogan?slogan=${author.slogan}&path=/article/detail/${article.articleid}" style="color:#d6613f">设置签名</a>
                             </div>
                             <div class="rich_media_author__ft">
                                 <a href="javascript:void(0);" style="color:#d6613f;font-size: 16px;" class="add-myweixin">加我微信</a>
@@ -261,7 +261,7 @@
         </span>
     </p>
     <div class="weui-footer">
-        <p class="weui-footer__text">Copyright © 2019 青山高创</p>
+        <#--<p class="weui-footer__text">Copyright © 2019 青山高创</p>-->
     </div>
     <#--如果是原创文章 显示设置 如果是二次编辑 显示设置 如果是分享 什么都不展示-->
     <#if userStatus = 0>
