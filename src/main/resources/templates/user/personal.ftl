@@ -162,7 +162,7 @@
             </div>
         </a>
         <!-- 如果未开通代理会员展示以下a 标签的内容-->
-        <a class="weui-cell weui-cell_access" href="/agent/agent">
+        <a class="weui-cell weui-cell_access" href="/agent">
             <div class="weui-cell__bd">
                 开通代理
             </div>
