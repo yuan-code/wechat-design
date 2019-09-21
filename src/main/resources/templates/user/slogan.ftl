@@ -50,6 +50,18 @@
 <script src="/js/weui.min.js"></script>
 <script src="/js/app.js"></script>
 <script>
+$(function(){
+     $("#slogan").val(decodeURIComponent(GetQueryString("slogan")));
+});
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+     if(r!=null)return (r[2]); return null;
+}
+
+
     $("#slogan").on("input",function(){
         var slogan = $("#slogan").val();
         $("#inputLength").html(slogan.length);
