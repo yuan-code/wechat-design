@@ -144,23 +144,24 @@
                 14,451个
             </div>
         </a>
+        <a class="weui-cell weui-cell_access" href="/pay/vip">
+            <div class="weui-cell__bd">
+                ${user.available?string('续费','开通会员')}
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
         <#if user.available>
-            <a class="weui-cell weui-cell_access" href="/pay/vip">
+            <a class="weui-cell weui-cell_access" href="javascript:;">
                 <div class="weui-cell__bd">
-                    续费
+                    会员到期日期
                 </div>
-                <div class="weui-cell__ft">
+                <div class="weui-cell__ft" id="endTime">
+
                 </div>
             </a>
         </#if>
-        <a class="weui-cell weui-cell_access" href="${user.available?string('javascript:;','/pay/vip')}">
-            <div class="weui-cell__bd">
-                ${user.available?string('会员到期日期','开通会员')}
-            </div>
-            <div class="weui-cell__ft" id="endTime">
 
-            </div>
-        </a>
         <!-- 如果未开通代理会员展示以下a 标签的内容-->
         <a class="weui-cell weui-cell_access" href="/agent/agent">
             <div class="weui-cell__bd">
