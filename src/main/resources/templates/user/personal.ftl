@@ -136,7 +136,7 @@
         </div>
     </div>
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="/my/coin">
+        <a class="weui-cell weui-cell_access" href="/user/coin">
             <div class="weui-cell__bd">
                 我的金币
             </div>
@@ -162,7 +162,7 @@
             </div>
         </a>
         <!-- 如果未开通代理会员展示以下a 标签的内容-->
-        <a class="weui-cell weui-cell_access" href="/agent">
+        <a class="weui-cell weui-cell_access" href="/agent/agent">
             <div class="weui-cell__bd">
                 开通代理
             </div>
