@@ -50,10 +50,19 @@
 
     <!-- Mixed sync/async -->
     <Loggers>
-        <!--additivity="false" 代表不继承Root内的属性 子Logger只会在自己的appender里输出-->
-<!--        <logger name="com.hualala" level="debug" additivity="false">
+        <!--additivity="false" 代表不继承Root内的属性 子Logger只会在自己的appender里输出&ndash;&gt;-->
+        <logger name="com.hualala.article" level="debug" additivity="false">
             <AppenderRef ref="infoFile"/>
-        </logger>-->
+        </logger>
+        <logger name="com.hualala.customer" level="debug" additivity="false">
+            <AppenderRef ref="infoFile"/>
+        </logger>
+        <logger name="com.hualala.pay" level="debug" additivity="false">
+            <AppenderRef ref="infoFile"/>
+        </logger>
+        <logger name="com.hualala.user" level="debug" additivity="false">
+            <AppenderRef ref="infoFile"/>
+        </logger>
         <AsyncRoot level="info">
             <AppenderRef ref="infoFile"/>
             <AppenderRef ref="errorFile"/>
