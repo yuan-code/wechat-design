@@ -42,6 +42,13 @@ mybatis-plus:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
 
+logging:
+  level:
+    com.hualala.article: debug
+    com.hualala.customer: debug
+    com.hualala.pay: debug
+    com.hualala.user: debug
+
 wechat:
   appID: wx0abd83b135ccb8e5
   secret: 9a5eb79bb7f4f89a6d15eef2a2601c09

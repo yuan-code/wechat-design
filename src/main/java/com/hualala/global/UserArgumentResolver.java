@@ -1,6 +1,6 @@
-package com.hualala.user.common;
+package com.hualala.global;
 
-import com.hualala.user.CurrentUser;
+import com.hualala.util.CurrentUser;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

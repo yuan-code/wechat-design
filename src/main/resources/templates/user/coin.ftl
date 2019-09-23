@@ -70,7 +70,7 @@
             <p>总金币</p>
             <h2>29,092
             </h2>
-            <p><a href="/my/coin/draw" class="weui-btn weui-btn_mini weui-btn_warn">提现</a></p>
+            <p><a href="/user/draw" class="weui-btn weui-btn_mini weui-btn_warn">提现</a></p>
         </div>
     </div>
     <div class="weui-msg">
@@ -106,7 +106,7 @@
         </div>
         <div class="weui-msg__opr-area">
             <p class="weui-btn-area">
-                <a href="/vip" class="weui-btn weui-btn_mini weui-btn_plain-primary">开通会员赚取10倍金币</a>
+                <a href="/pay/vip" class="weui-btn weui-btn_mini weui-btn_plain-primary">开通会员赚取10倍金币</a>
             </p>
         </div>
     </div>

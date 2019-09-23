@@ -8,6 +8,7 @@ import com.hualala.pay.OrderService;
 import com.hualala.user.common.Constant;
 import com.hualala.user.domain.User;
 import com.hualala.util.CacheUtils;
+import com.hualala.util.CurrentUser;
 import com.hualala.util.TimeUtil;
 import com.hualala.wechat.WXService;
 import org.apache.commons.codec.digest.DigestUtils;

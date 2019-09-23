@@ -5,7 +5,7 @@ import com.hualala.pay.common.VipType;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WxPayRes;
 import com.hualala.pay.util.SignUtil;
-import com.hualala.user.common.UserResolver;
+import com.hualala.global.UserResolver;
 import com.hualala.user.domain.User;
 import com.hualala.util.LockHelper;
 import com.hualala.util.ResultUtils;

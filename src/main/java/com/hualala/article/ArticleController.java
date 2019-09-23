@@ -9,7 +9,7 @@ import com.google.common.base.Preconditions;
 import com.hualala.article.domain.Article;
 import com.hualala.customer.CustomerService;
 import com.hualala.user.UserService;
-import com.hualala.user.common.UserResolver;
+import com.hualala.global.UserResolver;
 import com.hualala.user.domain.User;
 import com.hualala.util.LockHelper;
 import com.hualala.util.ResultUtils;
@@ -66,9 +66,9 @@ public class ArticleController {
         Integer userStatus = 0;
         Integer customerCount = 0;
         //所属用户ID
-        if (article.getUserid() != 0L) {
+        if (StringUtils.isNotEmpty(article.getOpenid())) {
             //二次编辑文章查询所属用户
-            User author = userService.getById(article.getUserid());
+            User author = userService.queryByOpenid(article.getOpenid());
             modelMap.addAttribute("author", author);
             if (!Objects.equals(author.getOpenid(), user.getOpenid())) {
                 //对于其他人点击来的情况 增加关注量

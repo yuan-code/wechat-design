@@ -2,7 +2,7 @@ package com.hualala.global;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hualala.pay.OrderService;
-import com.hualala.user.CurrentUser;
+import com.hualala.util.CurrentUser;
 import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
 import com.hualala.wechat.WXService;
