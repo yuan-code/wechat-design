@@ -57,6 +57,12 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Document document = connetUrl(source);
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
+        // 去掉所有超链接
+        Elements elements = document.getElementsByTag("a");
+        for (Element element : elements) {
+            element.attr("href", "");
+            element.text("");
+        }
         String content = replaceImage(jsContent).toString();
         String title = document.select("#activity-name").text();
         //获取JS变量
@@ -102,9 +108,9 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
 
     public Element replaceImage(Element element) {
         Elements stylesEle = element.getElementsByAttribute("style");
+
         for(Element ele : stylesEle) {
             String style = ele.attr("style");
-
             Optional<String> url = Arrays.stream(style.split(";"))
                     .filter(s -> s.contains("background-image") && s.contains("\""))
                     .map(s -> s.substring(s.indexOf("\"") + 1, s.lastIndexOf("\"")))
@@ -121,6 +127,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             String newUrl = MediaUtils.uploadImage(imgUrl);
             ele.attr("src", newUrl);
         }
+
         return element;
     }
 
