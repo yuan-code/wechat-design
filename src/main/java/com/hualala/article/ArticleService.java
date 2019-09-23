@@ -13,8 +13,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,7 +51,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      * @return
      * @throws IOException
      */
-    @Transactional(rollbackFor = Exception.class)
+    //@Transactional(rollbackFor = Exception.class)
     public Article articleCopy(String source) {
         QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("source", source).eq("pid", 0);
         //这行代码块是同步的
@@ -71,14 +76,24 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         String thumbnail = variableMap.get("msg_cdn_url");
         byte[] bytes = HttpClientUtil.downLoadFromUrl(thumbnail);
         thumbnail = MediaUtils.uploadImage(bytes);
-        article = new Article();
-        article.setContent(content);
-        article.setTitle(title);
-        article.setSummary(summary);
-        article.setThumbnail(thumbnail);
-        article.setSource(source);
-        article.setCreateTime(TimeUtil.currentDT());
-        articleMapper.insert(article);
+        PlatformTransactionManager transactionManager = new DataSourceTransactionManager();
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();//事务定义类
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);//返回事务对象
+        try {
+            article = new Article();
+            article.setContent(content);
+            article.setTitle(title);
+            article.setSummary(summary);
+            article.setThumbnail(thumbnail);
+            article.setSource(source);
+            article.setCreateTime(TimeUtil.currentDT());
+            articleMapper.insert(article);
+            transactionManager.commit(status);
+        } catch (Exception ex) {
+            log.error("articleCopy occur exception",ex);
+            transactionManager.rollback(status);
+        }
         return article;
     }
 
