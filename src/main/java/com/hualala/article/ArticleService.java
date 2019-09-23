@@ -63,6 +63,19 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             element.attr("href", "");
             element.text("");
         }
+        //移除最后的图片和文本
+        Elements elementsImg = document.getElementsByTag("img");
+        if(elementsImg != null && !elementsImg.isEmpty()) {
+            elements.last().remove();
+        }
+        elementsImg = document.getElementsByTag("p");
+        for(int i = elementsImg.size() - 1; i >= 0; i--) {
+            Element element = elementsImg.get(i);
+            if(element.hasText()) {
+                element.remove();
+                break;
+            }
+        }
         String content = replaceImage(jsContent).toString();
         String title = document.select("#activity-name").text();
         //获取JS变量
