@@ -6,7 +6,7 @@
     <title>${article.title}</title>
     <link rel="shortcut icon" type="image/x-icon" href="/image/icon.png">
     <link rel="stylesheet" href="/css/weui.min.css"/>
-    <link rel="stylesheet" href="/css/article.css">
+    <#--<link rel="stylesheet" href="/css/article.css">-->
     <link rel="stylesheet" href="/css/app.css"/>
     <link rel="stylesheet" href="/css/iconfont.css"/>
     <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
