@@ -33,13 +33,12 @@ public class WebConfg implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(webAuthInterceptor)
-                .excludePathPatterns("/wx/**")
-                .excludePathPatterns("/css/**")
-                .excludePathPatterns("/js/**")
-                .excludePathPatterns("/image/**")
-                .excludePathPatterns("/image/demo/**")
-                .addPathPatterns("/**");
+//        registry.addInterceptor(webAuthInterceptor)
+//                .excludePathPatterns("/wx/**")
+//                .excludePathPatterns("/css/**")
+//                .excludePathPatterns("/js/**")
+//                .excludePathPatterns("/image/**")
+//                .addPathPatterns("/**");
     }
 
 
