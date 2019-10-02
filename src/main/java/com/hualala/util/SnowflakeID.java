@@ -53,20 +53,15 @@ public class SnowflakeID {
     /** 上次生成ID的时间截 */
     private long lastTimestamp = -1L;
 
-    private static SnowflakeID idWorker;
+    private static SnowflakeID idWorker = new SnowflakeID(getWorkId());
 
-
-
-    static {
-        idWorker = new SnowflakeID(getWorkId());
-    }
 
     //==============================Constructors=====================================
     /**
      * 构造函数
      * @param workerId 工作ID (0~31)
      */
-    public SnowflakeID(long workerId) {
+    private SnowflakeID(long workerId) {
         if (workerId > maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("workerId can't be greater than %d or less than 0", maxWorkerId));
         }
