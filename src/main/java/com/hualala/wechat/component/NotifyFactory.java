@@ -114,7 +114,8 @@ public class NotifyFactory implements ApplicationContextAware {
             userService.saveUser(user);
             userService.deleteSession(user.getOpenid());
             WXReply wxReply = new WXReply(appID, openID);
-            return wxReply.replyMsg("我见青山多妩媚，料青山见我应如是");
+            String msg = "微信内容推广神器欢迎您\r\n我们免费为您提供:\r\n· 最合适朋友圈引流的文章\r\n· 免费带上你的个人名片信息\r\n· 自动追踪锁定客户";
+            return wxReply.replyMsg(msg);
         }
     }
 
