@@ -111,7 +111,7 @@ public class ArticleController {
     @RequestMapping("/copyArticle")
     public Object articleCopy(Article article, @UserResolver User user) throws Exception {
         String lockKey = "copyArticle/" + URLEncoder.encode(article.getSource(), "UTF-8");
-        Article copy = lockHelper.doSync(lockKey,() -> articleService.articleCopy(article.getSource()));
+        Article copy = lockHelper.doSync(lockKey,() -> articleService.articleCopy(article.getSource(),user.getOpenid()));
         copy.setContent(null);
         return ResultUtils.success(copy);
     }
