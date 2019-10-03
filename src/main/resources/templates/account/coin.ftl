@@ -104,11 +104,13 @@
             </p>
             </p>
         </div>
-        <div class="weui-msg__opr-area">
-            <p class="weui-btn-area">
-                <a href="/pay/vip" class="weui-btn weui-btn_mini weui-btn_plain-primary">开通会员赚取10倍金币</a>
-            </p>
-        </div>
+        <#if !user.available>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="/pay/vip" class="weui-btn weui-btn_mini weui-btn_plain-primary">开通会员赚取10倍金币</a>
+                </p>
+            </div>
+        </#if>
     </div>
 
 </div>

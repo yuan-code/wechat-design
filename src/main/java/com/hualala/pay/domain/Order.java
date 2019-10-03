@@ -1,6 +1,7 @@
 package com.hualala.pay.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.hualala.pay.common.VipType;
@@ -127,6 +128,18 @@ public class Order implements Serializable {
      */
     private Long actionTime;
 
+    /**
+     * 来自于哪个代理的用户ID
+     */
+    private Long sponsorUserid;
+
+    /**
+     * 来自于哪个代理的用户ID
+     */
+    private String sponsorOpenid;
+
+    @TableField(exist = false)
+    private String nickName;
 
     /**
      * 生成订单号

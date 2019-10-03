@@ -12,6 +12,7 @@ import com.hualala.util.CacheUtils;
 import com.hualala.util.CurrentUser;
 import com.hualala.util.TimeUtil;
 import com.hualala.wechat.WXService;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -29,6 +31,7 @@ import java.util.List;
  * @author YuanChong
  * @since 2019-07-06
  */
+@Log4j2
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> {
 
@@ -42,22 +45,56 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     private OrderService orderService;
 
 
+    public List<User> queryByAgent(String openid) {
+        Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", wxService.getAppID()).eq("sponsorOpenid", openid);
+        return userMapper.selectList(wrapper);
+    }
+
+    /**
+     * 推荐用户
+     *
+     * @param sponsorOpenid 介绍人
+     * @param openID  目标人
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public int recommend(String sponsorOpenid, String openID) {
+        Optional<Order> order = orderService.successAgentOrder(sponsorOpenid);
+        if(!order.isPresent()) {
+            //先判断介绍人是不是代理
+            log.warn("sponsor:%s openid:%s 介绍人不是代理，推荐的用户无效",sponsorOpenid,openID);
+            return 0;
+        }
+        User user = this.queryByOpenid(openID);
+        if(StringUtils.isNotEmpty(user.getSponsorOpenid())) {
+            //目标已经被代理过 不做修改
+            log.warn("sponsor:%s openid:%s 推荐的用户已经被%s代理过，推荐无效",sponsorOpenid,openID,user.getSponsorOpenid());
+            return 0;
+        }
+        User sponsor = this.queryByOpenid(sponsorOpenid);
+        user.setSponsorOpenid(sponsor.getOpenid());
+        user.setSponsorUserid(sponsor.getUserid());
+        user.setSponsorTime(TimeUtil.currentDT());
+        return userMapper.updateById(user);
+    }
+
+
     /**
      * 如果是收到的关注事件 saveOrUpdate
-     *     1.判断user表里没有这个用户，则代表净增的关注，直接插入
-     *     2.否则，可能是之前取关过。更新用户最新的头像等信息，更新关注状态=1
-     *     PS：由于服务器不稳定，关注事件可能会丢失，需要做补救措施
-     *
+     * 1.判断user表里没有这个用户，则代表净增的关注，直接插入
+     * 2.否则，可能是之前取关过。更新用户最新的头像等信息，更新关注状态=1
+     * PS：由于服务器不稳定，关注事件可能会丢失，需要做补救措施
+     * <p>
      * 如果是网页授权（这里做补救措施）
-     *     1.查询用户当前的关注状态，如果是路人甲，设置关注状态=3，saveOrUpdate
-     *     2.如果是已关注的用户，表里也没有数据，那么这种情况就是丢了数据
+     * 1.查询用户当前的关注状态，如果是路人甲，设置关注状态=3，saveOrUpdate
+     * 2.如果是已关注的用户，表里也没有数据，那么这种情况就是丢了数据
+     *
      * @param user
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
     public User saveUser(User user) {
         user.setAppid(wxService.getAppID());
-        if(user.getSubscribeStatus() != null && user.getSubscribeStatus() == 1) {
+        if (user.getSubscribeStatus() != null && user.getSubscribeStatus() == 1) {
             //这里是抓取到的关注的请求
             user.setSubscribeStatus(1);
             return saveOrUpdateNew(user);
@@ -65,10 +102,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         //这里是用户授权网页 做一个补救措施 防止丢失了某条关注用户
         //先查询用户状态是否关注 如果是关注的并且表里还没有数据 那么就是丢的数据
         User status = wxService.userBaseInfo(user.getOpenid());
-        if(status.getSubscribeStatus() == 0) {
+        if (status.getSubscribeStatus() == 0) {
             //路人甲
             user.setSubscribeStatus(3);
-        }else {
+        } else {
             user.setSubscribeScene(status.getSubscribeScene());
             user.setSubscribeTime(status.getSubscribeTime());
             user.setSubscribeStatus(1);
@@ -84,20 +121,20 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      */
     @Transactional(rollbackFor = Exception.class)
     public User saveOrUpdateNew(User user) {
-        if(user.getSubscribeTime() != null) {
+        if (user.getSubscribeTime() != null) {
             //转换微信给的时间戳到yyyyMMddHHmmss
             Long convertTime = TimeUtil.covertTimestamp(user.getSubscribeTime() * 1000);
             user.setSubscribeTime(convertTime);
         }
         Wrapper<User> wrapper = new QueryWrapper<User>().eq("appid", user.getAppid()).eq("openid", user.getOpenid());
         User dbUser = queryByOpenid(user.getOpenid());
-        if(dbUser == null) {
+        if (dbUser == null) {
             //净增的人
             userMapper.insert(user);
-        }else {
+        } else {
             //昵称不改
             user.setNickname(null);
-            userMapper.update(user,wrapper);
+            userMapper.update(user, wrapper);
         }
         return userMapper.selectOne(wrapper);
     }
@@ -109,6 +146,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     /**
      * 添加session
+     *
      * @param user
      */
     public String addSession(User user) {
@@ -135,6 +173,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     /**
      * 删除cookie
+     *
      * @param openid
      */
     public void deleteSession(String openid) {
@@ -146,6 +185,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     /**
      * token 认证
+     *
      * @param token
      * @return
      */

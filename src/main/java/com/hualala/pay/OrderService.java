@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.base.Preconditions;
+import com.hualala.account.AccountService;
+import com.hualala.account.domain.Account;
 import com.hualala.pay.common.PayConfig;
 import com.hualala.pay.common.RedisKey;
 import com.hualala.pay.common.VipType;
@@ -13,15 +16,16 @@ import com.hualala.pay.domain.WXPayResult;
 import com.hualala.pay.domain.WxPayReq;
 import com.hualala.pay.domain.WxPayRes;
 import com.hualala.pay.util.MoneyUtil;
-import com.hualala.util.BeanParse;
-import com.hualala.util.CacheUtils;
-import com.hualala.util.TimeUtil;
+import com.hualala.user.domain.User;
+import com.hualala.util.*;
 import com.hualala.wechat.WXService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +47,8 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     @Autowired
     private WXService wxService;
 
+    @Autowired
+    private AccountService accountService;
 
 
     /**
@@ -57,6 +63,12 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         order.setMchid(payConfig.getMchId());
         //生成订单号 计算金额 绑定用户 IP
         order.generateNo().computeMoney().findIP().setStatus(1).binding();
+        //普通vip订单设置介绍人
+        if (!Objects.equals(vipType, VipType.AGENT.getType())) {
+            User user = CurrentUser.getUser();
+            order.setSponsorOpenid(user.getSponsorOpenid());
+            order.setSponsorUserid(user.getSponsorUserid());
+        }
         orderMapper.insert(order);
         //微信支付订单
         WxPayReq wxPayOrder = new WxPayReq(order);
@@ -75,7 +87,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     @Transactional(rollbackFor = Exception.class)
     public Order createFreeOrder(String openid) {
         List<Order> orders = this.successVipOrder(openid);
-        if(orders.size() > 0) {
+        if (orders.size() > 0) {
             throw new RuntimeException("非法请求");
         }
         Order order = new Order();
@@ -91,7 +103,6 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     }
 
 
-
     /**
      * 支付成功 订单会被缓存 这里的缓存仅仅起到了缓存的作用 缓存失效会从DB重新查
      *
@@ -105,11 +116,9 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .eq("mchid", payResult.getMchid())
                 .eq("order_no", payResult.getOutTradeNo());
         Order order = orderMapper.selectOne(wrapper);
-        if (order == null) {
-            throw new RuntimeException("非法请求");
-        }
-        //4表示是代理
-        if(order.getOrderType() != 4) {
+        Preconditions.checkNotNull(order, "非法请求");
+        //普通订单计算起止时间
+        if (!Objects.equals(order.getOrderType(), VipType.AGENT.getType())) {
             //如果有重复支付，计算订单的下次起止时间
             Long beginTime = payResult.getTimeEnd();
             //查询vip结束时间
@@ -119,25 +128,37 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
             }
             order.calculateTime(beginTime);
         }
-        order.validateMoney(payResult.getFeeType(),MoneyUtil.Fen2Yuan(payResult.getCashFee()));
+        order.validateMoney(payResult.getFeeType(), MoneyUtil.Fen2Yuan(payResult.getCashFee()));
         order.savePayResult(payResult);
         orderMapper.updateById(order);
+        //为代理加金币
+        if (StringUtils.isNotEmpty(order.getSponsorOpenid())) {
+            Account account = new Account();
+            account.setAccountType(2);
+            account.setCreateTime(TimeUtil.currentDT());
+            account.setOpenid(order.getSponsorOpenid());
+            account.setUserid(order.getSponsorUserid());
+            account.setGoldNum(DecimalUtils.bigDiv(order.getCashFee(), BigDecimal.valueOf(2)));
+            accountService.save(account);
+        }
         return order;
     }
 
 
     /**
      * 查询vip结束时间
+     *
      * @param openid
      * @return
      */
     public Long selectVipEndTime(String openid) {
-        return selectVipEndTime(openid,null);
+        return selectVipEndTime(openid, null);
     }
 
 
     /**
      * 查询vip结束时间
+     *
      * @param openid
      * @param excludeNo
      * @return
@@ -152,15 +173,25 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      * @param openid
      * @return
      */
-    public Optional<Order> currentUserOrder(String openid) {
+    public Optional<Order> successAgentOrder(String openid) {
         List<Order> orderList = successOrder(openid);
-        Long currentTime = TimeUtil.currentDT();
-        return orderList.stream().filter(order -> currentTime >= order.getBeginTime() && currentTime <= order.getEndTime()).findAny();
+        return orderList.stream().filter(order -> order.getOrderType() == 4).findAny();
     }
 
 
+    public List<Order> queryByAgent(String openid) {
+        Wrapper<Order> wrapper = new QueryWrapper<Order>()
+                .eq("appid", wxService.getAppID())
+                .eq("openid", openid)
+                .eq("mchid", payConfig.getMchId())
+                .eq("status", 2)
+                .eq("sponsorOpenid",openid);
+        return orderMapper.selectList(wrapper);
+    }
+
     /**
      * 获取vip订单
+     *
      * @param openid
      * @return
      */

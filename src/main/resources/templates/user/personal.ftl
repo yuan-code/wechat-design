@@ -171,7 +171,7 @@
                 </div>
             </div>
             <!-- 展示代理推广信息-->
-            <a class="weui-cell weui-cell_access" href="/agent/members">
+            <a class="weui-cell weui-cell_access" href="/account/members">
                 <div class="weui-cell__bd">
                     推广明细
                 </div>
@@ -179,7 +179,7 @@
                     &nbsp;
                 </div>
             </a>
-            <a class="weui-cell weui-cell_access" href="/agent/draw">
+            <a class="weui-cell weui-cell_access" href="/account/draw">
                 <div class="weui-cell__bd">
                     提款
                 </div>
@@ -189,7 +189,7 @@
             </a>
         <#else>
             <!-- 如果未开通代理会员展示以下a 标签的内容-->
-            <a class="weui-cell weui-cell_access" href="/agent/agent">
+            <a class="weui-cell weui-cell_access" href="/account/agent">
                 <div class="weui-cell__bd">
                     开通代理
                 </div>

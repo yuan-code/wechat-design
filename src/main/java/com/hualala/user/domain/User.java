@@ -115,6 +115,21 @@ public class User implements Serializable {
     private String phone;
 
     /**
+     * 来自于哪个代理的用户ID
+     */
+    private Long sponsorUserid;
+
+    /**
+     * 来自于哪个代理的用户ID
+     */
+    private String sponsorOpenid;
+
+    /**
+     * 被代理的时间
+     */
+    private Long sponsorTime;
+
+    /**
      * 是否是有效的付费用户
      */
     @TableField(exist = false)

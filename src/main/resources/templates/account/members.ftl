@@ -68,10 +68,10 @@
     <script type="text/javascript">
         wx.config({
             debug: false,
-            appId: 'wx2aa93c5623a0285f',
-            timestamp:'1569070214',
-            nonceStr: 'b7cc1ede3f0b4089',
-            signature: 'c627e9486eec153b1314b33ee79b6dca6299dbc2',
+            appId: '${appID}',
+            timestamp:${timestamp},
+            nonceStr: '${noncestr}',
+            signature: '${signature}',
             jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','updateAppMessageShareData','updateTimelineShareData']
         });
     </script>
@@ -80,13 +80,13 @@
 <div class="container" id="container">
 
     <div class="weui-flex">
-        <a href="/agent/draw" class="weui-flex__item">
+        <a href="/account/draw" class="weui-flex__item">
             <p>账户余额</p>
-            <h2>￥14.44</h2>
+            <h2>￥#{sumAccount}</h2>
         </a>
         <div class="weui-flex__item">
             <p>支付人数</p>
-            <h2>1</h2>
+            <h2>#{agentCount}</h2>
         </div>
     </div>
 
@@ -111,6 +111,7 @@
     var page = 0;
     var hasMore = true;
     var loading = false;
+    var pageSize = 10;
     function loadMore(){
         if(loading){
             return;
@@ -127,17 +128,15 @@
         $("#loadingMore").css("display","");
         $("#nonLoadingMore").css("display","none");
         page = page+1;
-       ///agent/members/list
         // {"code":0,"errorMsg":"success","data":[{"orderId":"156904736503800406","orderStatus":0,"orderType":0,"userName":"漂泊的云","orderAmount":28.9,"payAmount":0.0,"createTime":"2019-09-21 14:29:25"}],"hasMore":false}
-        $.post('/agent/members/list', {page:page}, function (response) {
+        $.post('/pay/agentOrder', {pageNo:page,pageSize:pageSize}, function (response) {
             loading = false;
-            var json = eval("(" + response + ")")
-            if (json["code"] != 0) {
+            if (!response.success) {
                 $("#nonLoadingMoreTips").html("加载失败");
             } else {
-                hasMore = json.hasMore;
-                var data = json.data;
-                console.log(page)
+
+                hasMore = response.data.pages == page;
+                var data = response.data.records;
                 if(page==1&&data.length==0){
                     $("#loadMoreBtn").css("display","none");
                     $("#nonLoadingMore").css("display","");
@@ -147,7 +146,7 @@
                     var html = "";
                     for(var i=0;i<data.length;i++){
                         var o = data[i];
-                        html += '<div class="weui-cell"><div class="weui-cell__bd">'+o.userName+'</div><div class="weui-cell__ft">'+o.orderAmount+'元</div></div>';
+                        html += '<div class="weui-cell"><div class="weui-cell__bd">'+o.nickName+'</div><div class="weui-cell__ft">'+o.cashFee+'元</div></div>';
                     }
                     $(".weui-cells").append(html);
                     if(hasMore){

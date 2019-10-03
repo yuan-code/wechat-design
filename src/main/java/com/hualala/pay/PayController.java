@@ -1,11 +1,16 @@
 package com.hualala.pay;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.base.Preconditions;
 import com.hualala.pay.common.VipType;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WxPayRes;
 import com.hualala.pay.util.SignUtil;
 import com.hualala.global.UserResolver;
+import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
 import com.hualala.util.LockHelper;
 import com.hualala.util.ResultUtils;
@@ -42,6 +47,9 @@ public class PayController {
 
     @Autowired
     private LockHelper lockHelper;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 创建订单，发起预支付
@@ -116,5 +124,24 @@ public class PayController {
         }
         return ResultUtils.success(result);
     }
+
+    /**
+     * 查询当前用户的下级代理列表
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/agentOrder")
+    public Object agentOrder(Long pageNo, Long pageSize, @UserResolver User user) {
+        Page<Order> page = new Page<>(pageNo, pageSize);
+        Wrapper<Order> wrapper = new UpdateWrapper<Order>().eq("appid", wxService.getAppID()).eq("sponsor_openid", user.getOpenid());
+        IPage<Order> result = orderService.page(page, wrapper);
+        for(Order order: result.getRecords()) {
+            User payUser = userService.queryByOpenid(order.getOpenid());
+            order.setNickName(payUser.getNickname());
+        }
+        return ResultUtils.success(result);
+    }
+
 
 }

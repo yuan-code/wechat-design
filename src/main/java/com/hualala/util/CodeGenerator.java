@@ -105,7 +105,7 @@ public class CodeGenerator {
 
     public static void main(String[] args) {
         //表名数组
-        String[] tables = new String[] {"customer"};
+        String[] tables = new String[] {"account"};
         executeCode(PACKAGE_NAME,tables);
 
     }

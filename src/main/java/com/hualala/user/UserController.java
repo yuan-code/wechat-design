@@ -34,8 +34,6 @@ public class UserController {
     private WXService wxService;
 
 
-
-
     /**
      * 更新用户签名或二维码
      *
@@ -46,14 +44,14 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/updateByID")
     public Object updateByID(User params, @UserResolver User user) {
-        if(StringUtils.isNotEmpty(params.getQrcode())){
+        if (StringUtils.isNotEmpty(params.getQrcode())) {
             //上传图片
             byte[] images = wxService.downloadMedia(params.getQrcode());
             String url = MediaUtils.uploadImage(images);
             params.setQrcode(url);
         }
         Wrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxService.getAppID()).eq("openid", user.getOpenid());
-        userService.update(params,wrapper);
+        userService.update(params, wrapper);
         userService.deleteSession(user.getOpenid());
         return ResultUtils.success(params);
     }

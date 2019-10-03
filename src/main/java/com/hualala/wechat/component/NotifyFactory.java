@@ -96,7 +96,7 @@ public class NotifyFactory implements ApplicationContextAware {
      */
 
     @Log4j2
-    @NotifyType(NotifyEnum.SUBSCRIBE)
+    @NotifyType({NotifyEnum.SUBSCRIBE, NotifyEnum.SCAN})
     public static class Subscribe implements WechatNotify {
 
         @Autowired
@@ -112,6 +112,9 @@ public class NotifyFactory implements ApplicationContextAware {
             String appID = xmlMap.get("ToUserName");
             User user = wxService.userBaseInfo(openID);
             userService.saveUser(user);
+            //增加代理人
+            Optional.ofNullable(xmlMap.get("EventKey"))
+                    .ifPresent(eventKey -> userService.recommend(eventKey.substring(7),openID));
             userService.deleteSession(user.getOpenid());
             WXReply wxReply = new WXReply(appID, openID);
             String msg = "微信内容推广神器欢迎您\r\n我们免费为您提供:\r\n· 最合适朋友圈引流的文章\r\n· 免费带上你的个人名片信息\r\n· 自动追踪锁定客户";
@@ -142,7 +145,7 @@ public class NotifyFactory implements ApplicationContextAware {
             user.setUnsubscribeTime(TimeUtil.currentDT());
             user.setSubscribeStatus(2);
             UpdateWrapper<User> wrapper = new UpdateWrapper<User>().eq("appid", wxConfig.getAppID()).eq("openid", openID);
-            userService.update(user,wrapper);
+            userService.update(user, wrapper);
             userService.deleteSession(openID);
             return "";
         }
@@ -171,7 +174,7 @@ public class NotifyFactory implements ApplicationContextAware {
             switch (xmlMap.get("EventKey")) {
                 case HOT_ARTICLE_CLICK_TYPE:
                     Article article = articleService.findAny();
-                    return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),article.resolveUrl());
+                    return wxReply.replyNews(article.getTitle(), article.getSummary(), article.getThumbnail(), article.resolveUrl());
                 case HOT_ARTICLE_CONTACT_US:
                     return wxReply.replyImage(mediaID);
                 default:
@@ -203,10 +206,10 @@ public class NotifyFactory implements ApplicationContextAware {
             String appID = xmlMap.get("ToUserName");
             WXReply wxReply = new WXReply(appID, openID);
             String content = xmlMap.get("Content");
-            if(content.startsWith("https://mp.weixin.qq.com/")) {
-                String lockKey = "copyArticle/" + URLEncoder.encode(content,"UTF-8");
-                Article article = lockHelper.doSync(lockKey,() -> articleService.articleCopy(content));
-                return wxReply.replyNews(article.getTitle(),article.getSummary(),article.getThumbnail(),article.resolveUrl());
+            if (content.startsWith("https://mp.weixin.qq.com/")) {
+                String lockKey = "copyArticle/" + URLEncoder.encode(content, "UTF-8");
+                Article article = lockHelper.doSync(lockKey, () -> articleService.articleCopy(content));
+                return wxReply.replyNews(article.getTitle(), article.getSummary(), article.getThumbnail(), article.resolveUrl());
             }
             String msg = "回复公众号，内容为要复制的文章链接地址，即可获得文章推送（仅支持mp.weixin.qq.com域名下的原创文章）";
             return wxReply.replyMsg(msg);

@@ -41,10 +41,10 @@
     <script type="text/javascript">
         wx.config({
             debug: false,
-            appId: 'wx2aa93c5623a0285f',
-            timestamp:'1569071250',
-            nonceStr: 'a6fe69e137744d57',
-            signature: '00c41a9dfffae729f2acfdb8be99d8836ce26563',
+            appId: '${appID}',
+            timestamp:${timestamp},
+            nonceStr: '${noncestr}',
+            signature: '${signature}',
             jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','updateAppMessageShareData','updateTimelineShareData']
         });
     </script>
@@ -53,17 +53,17 @@
 <div class="container" id="container">
 
     <div class="weui-flex">
-        <a href="/agent/draw" class="weui-flex__item">
+        <a href="/account/draw" class="weui-flex__item">
             <p>待提</p>
-            <h2>￥14.44</h2>
+            <h2>￥#{sumAccount}</h2>
         </a>
-        <a href="/agent/members" class="weui-flex__item">
+        <a href="/account/members" class="weui-flex__item">
             <p>累计</p>
-            <h2>￥14.44</h2>
+            <h2>￥#{totalAccount}</h2>
         </a>
-        <a href="/agent/members" class="weui-flex__item">
+        <a href="/account/members" class="weui-flex__item">
             <p>成交人数</p>
-            <h2>1</h2>
+            <h2>#{agentCount}</h2>
         </a>
     </div>
 
