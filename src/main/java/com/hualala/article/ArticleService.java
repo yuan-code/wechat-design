@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.article.domain.Article;
 import com.hualala.cos.MediaUtils;
+import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
 import com.hualala.util.CurrentUser;
 import com.hualala.util.HttpClientUtil;
@@ -40,6 +41,9 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     @Autowired
     private ArticleMapper articleMapper;
 
+    @Autowired
+    private UserService userService;
+
 
     /**
      * 爬取单个公众号文章
@@ -49,7 +53,8 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      * @throws IOException
      */
     @Transactional(rollbackFor = Exception.class)
-    public Article articleCopy(String source) {
+    public Article articleCopy(String source,String openid) {
+        User user = userService.queryByOpenid(openid);
         QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("source", source).eq("pid", 0);
         //这行代码块是同步的
         Article article = articleMapper.selectOne(wrapper);
@@ -59,25 +64,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Document document = connetUrl(source);
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
-//        // 去掉所有超链接
-//        Elements elements = document.getElementsByTag("a");
-//        for (Element element : elements) {
-//            element.attr("href", "");
-//            element.text("");
-//        }
-//        //移除最后的图片和文本
-//        Elements elementsImg = document.getElementsByTag("img");
-//        if(elementsImg != null && !elementsImg.isEmpty()) {
-//            elements.last().remove();
-//        }
-//        elementsImg = document.getElementsByTag("p");
-//        for(int i = elementsImg.size() - 1; i >= 0; i--) {
-//            Element element = elementsImg.get(i);
-//            if(element.hasText()) {
-//                element.remove();
-//                break;
-//            }
-//        }
         String content = replaceImage(jsContent).toString();
         String title = document.select("#activity-name").text();
         //获取JS变量
@@ -93,7 +79,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         article.setThumbnail(thumbnail);
         article.setSource(source);
         article.setCreateTime(TimeUtil.currentDT());
-        User user = CurrentUser.getUser();
         article.setSourceOpenid(user.getOpenid());
         article.setSourceUserid(user.getUserid());
         articleMapper.insert(article);

@@ -208,7 +208,7 @@ public class NotifyFactory implements ApplicationContextAware {
             String content = xmlMap.get("Content");
             if (content.startsWith("https://mp.weixin.qq.com/")) {
                 String lockKey = "copyArticle/" + URLEncoder.encode(content, "UTF-8");
-                Article article = lockHelper.doSync(lockKey, () -> articleService.articleCopy(content));
+                Article article = lockHelper.doSync(lockKey, () -> articleService.articleCopy(content,openID));
                 return wxReply.replyNews(article.getTitle(), article.getSummary(), article.getThumbnail(), article.resolveUrl());
             }
             String msg = "回复公众号，内容为要复制的文章链接地址，即可获得文章推送（仅支持mp.weixin.qq.com域名下的原创文章）";
