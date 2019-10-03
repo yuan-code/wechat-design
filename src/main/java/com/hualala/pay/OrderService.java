@@ -195,7 +195,6 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     public List<Order> queryByAgent(String openid) {
         Wrapper<Order> wrapper = new QueryWrapper<Order>()
                 .eq("appid", wxService.getAppID())
-                .eq("openid", openid)
                 .eq("mchid", payConfig.getMchId())
                 .eq("status", 2)
                 .eq("sponsor_openid",openid);
