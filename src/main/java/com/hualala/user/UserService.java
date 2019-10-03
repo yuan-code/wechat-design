@@ -61,13 +61,13 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         Optional<Order> order = orderService.successAgentOrder(sponsorOpenid);
         if(!order.isPresent()) {
             //先判断介绍人是不是代理
-            log.warn("sponsor:%s openid:%s 介绍人不是代理，推荐的用户无效",sponsorOpenid,openID);
+            log.warn("sponsor:{} openid:{} 介绍人不是代理，推荐的用户无效",sponsorOpenid,openID);
             return 0;
         }
         User user = this.queryByOpenid(openID);
         if(StringUtils.isNotEmpty(user.getSponsorOpenid())) {
             //目标已经被代理过 不做修改
-            log.warn("sponsor:%s openid:%s 推荐的用户已经被%s代理过，推荐无效",sponsorOpenid,openID,user.getSponsorOpenid());
+            log.warn("sponsor:{} openid:{} 推荐的用户已经被%s代理过，推荐无效",sponsorOpenid,openID,user.getSponsorOpenid());
             return 0;
         }
         User sponsor = this.queryByOpenid(sponsorOpenid);
