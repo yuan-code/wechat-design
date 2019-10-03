@@ -108,7 +108,7 @@
 <script src="/js/weui.min.js"></script>
 <script src="/js/app.js"></script>
 <script>
-    $.post('/account/accountInfo',{} function (response) {
+    $.post('/account/accountInfo',{},function (response) {
         if (!response.success) {
             $("#nonLoadingMoreTips").html("加载失败");
         } else {
