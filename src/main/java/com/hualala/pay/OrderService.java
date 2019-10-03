@@ -185,7 +185,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .eq("openid", openid)
                 .eq("mchid", payConfig.getMchId())
                 .eq("status", 2)
-                .eq("sponsorOpenid",openid);
+                .eq("sponsor_openid",openid);
         return orderMapper.selectList(wrapper);
     }
 
