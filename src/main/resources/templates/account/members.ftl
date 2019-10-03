@@ -115,7 +115,7 @@
             $("#sumAccount").html(response.data.sumAccount)
             $("#agentCount").html(response.data.agentCount)
         }
-    }
+    })
     var page = 0;
     var hasMore = true;
     var loading = false;

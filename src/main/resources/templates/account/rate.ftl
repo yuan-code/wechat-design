@@ -106,7 +106,7 @@
             $("#agentCount").html(response.data.agentCount)
             $("#totalAccount").html(response.data.totalAccount)
         }
-    }
+    })
 </script>
 </body>
 </html>
