@@ -161,41 +161,44 @@
                 </div>
             </a>
         </#if>
+        <#if user.agent>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    账户余额
+                </div>
+                <div class="weui-cell__ft">
+                    14.44元
+                </div>
+            </div>
+            <!-- 展示代理推广信息-->
+            <a class="weui-cell weui-cell_access" href="/agent/members">
+                <div class="weui-cell__bd">
+                    推广明细
+                </div>
+                <div class="weui-cell__ft">
+                    &nbsp;
+                </div>
+            </a>
+            <a class="weui-cell weui-cell_access" href="/agent/draw">
+                <div class="weui-cell__bd">
+                    提款
+                </div>
+                <div class="weui-cell__ft">
+                    &nbsp;
+                </div>
+            </a>
+        <#else>
+            <!-- 如果未开通代理会员展示以下a 标签的内容-->
+            <a class="weui-cell weui-cell_access" href="/agent/agent">
+                <div class="weui-cell__bd">
+                    开通代理
+                </div>
+                <div class="weui-cell__ft">
+                    &nbsp;
+                </div>
+            </a>
+        </#if>
 
-        <!-- 如果未开通代理会员展示以下a 标签的内容-->
-        <a class="weui-cell weui-cell_access" href="/agent/agent">
-            <div class="weui-cell__bd">
-                开通代理
-            </div>
-            <div class="weui-cell__ft">
-                &nbsp;
-            </div>
-        </a>
-        <div class="weui-cell">
-            <div class="weui-cell__bd">
-                账户余额
-            </div>
-            <div class="weui-cell__ft">
-                14.44元
-            </div>
-        </div>
-        <!-- 展示代理推广信息-->
-        <a class="weui-cell weui-cell_access" href="/agent/members">
-            <div class="weui-cell__bd">
-                推广明细
-            </div>
-            <div class="weui-cell__ft">
-                &nbsp;
-            </div>
-        </a>
-        <a class="weui-cell weui-cell_access" href="/agent/draw">
-            <div class="weui-cell__bd">
-                提款
-            </div>
-            <div class="weui-cell__ft">
-                &nbsp;
-            </div>
-        </a>
     </div>
 </div>
 

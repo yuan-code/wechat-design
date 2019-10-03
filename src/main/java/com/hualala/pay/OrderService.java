@@ -74,7 +74,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
      */
     @Transactional(rollbackFor = Exception.class)
     public Order createFreeOrder(String openid) {
-        List<Order> orders = this.successOrder(openid);
+        List<Order> orders = this.successVipOrder(openid);
         if(orders.size() > 0) {
             throw new RuntimeException("非法请求");
         }
@@ -108,15 +108,19 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         if (order == null) {
             throw new RuntimeException("非法请求");
         }
-        //如果有重复支付，计算订单的下次起止时间
-        Long beginTime = payResult.getTimeEnd();
-        //查询vip结束时间
-        Long vipEndTime = selectVipEndTime(payResult.getOpenid(), order.getOrderNo());
-        if (vipEndTime != null && vipEndTime >= beginTime) {
-            beginTime = TimeUtil.stepTime(vipEndTime, Calendar.SECOND, 1);
+        //4表示是代理
+        if(order.getOrderType() != 4) {
+            //如果有重复支付，计算订单的下次起止时间
+            Long beginTime = payResult.getTimeEnd();
+            //查询vip结束时间
+            Long vipEndTime = selectVipEndTime(payResult.getOpenid(), order.getOrderNo());
+            if (vipEndTime != null && vipEndTime >= beginTime) {
+                beginTime = TimeUtil.stepTime(vipEndTime, Calendar.SECOND, 1);
+            }
+            order.calculateTime(beginTime);
         }
         order.validateMoney(payResult.getFeeType(),MoneyUtil.Fen2Yuan(payResult.getCashFee()));
-        order.calculateTime(beginTime).savePayResult(payResult);
+        order.savePayResult(payResult);
         orderMapper.updateById(order);
         return order;
     }
@@ -143,7 +147,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     }
 
     /**
-     * 获取用户在当前时间生效的订单
+     * 获取用户在当前时间生效的vip订单
      *
      * @param openid
      * @return
@@ -152,6 +156,18 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         List<Order> orderList = successOrder(openid);
         Long currentTime = TimeUtil.currentDT();
         return orderList.stream().filter(order -> currentTime >= order.getBeginTime() && currentTime <= order.getEndTime()).findAny();
+    }
+
+
+    /**
+     * 获取vip订单
+     * @param openid
+     * @return
+     */
+    public List<Order> successVipOrder(String openid) {
+        List<Order> orderList = successOrder(openid);
+        orderList.removeIf(order -> order.getOrderType() == 4);
+        return orderList;
     }
 
     /**

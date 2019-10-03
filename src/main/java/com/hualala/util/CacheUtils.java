@@ -37,6 +37,11 @@ public class CacheUtils {
     }
 
 
+    public static Long incr(String key) {
+        return stringRedisTemplate.opsForValue().increment(key);
+    }
+
+
     /**
      * 删除缓存<br>
      * 根据key精确匹配删除

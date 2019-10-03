@@ -115,10 +115,18 @@ public class User implements Serializable {
     private String phone;
 
     /**
-     * 是否是有效的付费用户 1-是 其他-否
+     * 是否是有效的付费用户
      */
     @TableField(exist = false)
     @JSONField(serialize=false)
     private boolean available;
+
+
+    /**
+     * 是否是代理
+     */
+    @TableField(exist = false)
+    @JSONField(serialize=false)
+    private boolean agent;
 
 }

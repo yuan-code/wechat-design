@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.pay.OrderService;
+import com.hualala.pay.domain.Order;
 import com.hualala.user.common.Constant;
 import com.hualala.user.domain.User;
 import com.hualala.util.CacheUtils;
@@ -16,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 /**
@@ -120,6 +123,16 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return cookieKey;
     }
 
+
+    public User vipAuth(User user) {
+        List<Order> orderList = orderService.successOrder(user.getOpenid());
+        Long currentTime = TimeUtil.currentDT();
+        orderList.stream().filter(order -> currentTime >= order.getBeginTime() && currentTime <= order.getEndTime()).findAny().ifPresent(order -> user.setAvailable(true));
+        orderList.stream().filter(order -> order.getOrderType() == 4).findAny().ifPresent(order -> user.setAgent(true));
+        return user;
+    }
+
+
     /**
      * 删除cookie
      * @param openid
@@ -142,7 +155,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             User user = JSON.parseObject(jsonUser, User.class);
             CacheUtils.expire(token, Constant.SESSION_EXPIRE_SECONDS);
             //判断用户是否是有效的付费用户
-            orderService.currentUserOrder(user.getOpenid()).ifPresent(order -> user.setAvailable(true));
+            this.vipAuth(user);
             return user;
         }
         return null;

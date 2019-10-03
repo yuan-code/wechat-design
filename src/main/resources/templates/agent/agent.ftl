@@ -11,10 +11,10 @@
     <script type="text/javascript">
         wx.config({
             debug: false,
-            appId: 'wx2aa93c5623a0285f',
-            timestamp:'1569071973',
-            nonceStr: '91b3387010be4816',
-            signature: 'f524c2577dcbfce778d6e2f3eff40d34638d880c',
+            appId: '${appID}',
+            timestamp:${timestamp},
+            nonceStr: '${noncestr}',
+            signature: '${signature}',
             jsApiList: ['checkJsApi','onMenuShareTimeline','onMenuShareAppMessage','updateAppMessageShareData','updateTimelineShareData']
         });
     </script>
@@ -91,22 +91,24 @@
 <script src="/js/app.js"></script>
 <script>
     $("#payBtn").on('click', function(e){
-        $.post('/agent/pay', {}, function (response) {
-            var json = eval("(" + response + ")")
-            if (json["code"] == 0) {
-                alert("操作失败");
+        $.post('/pay/create', {vipType: 4}, function (response) {
+            if (response.success) {
+                    wx.chooseWXPay({
+                        appId: response.data.appId,
+                        nonceStr: response.data.nonceStr,
+                        timestamp: response.data.timeStamp,
+                        package: response.data.package,
+                        signType: response.data.signType,
+                        paySign: response.data.paySign,
+                        success: function (res) {
+                            alert("支付成功", true);
+                            setTimeout(function() {
+                                window.location.href=document.referrer;
+                            }, 1000)
+                        }
+                    });
             } else {
-                wx.chooseWXPay({
-                    timestamp: json.timestamp,
-                    nonceStr: json.nonceStr,
-                    package: json.package,
-                    signType: json.signType,
-                    paySign: json.paySign,
-                    success: function (res) {
-                        alert("支付成功");
-                        window.location.href = "/my";
-                    }
-                });
+                alert("操作失败", false);
             }
         })
     });
@@ -116,40 +118,41 @@
         wx.ready(function () {
             if(wx.onMenuShareAppMessage){
                 wx.onMenuShareTimeline({
-                    title: '推客行',
-                    link: 'http://yx.herbedu.com/agent?p=u22c95e8d62320e2',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){
                     }
                 });
                 wx.onMenuShareAppMessage({
-                    title: '推客行',
-                    desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://yx.herbedu.com/agent?p=u22c95e8d62320e2',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    desc: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){
                     }
+
                 });
             } else {
                 wx.updateTimelineShareData({
-                    title: '推客行',
-                    desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://yx.herbedu.com/agent?p=u22c95e8d62320e2',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    desc: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){
                     }
                 });
                 wx.updateAppMessageShareData({
-                    title: '推客行',
-                    desc: '超过20万人正在用的销售线索追踪神器',
-                    link: 'http://yx.herbedu.com/agent?p=u22c95e8d62320e2',
-                    imgUrl: 'http://yx.herbedu.com/image/icon.png',
+                    title: '',
+                    desc: '',
+                    link: '',
+                    imgUrl: '',
                     success: function () {
                     },
                     fail:function(e){

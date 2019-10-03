@@ -93,7 +93,7 @@ public class PayController {
      */
     @RequestMapping(value = "/vip", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object vipType(@UserResolver User user, ModelMap modelMap) {
-        List<Order> orderList = orderService.successOrder(user.getOpenid());
+        List<Order> orderList = orderService.successVipOrder(user.getOpenid());
         Arrays.stream(VipType.values())
                 .filter(type -> orderList.size() == 0? true: !VipType.FREE.equals(type))
                 .forEach(type -> modelMap.addAttribute(type.name(),type));

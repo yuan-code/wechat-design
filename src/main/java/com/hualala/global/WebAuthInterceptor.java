@@ -77,7 +77,7 @@ public class WebAuthInterceptor implements HandlerInterceptor {
         User user = wxService.webUserInfo(result.getString("access_token"), result.getString("openid"));
         User currentUser = userService.saveUser(user);
         //判断用户是否是有效的付费用户
-        orderService.currentUserOrder(currentUser.getOpenid()).ifPresent(order -> currentUser.setAvailable(true));
+        userService.vipAuth(currentUser);
         CurrentUser.setUser(currentUser);
         return true;
     }
