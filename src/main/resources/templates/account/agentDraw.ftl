@@ -38,7 +38,7 @@
                 <label class="weui-label">姓名</label>
             </div>
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" id="userName" placeholder="真实姓名" value="#{user.nickname}">
+                <input class="weui-input" type="text" id="userName" placeholder="真实姓名" value="${user.nickname}">
             </div>
         </div>
         <div class="weui-cell">
