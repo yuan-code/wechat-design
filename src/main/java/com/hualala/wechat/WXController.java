@@ -3,6 +3,7 @@ package com.hualala.wechat;
 import com.alibaba.fastjson.JSON;
 import com.hualala.mail.MailService;
 import com.hualala.pay.OrderService;
+import com.hualala.pay.common.VipType;
 import com.hualala.pay.domain.Order;
 import com.hualala.pay.domain.WXPayResult;
 import com.hualala.pay.domain.WxPaySuccess;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -111,15 +113,18 @@ public class WXController {
         //基础校验 签名 金额
         payResult.baseValidate();
         Order order = orderService.paySuccess(payResult);
-        //异步发模板消息
-        Long count = CacheUtils.incr("vipCount");
         User user = userService.queryByOpenid(order.getOpenid());
-        TemplateMsg templateMsg = TemplateMsg.builder(order.getOpenid(), wxService.getVipSuccessTemplateCode())
-                .buildFirst("Hi，亲爱的" + user.getNickname() + "，恭喜你成为我们第" + (count + 5132) + "位会员")
-                .buildKeyword(order.getOrderNo(), "高级会员", order.getCashFee().toString(), "至" + TimeUtil.formatTime(order.getEndTime()))
-                .buildRemark("感谢您使用微信内容推广神器，我们将通过不断更新的优质内容，以及不断完善的用户获取工具助你工作轻松")
-                .build();
-        wxService.asynSendMsg(templateMsg);
+        //异步发模板消息
+        if (!Objects.equals(order.getOrderType(), VipType.AGENT.getType())) {
+            Long count = CacheUtils.incr("vipCount");
+
+            TemplateMsg templateMsg = TemplateMsg.builder(order.getOpenid(), wxService.getVipSuccessTemplateCode())
+                    .buildFirst("Hi，亲爱的" + user.getNickname() + "，恭喜你成为我们第" + (count + 5132) + "位会员")
+                    .buildKeyword(order.getOrderNo(), "高级会员", order.getCashFee().toString(), "至" + TimeUtil.formatTime(order.getEndTime()))
+                    .buildRemark("感谢您使用微信内容推广神器，我们将通过不断更新的优质内容，以及不断完善的用户获取工具助你工作轻松")
+                    .build();
+            wxService.asynSendMsg(templateMsg);
+        }
         //异步发邮件
         String msg = "%s购买会员了，openID=%s 支付金额=%s元 order信息:%s";
         String content = String.format(msg,user.getNickname(),order.getOpenid(),order.getCashFee(), JSON.toJSONString(order));
