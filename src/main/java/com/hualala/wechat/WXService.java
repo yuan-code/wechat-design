@@ -13,7 +13,6 @@ import com.hualala.wechat.common.WXConstant;
 import com.hualala.wechat.component.WXConfig;
 import com.hualala.wechat.domain.TemplateMsg;
 import com.hualala.weixin.mp.JSApiUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
