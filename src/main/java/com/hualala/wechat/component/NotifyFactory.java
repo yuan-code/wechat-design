@@ -114,7 +114,7 @@ public class NotifyFactory implements ApplicationContextAware {
             userService.saveUser(user);
             //增加代理人
             Optional.ofNullable(xmlMap.get("EventKey"))
-                    .map(eventKey -> eventKey.startsWith("qrscene_") ? xmlMap.get("EventKey").substring(8) : xmlMap.get("EventKey"))
+                    .map(eventKey -> eventKey.startsWith("qrscene_") ? eventKey.substring(8) : eventKey)
                     .ifPresent(eventKey -> userService.recommend(eventKey,openID));
             userService.deleteSession(user.getOpenid());
             WXReply wxReply = new WXReply(appID, openID);
