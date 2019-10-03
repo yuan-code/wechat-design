@@ -136,7 +136,7 @@
         </div>
     </div>
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="/user/coin">
+        <a class="weui-cell weui-cell_access" href="/account/coin">
             <div class="weui-cell__bd">
                 我的金币
             </div>

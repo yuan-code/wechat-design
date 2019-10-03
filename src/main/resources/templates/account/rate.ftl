@@ -55,15 +55,15 @@
     <div class="weui-flex">
         <a href="/account/draw" class="weui-flex__item">
             <p>待提</p>
-            <h2>￥#{sumAccount}</h2>
+            <h2>￥<span id="sumAccount"></span></h2>
         </a>
         <a href="/account/members" class="weui-flex__item">
             <p>累计</p>
-            <h2>￥#{totalAccount}</h2>
+            <h2>￥<span id="totalAccount"></span></h2>
         </a>
         <a href="/account/members" class="weui-flex__item">
             <p>成交人数</p>
-            <h2>#{agentCount}</h2>
+            <h2><span id="agentCount"></span></h2>
         </a>
     </div>
 
@@ -98,6 +98,15 @@
 <script src="/js/weui.min.js"></script>
 <script src="/js/app.js"></script>
 <script>
+    $.post('/account/accountInfo',{} function (response) {
+        if (!response.success) {
+            $("#nonLoadingMoreTips").html("加载失败");
+        } else {
+            $("#sumAccount").html(response.data.sumAccount)
+            $("#agentCount").html(response.data.agentCount)
+            $("#totalAccount").html(response.data.totalAccount)
+        }
+    }
 </script>
 </body>
 </html>

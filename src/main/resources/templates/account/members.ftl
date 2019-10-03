@@ -82,11 +82,11 @@
     <div class="weui-flex">
         <a href="/account/draw" class="weui-flex__item">
             <p>账户余额</p>
-            <h2>￥#{sumAccount}</h2>
+            <h2>￥<span id="sumAccount"></span></h2>
         </a>
         <div class="weui-flex__item">
             <p>支付人数</p>
-            <h2>#{agentCount}</h2>
+            <h2>#<span id="agentCount"></h2>
         </div>
     </div>
 
@@ -108,6 +108,14 @@
 <script src="/js/weui.min.js"></script>
 <script src="/js/app.js"></script>
 <script>
+    $.post('/account/accountInfo',{} function (response) {
+        if (!response.success) {
+            $("#nonLoadingMoreTips").html("加载失败");
+        } else {
+            $("#sumAccount").html(response.data.sumAccount)
+            $("#agentCount").html(response.data.agentCount)
+        }
+    }
     var page = 0;
     var hasMore = true;
     var loading = false;
