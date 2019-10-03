@@ -80,7 +80,7 @@
 <div class="container" id="container">
 
     <div class="weui-flex">
-        <a href="/account/draw" class="weui-flex__item">
+        <a href="/account/agentDraw" class="weui-flex__item">
             <p>账户余额</p>
             <h2>￥<span id="sumAccount"></span></h2>
         </a>
