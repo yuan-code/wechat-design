@@ -69,7 +69,7 @@
         <div class=" weui-flex_border weui-flex__item">
             <p>总金币</p>
             <h2 id="sumCoin"></h2>
-            <p><a href="/user/draw" class="weui-btn weui-btn_mini weui-btn_warn">提现</a></p>
+            <p><a href="/account/draw" class="weui-btn weui-btn_mini weui-btn_warn">提现</a></p>
         </div>
     </div>
     <div class="weui-msg">
