@@ -167,7 +167,7 @@
                     账户余额
                 </div>
                 <div class="weui-cell__ft">
-                    14.44元
+                    <span id="drawAmount"></span>元
                 </div>
             </div>
             <!-- 展示代理推广信息-->
@@ -205,5 +205,14 @@
 
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
+<script>
+    $.post('/account/accountInfo', {}, function (response) {
+        if (!response.success) {
+            $("#nonLoadingMoreTips").html("加载失败");
+        } else {
+            $("#drawAmount").html(response.data.sumAccount)
+        }
+    })
+</script>
 </body>
 </html>

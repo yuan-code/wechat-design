@@ -63,55 +63,73 @@
 <script src="/js/weui.min.js"></script>
 <script src="/js/app.js"></script>
 <script>
+    var sumAccount = 0;
+    $.post('/account/accountInfo', {}, function (response) {
+        if (!response.success) {
+            $("#nonLoadingMoreTips").html("加载失败");
+        } else {
+            sumAccount = response.data.sumAccount
+            $("#drawAmount").maxValue = sumAccount
+            $("#drawAmount").value = sumAccount
+        }
+    })
+
     var $loadingToast = $('#loadingToast');
     var mobileReg = /(^0{0,1}1[3|4|5|6|7|8|9][0-9]{9}$)/;
+
     //手机号验证
-    function validMobile(value){
+    function validMobile(value) {
         return mobileReg.test(value);
     }
-    $("#submitBtn").on('click', function(e){
+
+    $("#submitBtn").on('click', function (e) {
         var userMobile = $.trim($("#userMobile").val());
         var userWx = $.trim($("#userWx").val());
         var userName = $.trim($("#userName").val());
         var drawAmount = $.trim($("#drawAmount").val());
-        if(!validMobile(userMobile)){
+        if (!validMobile(userMobile)) {
             alert("请正确填写手机号码");
             return;
         }
-        if(userWx==""){
+        if (userWx == "") {
             alert("请填写微信号");
             return;
         }
-        if(userName==""){
+        if (userName == "") {
             alert("请填写真实姓名");
             return;
         }
-        if(drawAmount==""){
+        if (drawAmount == "") {
             alert("请填写提款金额");
             return;
         }
         drawAmount = parseFloat(drawAmount);
-        if(drawAmount<=0){
+        if (drawAmount <= 0) {
             alert("请正确填写提款金额");
             return;
         }
-        if(drawAmount<100){
+        if (drawAmount < 100) {
             alert("满100元才可提款");
             return;
         }
-        if(drawAmount>14.44){
-            alert("提款金额不能大于余额14.44元");
+        if (drawAmount > sumAccount) {
+            alert("提款金额不能大于余额" + sumAccount + "元");
             return;
         }
         $loadingToast.fadeIn(100);
-        $.post('/agent/draw', {userMobile: userMobile,userWx:userWx,userName:userName,drawAmount:drawAmount}, function (response) {
+        $.post('/agent/draw', {
+            userMobile: userMobile,
+            userWx: userWx,
+            userName: userName,
+            drawAmount: drawAmount
+        }, function (response) {
             $loadingToast.fadeOut(100);
             var json = eval("(" + response + ")")
             if (json["code"] != 0) {
                 alert(json["errorMsg"]);
                 return;
             }
-            alert("提款申请已提交",function(){
+            alert("提款申请已提交", function () {
                 window.location.href = "/my";
             });
         })
