@@ -117,6 +117,7 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .eq("order_no", payResult.getOutTradeNo());
         Order order = orderMapper.selectOne(wrapper);
         Preconditions.checkNotNull(order, "非法请求");
+        order.validateMoney(payResult.getFeeType(), MoneyUtil.Fen2Yuan(payResult.getCashFee()));
         //普通订单计算起止时间
         if (!Objects.equals(order.getOrderType(), VipType.AGENT.getType())) {
             //如果有重复支付，计算订单的下次起止时间
@@ -127,20 +128,32 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 beginTime = TimeUtil.stepTime(vipEndTime, Calendar.SECOND, 1);
             }
             order.calculateTime(beginTime);
-        }
-        order.validateMoney(payResult.getFeeType(), MoneyUtil.Fen2Yuan(payResult.getCashFee()));
-        order.savePayResult(payResult);
-        orderMapper.updateById(order);
-        //为代理加金币
-        if (StringUtils.isNotEmpty(order.getSponsorOpenid())) {
+            //为代理加钱
+            if (StringUtils.isNotEmpty(order.getSponsorOpenid())) {
+                Account account = new Account();
+                account.setAccountType(2);
+                account.setCreateTime(TimeUtil.currentDT());
+                account.setOpenid(order.getSponsorOpenid());
+                account.setUserid(order.getSponsorUserid());
+                account.setGoldNum(DecimalUtils.bigDiv(order.getCashFee(), BigDecimal.valueOf(2)));
+                accountService.save(account);
+            }
+            //为自己加金币
+            List<Order> orders = this.successOrder(order.getOpenid());
             Account account = new Account();
-            account.setAccountType(2);
+            account.setAccountType(1);
             account.setCreateTime(TimeUtil.currentDT());
-            account.setOpenid(order.getSponsorOpenid());
-            account.setUserid(order.getSponsorUserid());
-            account.setGoldNum(DecimalUtils.bigDiv(order.getCashFee(), BigDecimal.valueOf(2)));
+            account.setOpenid(order.getOpenid());
+            account.setUserid(order.getUserid());
+            if(orders.size() > 0) {
+                account.setGoldNum(DecimalUtils.bigDiv(order.getCashFee(), BigDecimal.valueOf(2)));
+            }else {
+                account.setGoldNum(order.getCashFee());
+            }
             accountService.save(account);
         }
+        order.savePayResult(payResult);
+        orderMapper.updateById(order);
         return order;
     }
 
@@ -187,6 +200,14 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
                 .eq("status", 2)
                 .eq("sponsor_openid",openid);
         return orderMapper.selectList(wrapper);
+    }
+
+
+
+    public Optional<Order> currentVipOrder(String openid) {
+        List<Order> orderList = successVipOrder(openid);
+        Long currenTime = TimeUtil.currentDT();
+        return orderList.stream().filter(order -> currenTime >= order.getBeginTime() && currenTime <= order.getEndTime()).findAny();
     }
 
     /**

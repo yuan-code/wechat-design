@@ -25,7 +25,7 @@
 <div class="container" id="container">
     <input type="hidden" id="coinAmount" value="29092">
     <div class="page-top">
-        您当前有29092金币，还差<font style="font-size:15px;font-weight:600;color:black;padding:0 10px;">70,908</font>金币即可提现
+        您当前有<span id="sumCoin"></span>金币，还差<font style="font-size:15px;font-weight:600;color:black;padding:0 10px;"><span id="subCount"></span> </font>金币即可提现
     </div>
     <div class="weui-cells weui-cells_form">
         <div class="weui-cell">
@@ -77,6 +77,16 @@
 <script src="/js/weui.min.js"></script>
 <script src="/js/app.js"></script>
 <script>
+    $.post('/account/coinCount',{},function (response) {
+        if (!response.success) {
+            $("#nonLoadingMoreTips").html("加载失败");
+        } else {
+            $("#sumCoin").html(response.data.sumCoin)
+            var subCount = 10000 - response.data.sumCoin
+            subCount = subCount < 0 ? 0 : subCount
+            $("#subCount").html(subCount)
+        }
+    })
     var $loadingToast = $('#loadingToast');
     var mobileReg = /(^0{0,1}1[3|4|5|6|7|8|9][0-9]{9}$)/;
     //手机号验证

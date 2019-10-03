@@ -63,13 +63,12 @@
     <div class="weui-flex">
         <div class="weui-flex__item">
             <p>今日金币</p>
-            <h2>15</h2>
+            <h2 id="todayCoin"></h2>
         </div>
         <div class="weui-flex__border"></div>
         <div class=" weui-flex_border weui-flex__item">
             <p>总金币</p>
-            <h2>29,092
-            </h2>
+            <h2 id="sumCoin"></h2>
             <p><a href="/user/draw" class="weui-btn weui-btn_mini weui-btn_warn">提现</a></p>
         </div>
     </div>
@@ -118,6 +117,14 @@
 <script src="/js/weui.min.js"></script>
 <script src="/js/app.js"></script>
 <script>
+    $.post('/account/coinCount',{},function (response) {
+        if (!response.success) {
+            $("#nonLoadingMoreTips").html("加载失败");
+        } else {
+            $("#todayCoin").html(response.data.todayCoin)
+            $("#sumCoin").html(response.data.sumCoin)
+        }
+    })
     $("#drawBtn").on("click",function(){
         alert("不满足提现条件");
     });

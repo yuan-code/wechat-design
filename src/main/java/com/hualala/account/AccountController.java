@@ -12,6 +12,7 @@ import com.hualala.pay.domain.Order;
 import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
 import com.hualala.util.ResultUtils;
+import com.hualala.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -61,6 +62,24 @@ public class AccountController {
         modelMap.put("sumAccount",sumAccount);
         modelMap.put("totalAccount",totalAccount);
         modelMap.put("agentCount",agentCount);
+        return ResultUtils.success(modelMap);
+    }
+
+    /**
+     * 查询金币数量
+     * @param user
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/coinCount")
+    public Object coinCount(@UserResolver User user) {
+        QueryWrapper<Account> wrapper = new QueryWrapper<Account>().eq("openid", user.getOpenid()).eq("account_type", 1);
+        List<Account> list = accountService.list(wrapper);
+        Long todayCoin = list.stream().map(Account::getCreateTime)
+                .filter(time -> time >= TimeUtil.todayStartTime() && time <= TimeUtil.todayEndTime()).count();
+        HashMap<Object, Object> modelMap = Maps.newHashMap();
+        modelMap.put("sumCoin",list.size());
+        modelMap.put("todayCoin",todayCoin.intValue());
         return ResultUtils.success(modelMap);
     }
 

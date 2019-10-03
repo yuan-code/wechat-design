@@ -141,7 +141,7 @@
                 我的金币
             </div>
             <div class="weui-cell__ft">
-                14,451个
+                <span id="sumCoin"></span>个
             </div>
         </a>
         <a class="weui-cell weui-cell_access" href="/pay/vip">
@@ -206,6 +206,14 @@
 <script src="/js/zepto.min.js"></script>
 <script src="/js/weui.min.js"></script>
 <script>
+    $.post('/account/coinCount',{},function (response) {
+        if (!response.success) {
+            $("#nonLoadingMoreTips").html("加载失败");
+        } else {
+            $("#sumCoin").html(response.data.sumCoin)
+        }
+    })
+
     $.post('/account/accountInfo', {}, function (response) {
         if (!response.success) {
             $("#nonLoadingMoreTips").html("加载失败");

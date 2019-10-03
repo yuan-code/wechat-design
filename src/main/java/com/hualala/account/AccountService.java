@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.account.domain.Account;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
  * <p>
  * 用户账户明细记录表 服务实现类

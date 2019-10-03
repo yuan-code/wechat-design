@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hualala.article.domain.Article;
 import com.hualala.cos.MediaUtils;
+import com.hualala.user.domain.User;
+import com.hualala.util.CurrentUser;
 import com.hualala.util.HttpClientUtil;
 import com.hualala.util.TimeUtil;
 import lombok.extern.log4j.Log4j2;
@@ -91,6 +93,9 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         article.setThumbnail(thumbnail);
         article.setSource(source);
         article.setCreateTime(TimeUtil.currentDT());
+        User user = CurrentUser.getUser();
+        article.setSourceOpenid(user.getOpenid());
+        article.setSourceUserid(user.getUserid());
         articleMapper.insert(article);
         return article;
     }

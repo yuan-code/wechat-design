@@ -9,6 +9,7 @@ import com.hualala.util.HttpUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.bouncycastle.asn1.cms.PasswordRecipientInfo;
 
 /**
  * <p>
@@ -78,6 +79,16 @@ public class Article implements Serializable {
      * 最后更新日期
      */
     private Long modifyTime;
+
+    /**
+     * 来源于哪个用户id
+     */
+    private String sourceOpenid;
+
+    /**
+     * 来源于哪个用户id
+     */
+    private Long sourceUserid;
 
     /**
      * 文章来源

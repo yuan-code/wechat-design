@@ -14,7 +14,7 @@ public class DecimalUtils {
      * 确的浮点数运算，包括加减乘除和四舍五入。
      */
     //默认除法运算精度
-    private static final int DEF_DIV_SCALE = 8;
+    private static final int DEF_DIV_SCALE = 2;
 
     //加减乘除运算
     public static BigDecimal bigAdd(BigDecimal arg1, BigDecimal arg2){

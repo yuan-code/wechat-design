@@ -73,7 +73,7 @@ public class ArticleController {
             if (!Objects.equals(author.getOpenid(), user.getOpenid())) {
                 //对于其他人点击来的情况 增加关注量
                 String lockKey = "addCustomer/" + URLEncoder.encode(author.getOpenid() + "/" + user.getOpenid(), "UTF-8");
-                lockHelper.doSync(lockKey,() -> customerService.addCustomer(author,user,article.getArticleid()));
+                lockHelper.doSync(lockKey,() -> customerService.addCustomer(author,user,article));
                 userStatus = 1;
             }
             //查询作者的文章关注量
@@ -112,6 +112,7 @@ public class ArticleController {
     public Object articleCopy(Article article, @UserResolver User user) throws Exception {
         String lockKey = "copyArticle/" + URLEncoder.encode(article.getSource(), "UTF-8");
         Article copy = lockHelper.doSync(lockKey,() -> articleService.articleCopy(article.getSource()));
+        copy.setContent(null);
         return ResultUtils.success(copy);
     }
 
