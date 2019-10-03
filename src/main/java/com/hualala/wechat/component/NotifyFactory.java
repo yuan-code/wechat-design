@@ -113,9 +113,9 @@ public class NotifyFactory implements ApplicationContextAware {
             User user = wxService.userBaseInfo(openID);
             userService.saveUser(user);
             //增加代理人
-            String sponsorOpenid = xmlMap.get("EventKey").startsWith("qrscene_") ? xmlMap.get("EventKey").substring(8) : xmlMap.get("EventKey");
             Optional.ofNullable(xmlMap.get("EventKey"))
-                    .ifPresent(eventKey -> userService.recommend(sponsorOpenid,openID));
+                    .map(eventKey -> eventKey.startsWith("qrscene_") ? xmlMap.get("EventKey").substring(8) : xmlMap.get("EventKey"))
+                    .ifPresent(eventKey -> userService.recommend(eventKey,openID));
             userService.deleteSession(user.getOpenid());
             WXReply wxReply = new WXReply(appID, openID);
             String msg = "微信内容推广神器欢迎您\r\n我们免费为您提供:\r\n· 最合适朋友圈引流的文章\r\n· 免费带上你的个人名片信息\r\n· 自动追踪锁定客户";
