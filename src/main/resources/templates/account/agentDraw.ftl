@@ -38,13 +38,13 @@
                 <label class="weui-label">姓名</label>
             </div>
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" id="userName" placeholder="真实姓名" value="yugoslavia">
+                <input class="weui-input" type="text" id="userName" placeholder="真实姓名" value="#{user.nickname}">
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">提款金额</label></div>
             <div class="weui-cell__bd">
-                <input class="weui-input" type="number" id="drawAmount" maxValue="14.44" value="14.44">
+                <input class="weui-input" type="number" id="drawAmount" maxValue="" value="">
             </div>
         </div>
     </div>

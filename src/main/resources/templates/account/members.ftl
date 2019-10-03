@@ -86,7 +86,7 @@
         </a>
         <div class="weui-flex__item">
             <p>支付人数</p>
-            <h2>#<span id="agentCount"></h2>
+            <h2><span id="agentCount"></h2>
         </div>
     </div>
 
