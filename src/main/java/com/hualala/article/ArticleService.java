@@ -65,11 +65,10 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Document document = connetUrl(source);
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
-        Whitelist wl = Whitelist.basicWithImages();
-        wl.addTags("div", "span", "p", "font");
+
         String content = replaceImage(jsContent).toString();
 
-        String cleanContent = Jsoup.clean(content, wl);
+        String cleanContent = Jsoup.clean(content, Whitelist.relaxed());
 
         String title = document.select("#activity-name").text();
         //获取JS变量
