@@ -37,6 +37,9 @@ server:
   port: 8080
   tomcat:
     uri-encoding: UTF-8
+  compression:
+    enabled: true
+    mimeTypes: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
 
 mybatis-plus:
   config-location: classpath:mybatis-config.xml
