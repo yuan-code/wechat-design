@@ -14,6 +14,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,12 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Document document = connetUrl(source);
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
+        Whitelist wl = Whitelist.basicWithImages();
+        wl.addTags("div", "span", "p", "font");
         String content = replaceImage(jsContent).toString();
+
+        String cleanContent = Jsoup.clean(content, wl);
+
         String title = document.select("#activity-name").text();
         //获取JS变量
         Map<String, String> variableMap = scriptVariable(document);
@@ -73,7 +79,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         byte[] bytes = HttpClientUtil.downLoadFromUrl(thumbnail);
         thumbnail = MediaUtils.uploadImage(bytes);
         article = new Article();
-        article.setContent(content);
+        article.setContent(cleanContent);
         article.setTitle(title);
         article.setSummary(summary);
         article.setThumbnail(thumbnail);
