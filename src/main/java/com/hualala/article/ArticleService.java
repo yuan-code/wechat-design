@@ -63,12 +63,19 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             return article;
         }
         Document document = connetUrl(source);
+        // 去掉所有超链接
+        Elements elements = document.getElementsByTag("a");
+        for (Element element : elements) {
+            element.attr("href", "");
+            element.text("");
+        }
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
 
         String content = replaceImage(jsContent).toString();
 
-        String cleanContent = Jsoup.clean(content, Whitelist.relaxed());
+        content = content.replaceAll("<section>", "");
+        content = content.replaceAll("</section>", "");
 
         String title = document.select("#activity-name").text();
         //获取JS变量
@@ -78,7 +85,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         byte[] bytes = HttpClientUtil.downLoadFromUrl(thumbnail);
         thumbnail = MediaUtils.uploadImage(bytes);
         article = new Article();
-        article.setContent(cleanContent);
+        article.setContent(content);
         article.setTitle(title);
         article.setSummary(summary);
         article.setThumbnail(thumbnail);
