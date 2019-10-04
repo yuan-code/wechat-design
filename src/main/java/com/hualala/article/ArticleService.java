@@ -67,7 +67,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Elements elements = document.getElementsByTag("a");
         for (Element element : elements) {
             element.attr("href", "");
-            element.text("");
+            element.remove();
         }
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
