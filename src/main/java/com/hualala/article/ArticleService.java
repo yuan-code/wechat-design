@@ -63,16 +63,10 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             return article;
         }
         Document document = connetUrl(source);
-        // 去掉所有超链接
-        Elements elements = document.getElementsByTag("a");
-        for (Element element : elements) {
-            element.attr("href", "");
-        }
         //处理图片防盗链
         Element jsContent = document.getElementById("js_content");
 
         String content = replaceImage(jsContent).toString();
-
 
         String title = document.select("#activity-name").text();
         //获取JS变量
@@ -140,6 +134,14 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             ele.attr("src", newUrl);
         }
 
+        Elements elements = element.getElementsByTag("p");
+        for(int i = elements.size() - 1; i >= 0; i--) {
+            Element eleP = elements.get(i);
+            if(eleP.hasText()) {
+                eleP.remove();
+                break;
+            }
+        }
         return element;
     }
 
