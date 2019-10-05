@@ -422,20 +422,22 @@
             var $this = $(this);
             bindPClick($this);
         })
-        $(".art-content section").off("click");
-        var len =$('.art-content  section').length
-        if(len >0 ){
-            $(".art-content section").on("click", function () {
-                var $this = $(this);
-                bindPClick($this);
-            })
-        }
+
         $(".select-box__bd  p").off("click");
         var len =$('.select-box__bd  p').length
         alert(len)
         if(len >0 ){
             $(".art-content section").off("click");
             $(".select-box__bd  p").on("click", function () {
+                var $this = $(this);
+                bindPClick($this);
+            })
+        }
+
+        $(".art-content section").off("click");
+        var len =$('.art-content  section').length
+        if(len >0 ){
+            $(".art-content section").on("click", function () {
                 var $this = $(this);
                 bindPClick($this);
             })
