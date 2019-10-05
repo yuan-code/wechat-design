@@ -18,7 +18,10 @@ import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -45,7 +48,8 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     @Autowired
     private UserService userService;
 
-
+    @Autowired
+    private PlatformTransactionManager transactionManager;
     /**
      * 爬取单个公众号文章
      *
@@ -53,7 +57,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      * @return
      * @throws IOException
      */
-    @Transactional(rollbackFor = Exception.class)
+    //@Transactional(rollbackFor = Exception.class)
     public Article articleCopy(String source,String openid) {
         User user = userService.queryByOpenid(openid);
         QueryWrapper<Article> wrapper = new QueryWrapper<Article>().eq("source", source).eq("pid", 0);
@@ -76,16 +80,23 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         String thumbnail = variableMap.get("msg_cdn_url");
         byte[] bytes = HttpClientUtil.downLoadFromUrl(thumbnail);
         thumbnail = MediaUtils.uploadImage(bytes);
-        article = new Article();
-        article.setContent(content);
-        article.setTitle(title);
-        article.setSummary(summary);
-        article.setThumbnail(thumbnail);
-        article.setSource(source);
-        article.setCreateTime(TimeUtil.currentDT());
-        article.setSourceOpenid(user.getOpenid());
-        article.setSourceUserid(user.getUserid());
-        articleMapper.insert(article);
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try {
+            article = new Article();
+            article.setContent(content);
+            article.setTitle(title);
+            article.setSummary(summary);
+            article.setThumbnail(thumbnail);
+            article.setSource(source);
+            article.setCreateTime(TimeUtil.currentDT());
+            article.setSourceOpenid(user.getOpenid());
+            article.setSourceUserid(user.getUserid());
+            articleMapper.insert(article);
+            transactionManager.commit(status);
+        } catch (Exception e) {
+            transactionManager.rollback(status);
+            log.error("articleCopy transaction  error ,reason {}",e);
+        }
         return article;
     }
 

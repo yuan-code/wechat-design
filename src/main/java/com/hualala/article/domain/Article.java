@@ -95,6 +95,11 @@ public class Article implements Serializable {
      */
     private String source;
 
+    /**
+     * 文章唯一性标识
+     */
+    private String checksum;
+
 
     public String resolveUrl() {
         return HttpUtils.getHostName() + "/article/detail/" + this.articleid;
