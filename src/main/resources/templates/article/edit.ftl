@@ -423,19 +423,8 @@
             bindPClick($this);
         })
 
-        $(".select-box__bd  p").off("click");
-        var len =$('.select-box__bd  p').length
-        alert(".select-box__bd  p"+len)
-        if(len >0 ){
-            $(".select-box__bd  p").on("click", function () {
-                var $this = $(this);
-                bindPClick($this);
-            })
-        }
-
         $(".art-content section").off("click");
         var len =$('.art-content  section').length
-        alert(".art-content  section"+len)
         if(len >0 ){
             $(".art-content section").on("click", function () {
                 var $this = $(this);
