@@ -436,6 +436,7 @@
 
         $(".art-content section").off("click");
         var len =$('.art-content  section').length
+        alert(len)
         if(len >0 ){
             $(".art-content section").on("click", function () {
                 var $this = $(this);
