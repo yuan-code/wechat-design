@@ -158,15 +158,15 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
                 break;
             }
         }
-        Elements elementsSec = element.getElementsByTag("section");
-        for(int i = elementsSec.size() - 1; i >= 0; i--) {
-            Element eleSc = elementsSec.get(i);
-            if(eleSc.hasText()) {
-                eleSc.select("section").unwrap();
-            }else {
-                eleSc.remove();
-            }
-        }
+//        Elements elementsSec = element.getElementsByTag("section");
+//        for(int i = elementsSec.size() - 1; i >= 0; i--) {
+//            Element eleSc = elementsSec.get(i);
+//            if(eleSc.hasText()) {
+//                eleSc.select("section").unwrap();
+//            }else {
+//                eleSc.remove();
+//            }
+//        }
         return element;
     }
 
