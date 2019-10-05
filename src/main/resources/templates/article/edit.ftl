@@ -422,6 +422,7 @@
             var $this = $(this);
             bindPClick($this);
         })
+        $(".art-content section").off("click");
         var len =$('.art-content  section').length
         if(len >0 ){
             $(".art-content section").on("click", function () {
