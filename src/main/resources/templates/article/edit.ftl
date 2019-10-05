@@ -422,6 +422,13 @@
             var $this = $(this);
             bindPClick($this);
         })
+        var len =$('.art-content  section').length
+        if(len >0 ){
+            $(".art-content section").on("click", function () {
+                var $this = $(this);
+                bindPClick($this);
+            })
+        }
     }
 
     function bindPClick($this) {
