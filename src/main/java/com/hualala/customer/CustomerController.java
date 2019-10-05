@@ -41,7 +41,7 @@ public class CustomerController {
 
     @RequestMapping("/customer")
     public String customer(@UserResolver User user, ModelMap modelMap) {
-        QueryWrapper<Customer> wrapper = new QueryWrapper<Customer>().eq("author_openid", user.getOpenid());
+        QueryWrapper<Customer> wrapper = new QueryWrapper<Customer>().eq("author_openid", user.getOpenid()).groupBy("customer_openid");
         int allCount = customerService.count(wrapper);
         wrapper.between("subscibe_time", TimeUtil.todayStartTime(), TimeUtil.todayEndTime());
         int todayCount = customerService.count(wrapper);
@@ -54,7 +54,7 @@ public class CustomerController {
     @RequestMapping("/list")
     public Object list(Long pageNo, Long pageSize, @UserResolver User user) {
         Page<Customer> page = new Page<>(pageNo, pageSize);
-        page.addOrder(OrderItem.asc("subscibe_time"));
+        page.addOrder(OrderItem.desc("subscibe_time"));
         QueryWrapper<Customer> wrapper = new QueryWrapper<Customer>().eq("author_openid", user.getOpenid());
         IPage<Customer> result = customerService.page(page, wrapper);
         Map<Long, List<Customer>> relationMap = result.getRecords().stream().collect(Collectors.groupingBy(Customer::getCustomerUserid));
