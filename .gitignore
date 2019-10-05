@@ -1,6 +1,7 @@
 HELP.md
 target/
 logs/
+nohup.out
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
