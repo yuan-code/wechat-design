@@ -430,10 +430,10 @@
                 bindPClick($this);
             })
         }
-        $(".art-content  section p").off("click");
-        var len =$('.art-content  section p').length
+        $(".select-box__bd  p").off("click");
+        var len =$('.select-box__bd  p').length
         if(len >0 ){
-            $(".art-content  section p").on("click", function () {
+            $(".select-box__bd  p").on("click", function () {
                 var $this = $(this);
                 bindPClick($this);
             })
