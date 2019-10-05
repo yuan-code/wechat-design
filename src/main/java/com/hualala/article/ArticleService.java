@@ -71,8 +71,8 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Element jsContent = document.getElementById("js_content");
 
         String content = replaceImage(jsContent).toString();
-        content = content.replaceAll("<section", "<p");
-        content = content.replaceAll("</section>", "</p>");
+//        content = content.replaceAll("<section", "<p");
+//        content = content.replaceAll("</section>", "</p>");
         String title = document.select("#activity-name").text();
         //获取JS变量
         Map<String, String> variableMap = scriptVariable(document);
