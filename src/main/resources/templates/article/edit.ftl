@@ -294,7 +294,14 @@
                 if (targetPanel == null) {
                     $(".art-content").prepend('<p style="margin: 0em 0.5em;max-width: 100%;color: rgb(0, 0, 0);white-space: normal;line-height: 1.75em;box-sizing: border-box !important;word-wrap: break-word !important;">' + html + '</p>')
                 } else {
-                    targetPanel.after('<p style="margin: 0em 0.5em;max-width: 100%;color: rgb(0, 0, 0);white-space: normal;line-height: 1.75em;box-sizing: border-box !important;word-wrap: break-word !important;">' + html + '</p>');
+                    var len  = targetPanel.children()[0].getElementsByTagName("section").length;
+                    if (len > 0){
+                        targetPanel.after('<section style="margin-left: 8px;margin-right: 8px;">' +
+                                '<span style="font-size: 15px;">' + html + '</span></section>');
+                    }else{
+                        targetPanel.after('<p style="margin: 0em 0.5em;max-width: 100%;color: rgb(0, 0, 0);white-space: normal;line-height: 1.75em;box-sizing: border-box !important;word-wrap: break-word !important;">' + html + '</p>');
+                    }
+
                 }
                 bindContentClick();
             }
