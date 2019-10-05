@@ -150,14 +150,14 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             eleA.attr("href","javascript:void(0)");
         }
 
-        Elements elements = element.getElementsByTag("p");
-        for(int i = elements.size() - 1; i >= 0; i--) {
-            Element eleP = elements.get(i);
-            if(eleP.hasText()) {
-                eleP.remove();
-                break;
-            }
-        }
+//        Elements elements = element.getElementsByTag("p");
+//        for(int i = elements.size() - 1; i >= 0; i--) {
+//            Element eleP = elements.get(i);
+//            if(eleP.hasText()) {
+//                eleP.remove();
+//                break;
+//            }
+//        }
         return element;
     }
 
