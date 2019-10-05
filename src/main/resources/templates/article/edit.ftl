@@ -430,6 +430,14 @@
                 bindPClick($this);
             })
         }
+        $(".art-content  section p").off("click");
+        var len =$('.art-content  section p').length
+        if(len >0 ){
+            $(".art-content  section p").on("click", function () {
+                var $this = $(this);
+                bindPClick($this);
+            })
+        }
     }
 
     function bindPClick($this) {
