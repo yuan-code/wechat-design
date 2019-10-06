@@ -54,8 +54,7 @@ public class CustomerController {
     @RequestMapping("/list")
     public Object list(Long pageNo, Long pageSize, @UserResolver User user) {
         Page<Customer> page = new Page<>(pageNo, pageSize);
-        page.addOrder(OrderItem.desc("subscibe_time"));
-        QueryWrapper<Customer> wrapper = new QueryWrapper<Customer>().eq("author_openid", user.getOpenid());
+        QueryWrapper<Customer> wrapper = new QueryWrapper<Customer>().eq("author_openid", user.getOpenid()).orderByDesc("subscibe_time");
         IPage<Customer> result = customerService.page(page, wrapper);
         Map<Long, List<Customer>> relationMap = result.getRecords().stream().collect(Collectors.groupingBy(Customer::getCustomerUserid));
         if(relationMap.size() > 0) {
