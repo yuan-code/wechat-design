@@ -51,6 +51,7 @@ logging:
     com.hualala.customer: debug
     com.hualala.pay: debug
     com.hualala.user: debug
+    com.hualala.account: debug
 
 wechat:
   appID: wx0abd83b135ccb8e5

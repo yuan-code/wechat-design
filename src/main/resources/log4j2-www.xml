@@ -63,6 +63,9 @@
         <logger name="com.hualala.user" level="debug" additivity="false">
             <AppenderRef ref="infoFile"/>
         </logger>
+        <logger name="com.hualala.account" level="debug" additivity="false">
+            <AppenderRef ref="infoFile"/>
+        </logger>
         <AsyncRoot level="info">
             <AppenderRef ref="infoFile"/>
             <AppenderRef ref="errorFile"/>

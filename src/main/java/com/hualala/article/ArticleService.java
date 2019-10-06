@@ -133,11 +133,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
                     .filter(s -> s.contains("background-image") && s.contains("\""))
                     .map(s -> s.substring(s.indexOf("\"") + 1, s.lastIndexOf("\"")))
                     .findAny();
-            if(url.isPresent()) {
-                String newUrl = MediaUtils.uploadImage(url.get());
-                String replace = style.replace(url.get(), newUrl);
-                ele.attr("style",replace);
-            }
+            url.ifPresent(u -> ele.attr("style",style.replace(u, MediaUtils.uploadImage(u))));
         }
         Elements images = element.select("img");
         for (Element ele : images) {
@@ -158,15 +154,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
                 break;
             }
         }
-//        Elements elementsSec = element.getElementsByTag("section");
-//        for(int i = elementsSec.size() - 1; i >= 0; i--) {
-//            Element eleSc = elementsSec.get(i);
-//            if(eleSc.hasText()) {
-//                eleSc.select("section").unwrap();
-//            }else {
-//                eleSc.remove();
-//            }
-//        }
         return element;
     }
 
