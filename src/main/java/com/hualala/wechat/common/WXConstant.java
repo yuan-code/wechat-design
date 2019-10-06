@@ -20,12 +20,17 @@ public class WXConstant {
     /**
      * 点击事件 热点推送
      */
-    public static final String HOT_ARTICLE_CLICK_TYPE = "HotArticle";
+    public static final String HOT_ARTICLE_CLICK = "HotArticle";
 
     /**
      * 点击事件 联系我们
      */
-    public static final String HOT_ARTICLE_CONTACT_US = "ContactUs";
+    public static final String CONTACT_US_CLICK = "ContactUs";
+
+    /**
+     * 点击事件 代理推广
+     */
+    public static final String AGENT_PARTNER_CLICK = "AgentPartner";
 
     /**
      * 获取微信公众号的access_token

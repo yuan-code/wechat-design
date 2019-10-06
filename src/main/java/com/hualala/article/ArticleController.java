@@ -3,13 +3,12 @@ package com.hualala.article;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.base.Preconditions;
 import com.hualala.article.domain.Article;
 import com.hualala.customer.CustomerService;
-import com.hualala.user.UserService;
 import com.hualala.global.UserResolver;
+import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
 import com.hualala.util.LockHelper;
 import com.hualala.util.ResultUtils;

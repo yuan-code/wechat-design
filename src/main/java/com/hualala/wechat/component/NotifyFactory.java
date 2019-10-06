@@ -1,15 +1,16 @@
 package com.hualala.wechat.component;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.hualala.article.ArticleService;
+import com.hualala.article.domain.Article;
+import com.hualala.user.UserService;
+import com.hualala.user.domain.User;
 import com.hualala.util.LockHelper;
+import com.hualala.util.TimeUtil;
+import com.hualala.wechat.WXService;
 import com.hualala.wechat.common.NotifyEnum;
 import com.hualala.wechat.common.NotifyType;
-import com.hualala.article.domain.Article;
-import com.hualala.user.domain.User;
-import com.hualala.article.ArticleService;
-import com.hualala.user.UserService;
-import com.hualala.wechat.WXService;
-import com.hualala.util.TimeUtil;
+import com.hualala.wechat.common.ReplyMsg;
 import com.hualala.wechat.util.WXReply;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ArrayUtils;
@@ -27,8 +28,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.hualala.wechat.common.WXConstant.HOT_ARTICLE_CLICK_TYPE;
-import static com.hualala.wechat.common.WXConstant.HOT_ARTICLE_CONTACT_US;
+import static com.hualala.wechat.common.WXConstant.*;
 
 /**
  * @author YuanChong
@@ -118,8 +118,7 @@ public class NotifyFactory implements ApplicationContextAware {
                     .ifPresent(eventKey -> userService.recommend(eventKey,openID));
             userService.deleteSession(user.getOpenid());
             WXReply wxReply = new WXReply(appID, openID);
-            String msg = "微信内容推广神器欢迎您\r\n我们免费为您提供:\r\n· 最合适朋友圈引流的文章\r\n· 免费带上你的个人名片信息\r\n· 自动追踪锁定客户";
-            return wxReply.replyMsg(msg);
+            return wxReply.replyMsg(ReplyMsg.SUBSCRIBE_MSG);
         }
     }
 
@@ -173,11 +172,13 @@ public class NotifyFactory implements ApplicationContextAware {
             String appID = xmlMap.get("ToUserName");
             WXReply wxReply = new WXReply(appID, openID);
             switch (xmlMap.get("EventKey")) {
-                case HOT_ARTICLE_CLICK_TYPE:
+                case HOT_ARTICLE_CLICK:
                     Article article = articleService.findAny();
                     return wxReply.replyNews(article.getTitle(), article.getSummary(), article.getThumbnail(), article.resolveUrl());
-                case HOT_ARTICLE_CONTACT_US:
+                case CONTACT_US_CLICK:
                     return wxReply.replyImage(mediaID);
+                case AGENT_PARTNER_CLICK:
+                    return wxReply.replyMsg(ReplyMsg.AGENT_MSG);
                 default:
                     return "";
             }
