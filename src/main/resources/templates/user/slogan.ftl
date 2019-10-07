@@ -36,7 +36,7 @@
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <textarea class="weui-textarea" id="slogan" placeholder="请输入签名" rows="3"></textarea>
+                    <textarea class="weui-textarea" id="slogan" placeholder="请输入签名" rows="3" maxlength="20"></textarea>
                     <div class="weui-textarea-counter"><span id="inputLength">0</span>/20</div>
                 </div>
             </div>
@@ -52,6 +52,8 @@
 <script>
 $(function(){
      $("#slogan").val(decodeURIComponent(GetQueryString("slogan")));
+     var slogan = $("#slogan").val();
+    $("#inputLength").html(slogan.length);
 });
 
 function GetQueryString(name)
