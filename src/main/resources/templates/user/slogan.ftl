@@ -51,7 +51,7 @@
 <script src="/js/app.js"></script>
 <script>
 $(function(){
-     $("#slogan").val(decodeURIComponent(GetQueryString("slogan")));
+     $("#slogan").val($.trim(decodeURIComponent(GetQueryString("slogan"))));
      var slogan = $("#slogan").val();
     $("#inputLength").html(slogan.length);
 });
