@@ -287,9 +287,9 @@
     <div class="mask mask_gr" style="display:none">
         <div class="mask-dialog qrcodeContent" style="padding-top:20px;">
             <#if userStatus = 0>
-                 <img src="${user.qrcode}">
+                 <img src="${user.qrcode?default("")}">
             <#else>
-                 <img src="${user.qrcode}">
+                 <img src="${user.qrcode?default("")}">
             </#if>
             <p style="color:red;margin-bottom:20px;">长按二维码加我微信</p>
         </div>
