@@ -181,6 +181,7 @@ public class HttpClientUtil {
                 release(httpResponse, httpClient);
             }
         }
+        log.info("httpclient httpMethod {} result {}",httpMethod,result);
         return result;
     }
 
