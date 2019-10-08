@@ -3,6 +3,7 @@ package com.hualala.util;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -10,11 +11,13 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -41,13 +44,6 @@ public class HttpClientUtil {
         return get(url, Collections.emptyMap());
     }
 
-    public static HttpClientUtil.HttpResult post(String url, Map<String, String> params) {
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setConfig(requestConfig);
-        packageParam(params, httpPost);
-        return getHttpResult(httpClient, httpPost);
-    }
 
     public static HttpClientUtil.HttpResult postXML(String url, String content) {
         return post(url, content, "application/xml; charset=utf-8");
@@ -55,6 +51,18 @@ public class HttpClientUtil {
 
     public static HttpClientUtil.HttpResult postJson(String url, String content) {
         return post(url, content, "application/json; charset=utf-8");
+    }
+
+    public static HttpClientUtil.HttpResult postFile(String url, String name,byte[] file) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setConfig(requestConfig);
+        MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+        multipartEntityBuilder.addBinaryBody(name,file);
+        HttpEntity reqEntity = multipartEntityBuilder.build();
+        httpPost.setEntity(reqEntity);
+        return getHttpResult(httpClient,httpPost);
+
     }
 
 
@@ -67,6 +75,13 @@ public class HttpClientUtil {
         return getHttpResult(httpClient, httpPost);
     }
 
+    public static HttpClientUtil.HttpResult post(String url, Map<String, String> params) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setConfig(requestConfig);
+        packageParam(params, httpPost);
+        return getHttpResult(httpClient, httpPost);
+    }
 
     public static HttpClientUtil.HttpResult get(String url, Map<String, String> params) {
         CloseableHttpClient httpClient = HttpClients.createDefault();

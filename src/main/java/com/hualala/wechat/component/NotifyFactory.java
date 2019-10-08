@@ -5,12 +5,14 @@ import com.hualala.article.ArticleService;
 import com.hualala.article.domain.Article;
 import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
+import com.hualala.util.HttpClientUtil;
 import com.hualala.util.LockHelper;
 import com.hualala.util.TimeUtil;
 import com.hualala.wechat.WXService;
 import com.hualala.wechat.common.NotifyEnum;
 import com.hualala.wechat.common.NotifyType;
 import com.hualala.wechat.common.ReplyMsg;
+import com.hualala.wechat.common.WXConstant;
 import com.hualala.wechat.util.WXReply;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ArrayUtils;
@@ -166,6 +168,10 @@ public class NotifyFactory implements ApplicationContextAware {
         @Autowired
         private ArticleService articleService;
 
+        @Autowired
+        private WXService wxService;
+
+
         @Override
         public String wechatNotify(Map<String, String> xmlMap) throws Exception {
             String openID = xmlMap.get("FromUserName");
@@ -178,6 +184,8 @@ public class NotifyFactory implements ApplicationContextAware {
                 case CONTACT_US_CLICK:
                     return wxReply.replyImage(mediaID);
                 case AGENT_PARTNER_CLICK:
+                    //通过客服消息发送用户唯一二维码 30天过期
+                    wxService.asynSendQrcode(openID);
                     return wxReply.replyMsg(ReplyMsg.AGENT_MSG);
                 default:
                     return "";

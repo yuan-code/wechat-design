@@ -11,6 +11,7 @@ import com.hualala.wechat.common.RedisKey;
 import com.hualala.wechat.common.TemplateCode;
 import com.hualala.wechat.common.WXConstant;
 import com.hualala.wechat.component.WXConfig;
+import com.hualala.wechat.domain.CustomMsg;
 import com.hualala.wechat.domain.TemplateMsg;
 import com.hualala.weixin.mp.JSApiUtil;
 import lombok.extern.log4j.Log4j2;
@@ -47,6 +48,7 @@ public class WXService {
      */
     private ExecutorService templatePool = Executors.newSingleThreadExecutor();
 
+    private final Integer monthSeconds = 30 * 24 * 60 * 60;
 
     /**
      * 获取公众号的AccessToken
@@ -318,6 +320,40 @@ public class WXService {
         return ticketRes;
     }
 
+
+
+    public void asynSendQrcode(String openID) {
+        templatePool.execute(() -> this.sendQrcode(openID));
+    }
+
+
+    public void sendQrcode(String openID) {
+        //生成二维码ticket 30天过期
+        String qrcodeTicket = this.qrcodeTicket(openID, monthSeconds);
+        //获取二维码数据
+        String showQrcodeUrl = String.format(SHOW_QRCODE_URL, qrcodeTicket);
+        byte[] media = HttpClientUtil.downLoadFromUrl(showQrcodeUrl);
+        //上传临时二维码文件 获取mediaID
+        String mediaID = this.uploadImage("image", media);
+        //构建二维码客服消息
+        CustomMsg customMsg = new CustomMsg(openID, "image");
+        customMsg.buildImage(mediaID);
+        this.sendMsg(customMsg);
+    }
+
+
+    /**
+     * 发送客服消息
+     * @param customMsg
+     */
+    public void sendMsg(CustomMsg customMsg) {
+        String params = customMsg.build();
+        String accessToken = getAccessToken();
+        String customUrl = String.format(CUSTOM_SEND_URL, accessToken);
+        HttpClientUtil.postJson(customUrl, params);
+    }
+
+
     /**
      * 通过模板编码获取模板ID
      *
@@ -338,6 +374,24 @@ public class WXService {
             CacheUtils.set(redisKey, templateID);
         }
         return templateID;
+    }
+
+    /**
+     * 上传临时文件到微信
+     *
+     * @param type
+     * @param media
+     */
+    public String uploadImage(String type, byte[] media) {
+        String accessToken = getAccessToken();
+        String uploadUrl = String.format(UPLOAD_MEDIA_URL, accessToken, type);
+        HttpClientUtil.HttpResult httpResult = HttpClientUtil.postFile(uploadUrl, "media", media);
+        JSONObject jsonResult = JSON.parseObject(httpResult.getContent());
+        if (StringUtils.isEmpty(jsonResult.getString("media_id"))) {
+            log.error("上传临时文件到微信 url {} result {}", uploadUrl, httpResult.getContent());
+            throw new RuntimeException("上传临时文件到微信失败");
+        }
+        return jsonResult.getString("media_id");
     }
 
 

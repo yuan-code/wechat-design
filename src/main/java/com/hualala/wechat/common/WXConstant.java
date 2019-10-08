@@ -87,4 +87,20 @@ public class WXConstant {
      * 发送模板消息
      */
     public static final String SEND_TEMPLATE_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s";
+
+    /**
+     * 客服发消息接口
+     */
+    public static final String  CUSTOM_SEND_URL = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s";
+
+    /**
+     * 上传素材url
+     */
+    public static final String  UPLOAD_MEDIA_URL = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s";
+
+    /**
+     * 展示二维码的url
+     */
+    public static final String  SHOW_QRCODE_URL = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=%s";
+
 }
