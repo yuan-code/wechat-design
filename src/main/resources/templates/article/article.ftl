@@ -689,6 +689,11 @@
             });
             $(".add-myweixin").on("click",function(){
                 $(".mask_gr").css("display","")
+                var srcImg = $(".qrcodeContent img").attr("src");
+                if( srcImg == '' ||  srcImg == 'undefine' ){
+                    $(".qrcodeContent p").html("您暂未上传二维码，请移步个人中心上传您的二维码!")
+
+                }
             });
         })();
     </script>
