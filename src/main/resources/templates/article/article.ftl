@@ -287,9 +287,17 @@
     <div class="mask mask_gr" style="display:none">
         <div class="mask-dialog qrcodeContent" style="padding-top:20px;">
             <#if userStatus = 0>
-                <img src="${user.qrcode}">
+               <#if !user.qrcode??>
+                  <p style="color:red;margin-bottom:20px;">您还没有上传二维码，客户无法添加您的微信!请到个人下设置!</p>
+               <#else>
+                 <img src="${user.qrcode}">
+               </#if>
             <#else>
-                <img src="${author.qrcode}">
+                <#if !user.qrcode??>
+                  <p style="color:red;margin-bottom:20px;">您还没有上传二维码，客户无法添加您的微信!请到个人下设置!</p>
+                <#else>
+                 <img src="${user.qrcode}">
+                </#if>
             </#if>
             <p style="color:red;margin-bottom:20px;">长按二维码加我微信</p>
         </div>
