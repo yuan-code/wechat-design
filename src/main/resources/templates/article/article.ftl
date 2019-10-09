@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=yes"/>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
     <link rel="shortcut icon" type="image/x-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico">
     <link rel="mask-icon" href="//res.wx.qq.com/a/wx_fed/assets/res/MjliNWVm.svg" color="#4C4C4C">
@@ -287,17 +288,9 @@
     <div class="mask mask_gr" style="display:none">
         <div class="mask-dialog qrcodeContent" style="padding-top:20px;">
             <#if userStatus = 0>
-               <#if !user.qrcode??>
-                  <p style="color:red;margin-bottom:20px;">您还没有上传二维码，客户无法添加您的微信!请到个人下设置!</p>
-               <#else>
-                 <img src="${user.qrcode}">
-               </#if>
+                 <img src="${user.qrcode?default("")}">
             <#else>
-                <#if !user.qrcode??>
-                  <p style="color:red;margin-bottom:20px;">您还没有上传二维码，客户无法添加您的微信!请到个人下设置!</p>
-                <#else>
-                 <img src="${user.qrcode}">
-                </#if>
+                 <img src="${user.qrcode?default("")}">
             </#if>
             <p style="color:red;margin-bottom:20px;">长按二维码加我微信</p>
         </div>
@@ -697,6 +690,11 @@
             });
             $(".add-myweixin").on("click",function(){
                 $(".mask_gr").css("display","")
+                var srcImg = $(".qrcodeContent img").attr("src");
+                if( srcImg == '' ||  srcImg == 'undefine' ){
+                    $(".qrcodeContent p").html("您暂未上传二维码，请移步个人中心上传您的二维码!")
+
+                }
             });
         })();
     </script>
