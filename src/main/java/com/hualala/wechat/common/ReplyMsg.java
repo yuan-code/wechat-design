@@ -13,7 +13,7 @@ public class ReplyMsg {
 
 
 
-    public static final String AGENT_MSG = "<![CDATA[每推荐成功一个高级会员，将获得会员费的50%作为推荐奖励\r\n\r\n推荐方式：\r\n1、推荐专属推广二维码图片\r\n2、分享文章，朋友点击「免费转换成我的名片文章」\r\n\r\n<a href='http://wechat.ictry.com/account/rate'>查看推荐用户及奖励</a>]]>";
+    public static final String AGENT_MSG = "<![CDATA[每推荐成功一个高级会员，将获得会员费的50%作为推荐奖励\r\n\r\n推荐方式：\r\n推荐专属推广二维码图片\r\n\r\n<a href='http://wechat.ictry.com/account/rate'>查看推荐用户及奖励</a>]]>";
 
 
 

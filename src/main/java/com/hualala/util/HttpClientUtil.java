@@ -12,12 +12,12 @@ import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -58,7 +58,8 @@ public class HttpClientUtil {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setConfig(requestConfig);
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
-        multipartEntityBuilder.addBinaryBody(name,file);
+        ByteArrayBody body = new ByteArrayBody(file, name + ".jpg");
+        multipartEntityBuilder.addPart(name,body);
         HttpEntity reqEntity = multipartEntityBuilder.build();
         httpPost.setEntity(reqEntity);
         return getHttpResult(httpClient,httpPost);

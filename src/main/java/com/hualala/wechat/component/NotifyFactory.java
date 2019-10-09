@@ -23,10 +23,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -117,6 +114,7 @@ public class NotifyFactory implements ApplicationContextAware {
             //增加代理人
             Optional.ofNullable(xmlMap.get("EventKey"))
                     .map(eventKey -> eventKey.startsWith("qrscene_") ? eventKey.substring(8) : eventKey)
+                    .filter(eventKey -> !Objects.equals(eventKey,openID))
                     .ifPresent(eventKey -> userService.recommend(eventKey,openID));
             userService.deleteSession(user.getOpenid());
             WXReply wxReply = new WXReply(appID, openID);
