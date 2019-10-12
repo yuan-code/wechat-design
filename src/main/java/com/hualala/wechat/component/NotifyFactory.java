@@ -215,7 +215,7 @@ public class NotifyFactory implements ApplicationContextAware {
             WXReply wxReply = new WXReply(appID, openID);
             String content = xmlMap.get("Content");
             if (content.startsWith("https://mp.weixin.qq.com/")) {
-                String lockKey = "copyArticle/" + URLEncoder.encode(content, "UTF-8");
+                String lockKey = "copyArticle:" + URLEncoder.encode(content, "UTF-8");
                 Article article = lockHelper.doSync(lockKey, () -> articleService.articleCopy(content,openID));
                 return wxReply.replyNews(article.getTitle(), article.getSummary(), article.getThumbnail(), article.resolveUrl());
             }

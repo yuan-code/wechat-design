@@ -81,7 +81,7 @@ public class PayController {
     @RequestMapping("/free")
     public Object free(@UserResolver User user) throws Exception {
         //同步锁
-        String lock = "createFreeOrder/" + user.getOpenid();
+        String lock = "createFreeOrder:" + user.getOpenid();
         Order order = lockHelper.doSync(lock, () -> orderService.createFreeOrder(user.getOpenid()));
         //异步发模板消息
         TemplateMsg templateMsg = TemplateMsg.builder(order.getOpenid(), wxService.getVipSuccessTemplateCode())

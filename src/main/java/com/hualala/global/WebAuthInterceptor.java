@@ -5,6 +5,7 @@ import com.hualala.pay.OrderService;
 import com.hualala.util.CurrentUser;
 import com.hualala.user.UserService;
 import com.hualala.user.domain.User;
+import com.hualala.util.LockHelper;
 import com.hualala.wechat.WXService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
