@@ -161,7 +161,7 @@ public class NotifyFactory implements ApplicationContextAware {
     @NotifyType(NotifyEnum.CLICK)
     public static class Click implements WechatNotify {
 
-        private final String mediaID = "ELYMY-79MurPtaqnYq7igICx4lKDThqNIXAA8PLZRVw";
+        private final String mediaID = "ELYMY-79MurPtaqnYq7igNohXkc_8oj6bSCngGo1ZCE";
 
         @Autowired
         private ArticleService articleService;
