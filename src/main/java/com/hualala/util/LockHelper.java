@@ -19,9 +19,6 @@ import java.util.function.Supplier;
 @Component
 public class LockHelper {
 
-    @Autowired
-    private CacheUtils cacheUtils;
-
 
     private static final String ROOT_PATH = "distributionlock:%s";
 
@@ -108,7 +105,7 @@ public class LockHelper {
     public boolean tryLock(String resource) {
         String lockKey = getLockKey(resource);
         String lockHold = cacheLockHolder();
-        return cacheUtils.setNx(lockKey, lockHold, LOCK_TIMEOUT);
+        return CacheUtils.setNx(lockKey, lockHold, LOCK_TIMEOUT);
     }
 
 
@@ -124,7 +121,7 @@ public class LockHelper {
         if (StringUtils.isEmpty(lockHolder)) {
             throw new IllegalStateException("unlock must after at lock");
         }
-        Long result = cacheUtils.eval(UNLOCK_SCRIPT, Collections.singletonList(lockKey), lockHolder);
+        Long result = CacheUtils.eval(UNLOCK_SCRIPT, Collections.singletonList(lockKey), lockHolder);
         boolean success = result != null && result == 1;
         if(success) {
             removeLockHolder();
