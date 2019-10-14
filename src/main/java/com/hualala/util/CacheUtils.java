@@ -2,10 +2,12 @@ package com.hualala.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -37,8 +39,28 @@ public class CacheUtils {
     }
 
 
+    /**
+     * 普通缓存放入
+     *
+     * @param key   键
+     * @param value 值
+     * @return true成功 false失败
+     */
+    public static Boolean setNx(String key, String value, Integer expire) {
+        return stringRedisTemplate.opsForValue().setIfAbsent(key, value, expire, TimeUnit.SECONDS);
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     */
     public static Long incr(String key) {
         return stringRedisTemplate.opsForValue().increment(key);
+    }
+
+    public <T> T eval(RedisScript<T> script, List<String> keys, String... values) {
+        return stringRedisTemplate.execute(script,keys,values);
     }
 
 
@@ -141,4 +163,6 @@ public class CacheUtils {
     public static Long zDel(String key) {
         return stringRedisTemplate.opsForZSet().removeRange(key, 0, -1);
     }
+
+
 }

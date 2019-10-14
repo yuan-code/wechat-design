@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.l;
+
 
 /**
  * <p>
@@ -152,13 +154,14 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public String addSession(User user) {
         //返回给前端cookie
         //cookie内的token一小时过期
-        String cookieKey = generateCookieKey(user.getOpenid());
-        if (CacheUtils.exists(cookieKey)) {
-            CacheUtils.expire(cookieKey, Constant.SESSION_EXPIRE_SECONDS);
+        String cookieValue = generateCookieValue(user.getOpenid());
+        String sessionKey = generateSessionKey(cookieValue);
+        if (CacheUtils.exists(sessionKey)) {
+            CacheUtils.expire(sessionKey, Constant.SESSION_EXPIRE_SECONDS);
         } else {
-            CacheUtils.set(cookieKey, JSON.toJSONString(user), Constant.SESSION_EXPIRE_SECONDS);
+            CacheUtils.set(sessionKey, JSON.toJSONString(user), Constant.SESSION_EXPIRE_SECONDS);
         }
-        return cookieKey;
+        return cookieValue;
     }
 
 
@@ -177,8 +180,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @param openid
      */
     public void deleteSession(String openid) {
-        String cookieKey = generateCookieKey(openid);
-        CacheUtils.del(cookieKey);
+        String cookieValue = generateCookieValue(openid);
+        String sessionKey = generateSessionKey(cookieValue);
+        CacheUtils.del(sessionKey);
         User user = queryByOpenid(openid);
         CurrentUser.setUser(user);
     }
@@ -190,7 +194,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @return
      */
     public User tokenAuth(String token) {
-        String jsonUser = CacheUtils.get(token);
+        String sessionKey = generateSessionKey(token);
+        String jsonUser = CacheUtils.get(sessionKey);
         if (StringUtils.isNotEmpty(jsonUser)) {
             User user = JSON.parseObject(jsonUser, User.class);
             CacheUtils.expire(token, Constant.SESSION_EXPIRE_SECONDS);
@@ -202,7 +207,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     }
 
 
-    private String generateCookieKey(String openid) {
+    private String generateCookieValue(String openid) {
         return DigestUtils.md5Hex(wxService.getAppID() + openid);
+    }
+
+    private String generateSessionKey(String cookieValue) {
+        return "session:" + cookieValue;
     }
 }

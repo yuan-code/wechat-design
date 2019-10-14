@@ -161,7 +161,7 @@ public class NotifyFactory implements ApplicationContextAware {
     @NotifyType(NotifyEnum.CLICK)
     public static class Click implements WechatNotify {
 
-        private final String mediaID = "ELYMY-79MurPtaqnYq7igICx4lKDThqNIXAA8PLZRVw";
+        private final String mediaID = "ELYMY-79MurPtaqnYq7igNohXkc_8oj6bSCngGo1ZCE";
 
         @Autowired
         private ArticleService articleService;
@@ -215,7 +215,7 @@ public class NotifyFactory implements ApplicationContextAware {
             WXReply wxReply = new WXReply(appID, openID);
             String content = xmlMap.get("Content");
             if (content.startsWith("https://mp.weixin.qq.com/")) {
-                String lockKey = "copyArticle/" + URLEncoder.encode(content, "UTF-8");
+                String lockKey = "copyArticle:" + URLEncoder.encode(content, "UTF-8");
                 Article article = lockHelper.doSync(lockKey, () -> articleService.articleCopy(content,openID));
                 return wxReply.replyNews(article.getTitle(), article.getSummary(), article.getThumbnail(), article.resolveUrl());
             }
