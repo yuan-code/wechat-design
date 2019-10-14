@@ -39,6 +39,7 @@ server:
     uri-encoding: UTF-8
   compression:
     enabled: true
+    min-response-size: 2048
     mimeTypes: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
 
 mybatis-plus:
