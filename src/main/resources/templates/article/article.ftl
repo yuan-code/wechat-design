@@ -291,7 +291,7 @@
             <#if userStatus = 0>
                  <img src="${user.qrcode?default("")}">
             <#else>
-                 <img src="${user.qrcode?default("")}">
+                 <img src="${author.qrcode?default("")}">
             </#if>
             <p style="color:red;margin-bottom:20px;">长按二维码加我微信</p>
         </div>
