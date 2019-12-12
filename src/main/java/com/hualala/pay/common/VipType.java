@@ -1,5 +1,8 @@
 package com.hualala.pay.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -10,6 +13,8 @@ import java.util.Optional;
  * @create 2019-08-11 09:49
  * @desc
  */
+@AllArgsConstructor
+@Getter
 public enum VipType {
 
 
@@ -24,36 +29,6 @@ public enum VipType {
     private String desc;
     private Integer calendarType;
     private Integer calendarCount;
-
-
-
-    VipType(Integer type, BigDecimal price, String desc, Integer calendarType, Integer calendarCount) {
-        this.type = type;
-        this.price = price;
-        this.desc = desc;
-        this.calendarType = calendarType;
-        this.calendarCount = calendarCount;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public Integer getCalendarCount() {
-        return calendarCount;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public Integer getCalendarType() {
-        return calendarType;
-    }
 
 
     public static VipType resolveType(Integer type) {
