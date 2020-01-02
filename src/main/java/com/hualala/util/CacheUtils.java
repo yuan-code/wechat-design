@@ -59,7 +59,7 @@ public class CacheUtils {
         return stringRedisTemplate.opsForValue().increment(key);
     }
 
-    public <T> T eval(RedisScript<T> script, List<String> keys, String... values) {
+    public static <T> T eval(RedisScript<T> script, List<String> keys, String... values) {
         return stringRedisTemplate.execute(script,keys,values);
     }
 

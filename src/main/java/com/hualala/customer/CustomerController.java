@@ -42,9 +42,9 @@ public class CustomerController {
     @RequestMapping("/customer")
     public String customer(@UserResolver User user, ModelMap modelMap) {
         QueryWrapper<Customer> wrapper = new QueryWrapper<Customer>().eq("author_openid", user.getOpenid()).groupBy("customer_openid");
-        int allCount = customerService.count(wrapper);
+        int allCount = customerService.list(wrapper).size();
         wrapper.between("subscibe_time", TimeUtil.todayStartTime(), TimeUtil.todayEndTime());
-        int todayCount = customerService.count(wrapper);
+        int todayCount = customerService.list(wrapper).size();
         modelMap.put("allCount", allCount);
         modelMap.put("todayCount", todayCount);
         return "customer/customer";

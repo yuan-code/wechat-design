@@ -248,7 +248,7 @@
                         if(o.subscribe==1){
                             html += '	<a href="/chat/'+sessionUserId+'/'+o.customerUser.userid+'" class="weui-btn weui-btn_mini weui-btn_warn">撩TA</a>';
                         }else{
-                            html += '	<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" data-clipboard-text="'+o.nickName+'">复制TA</a>';
+                            html += '	<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary" data-clipboard-text="'+o.customerUser.nickname+'">复制TA</a>';
                         }
                         html += '</div>';
                         html += '</div>';
