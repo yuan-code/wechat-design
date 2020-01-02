@@ -51,18 +51,9 @@ public class NotifyFactory implements ApplicationContextAware {
     public WechatNotify loadWeChatNotify(NotifyEnum notifyType) {
         WechatNotify notify = notifyMap.get(notifyType);
         //对于没配置的策略 返回一个默认的空实现即可
-        return Optional.ofNullable(notify).orElse((xmlMap) -> this.defaultNotify(xmlMap));
+        return notify == null ? xmlMap -> "success" : notify;
     }
 
-    /**
-     * 工厂提供默认空实现
-     *
-     * @param xmlMap
-     * @return
-     */
-    public String defaultNotify(Map<String, String> xmlMap) {
-        return "success";
-    }
 
 
     /**
